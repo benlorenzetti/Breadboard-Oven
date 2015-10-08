@@ -1,8 +1,4 @@
 # Ignore Programming Files Except Source Code
-*
-!*/*
-**/!*.*
-**/!makefile
 **/*.o
 
 # Ignore Latex Intermediate Files
