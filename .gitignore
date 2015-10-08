@@ -1,8 +1,8 @@
 # Ignore Programming Files Except Source Code
-*
-!*.*
-!makefile
-*.o
+**/*
+**/!*.*
+**/!makefile
+**/*.o
 
 # Ignore Latex Intermediate Files
 *.aux
@@ -30,6 +30,6 @@
 *.synctex.gz
 
 # Ignore Text Editor Temporary Files
-/**~
-/**.sw?
+**/*~
+**/*.sw?
 
