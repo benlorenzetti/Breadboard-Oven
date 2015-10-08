@@ -1,6 +1,6 @@
 # Ignore Programming Files Except Source Code
-**/*
-!*/
+*
+!*/*
 **/!*.*
 **/!makefile
 **/*.o
