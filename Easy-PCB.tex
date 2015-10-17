@@ -92,7 +92,143 @@ within the range of capabilities of independent hobbyists.
 
 \section{User Interface}
 
-\section{Oven Design}
+\section{Plant Design}
 
+\subsection{Temperature Objectives}
+
+\subsection{Thermodynamics Theory}
+
+The heat required to increase temperature of a unit mass of material by one degree is
+\begin{equation}
+dQ=mc_{p}dT
+\label{specific-heat-eq}
+\end{equation}
+where \(c_{p}\) is the specific heat of the material with \mbox{units \(\left[\frac{kJ}{kg*K}\right]\)}.
+
+\begin{equation}
+\vec{q}=-k\vec{\nabla}T
+\label{fouriers-law-differential-form}
+\end{equation}
+where \(k\) is thermal conductivity with \mbox{units \(\left[\frac{W}{m*K}\right]\)}.
+
+\begin{equation*}
+\frac{dQ}{dt}=-k\oint _{S}\vec{\nabla}T*d\vec{A}
+\end{equation*}
+where \(d\vec{A}\) is a differential area element of a closed \mbox{surface \(S\)}.
+
+\begin{equation}
+\frac{\delta Q}{\delta t}=-kA\frac{\delta T}{\delta x}
+\label{fouriers-law-in-1D}
+\end{equation}
+
+\begin{equation}
+\frac{dQ}{dt}=hA\Delta T
+\label{newtons-cooling-law}
+\end{equation}
+where \(h\) is the heat transfer coefficient with \mbox{units \(\left[\frac{W}{m^{2}*K}\right]\)}.
+
+\subsection{Conceptual Design}
+
+Most microwaves draw between 600 and 1200 Watts of power.
+An IR toaster oven may draw 1500 Watts into its lamps.
+How much power does \emph{Easy-PCB} need to produce the required temperature profiles?
+
+Our approach for answering this question is to browse available parts on McMaster.com,
+imagine how they would be assembled into an oven,
+and then model their thermodynamic responses using PSPICE.
+Thermodynamics can be modeled in SPICE because temperature is
+mathematically analogous to voltage (both are potential functions)
+and heat energy to electric charge (both are through variables).
+
+Starting from the source of heat and moving towards the heat sinks,
+the first component in a convection oven is a heating element.
+Most electric heating elements are protected from shorts and moisture
+by a metal sheath.
+If the sheath is relatively thin compared to the square root of its surface area,
+then its heat transfer can be modeled as a 1--D transmission line, like shown in
+\hyperref[sheath-transmission-line]{figure \ref{sheath-transmission-line}}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\columnwidth]{Figures/sheath-transmission-line.pdf}
+\caption{One--Dimensional Model of Heating Element Sheath}
+\label{sheath-transmission-line}
+\end{figure}
+
+From \hyperref[specific-heat-eq]{equation \ref{specific-heat-eq}},
+the heat capacity of a thin slice of the metal sheath is
+\begin{equation*}
+dQ=(\rho A dx)c_{p}dT
+\end{equation*}
+
+And, using Fourier's Law of heat conduction in 1--D,
+(\hyperref[fouriers-law-in-1D]{equation \ref{fouriers-law-in-1D}})
+the rate of heat passing through a thin slice is
+\begin{equation*}
+\frac{\delta Q}{\delta t}=-kA\frac{\delta T}{\delta x}
+\end{equation*} 
+ 
+Rewriting these equations to look like current-voltage relationships gives
+\begin{equation}
+\delta T=R_{x}\frac{\delta Q}{\delta t},
+\quad R_{x}=\frac{\delta x}{kA}
+\label{differential-resistance-eq}
+\end{equation}
+and
+\begin{equation}
+\frac{\delta Q}{\delta t}=C_{x}\frac{\delta T}{\delta t},
+\quad C_{x}=\rho A c_{p} * \delta x
+\label{differential-capacitance-eq}
+\end{equation}
+
+Values for $k$, $c_{p}$, and $\rho$ of different metals are listed in
+\hyperref[thermal-properties-table]{table \ref{thermal-properties-table}}.
+
+Long metal bars and rods can also be modeled with equations
+\ref{differential-resistance-eq} and \ref{differential-capacitance-eq}
+if the heat loss along the length of the bar is assumed to be
+negligible compared to heat transfered at the end faces.
+
+For sheaths or metal bars where heat is injected at the center
+of the part and dissipates symmetrically in either direction,
+the surface area can be doubled so that the transmission line
+only needs to be integraded in the positive direction.
+\begin{equation}
+\left\{\begin{array}{c c c}
+R_{x}	&\Rightarrow	&R_{x}/{2}	\\
+C_{x}	&\Rightarrow	&2C_{x}	\\
+\{x|-\frac{w}{2} \leq x \leq \frac{w}{2}\}	&\Rightarrow	&\{x|0 \leq x \leq \frac{w}{2}\}	\\
+\end{array}\right.
+\end{equation}
+
+\begin{table*}
+\centering
+\caption{Thermal Conductivity, Specific Heat, and Density of Selected Materials}
+\begin{tabular}{c | c | c | c | c}
+\hline\hline
+Material	&Linear Region (K--K)	&k \(\left(\frac{W}{m*K}\right)\)	&\(c_{p}\) \(\left(\frac{kJ}{kg*K}\right)\)	&\(\rho\) \((kg/m^{3})\)	\\
+% Material	Linear Region		k	Cp	density	\\
+\hline\hline
+
+\hline\hline
+\end{tabular}
+\label{thermal-properties-table}
+\end{table*}
+
+\subsection{Component Selection \& SPICE Modeling}
+
+\subsection{Transfer Model}
+
+\section{Thermocouple Amplifier Design}
+
+\subsection{Controller and Power Requirements}
+
+\section{Motor Driver Design}
+
+\subsection{Power Requirements}
+
+\section{Power Circuit Design}
+
+\section{Controller Design}
 
 \end{document}
