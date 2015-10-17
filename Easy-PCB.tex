@@ -138,7 +138,7 @@ imagine how they would be assembled into an oven,
 and then model their thermodynamic responses using PSPICE.
 Thermodynamics can be modeled in SPICE because temperature is
 mathematically analogous to voltage (both are potential functions)
-and heat energy to electric charge (both are through variables).
+and heat energy to electric charge.
 
 Starting from the source of heat and moving towards the heat sinks,
 the first component in a convection oven is a heating element.
@@ -165,7 +165,7 @@ And, using Fourier's Law of heat conduction in 1--D,
 (\hyperref[fouriers-law-in-1D]{equation \ref{fouriers-law-in-1D}})
 the rate of heat passing through a thin slice is
 \begin{equation*}
-\frac{\delta Q}{\delta t}=-kA\frac{\delta T}{\delta x}
+\frac{\delta Q}{\delta t}=kA\frac{\delta T}{\delta x}
 \end{equation*} 
  
 Rewriting these equations to look like current-voltage relationships gives
@@ -214,6 +214,91 @@ Material	&Linear Region (K--K)	&k \(\left(\frac{W}{m*K}\right)\)	&\(c_{p}\) \(\l
 \end{tabular}
 \label{thermal-properties-table}
 \end{table*}
+
+At any moment in time, we can plot the temperature of air as one
+moves away from the sheath surface. We see there is a certain
+distance, called the skin depth $\delta$, over which the temperature
+gradient is nearly dissipaited and the bulk air begins.
+
+PLOT with T0et/alpha and Tbulk on y axis and x on x axis
+
+Forced convection from the fan causes the bulk air, uniform temperature
+region to be pushed closer to the sheath's surface.
+If the skin depth can be pushed sufficiently close to the surface,
+then the time constant shrinks due to the relation $\alpha=\frac{k}{\rho c_{p}}\delta$.
+Thus, for sufficiently strong circullation and close skin depth, the time
+constant becomes small enough that the system is effectively always in
+steady state, where
+\begin{equation*}
+\frac{dT}{dt}\approx 0
+\end{equation*}
+
+From the first law of thermodynamics (conservation of energy),
+the difference between heat flowing in and out of a thin slice by
+all mechanisms is equal to the heat stored within that slice, for all t and x.
+\begin{equation*}
+\frac{\delta Q_{\textrm{cap.}}}{\delta t}*\frac{1}{\delta x}=
+\frac{\delta Q_{\textrm{cond.}}}{\delta t}*\frac{1}{\delta x}+
+\frac{\delta Q_{\textrm{conv.}}}{\delta t}*\frac{1}{\delta x}
+\end{equation*}
+
+Substituting
+\hyperref[differential-capacitance-eq]{equation \ref{differential-capacitance-eq}}
+for the heat capacity of a thin slice yields:
+
+\begin{equation*}
+\rho A c_{p}\frac{\delta T}{\delta t}=
+\frac{\delta Q_{\textrm{cond.}}}{\delta t}*\frac{1}{\delta x}+
+\frac{\delta Q_{\textrm{conv.}}}{\delta t}*\frac{1}{\delta x}
+\end{equation*}
+
+But we have just argued that if the skin depth can be made very close
+by forced convection, then $\frac{dT}{dt}\rightarrow 0$.
+
+\begin{equation*}
+\frac{\delta Q_{\textrm{conv.}}}{\delta t}*\frac{1}{\delta x}=-
+\frac{\delta Q_{\textrm{cond.}}}{\delta t}*\frac{1}{\delta x}
+\end{equation*}
+
+Integrating across x is easy.
+
+\begin{equation*}
+\frac{dQ_{\textrm{conv.}}}{dt}(x)=C-
+\frac{dQ_{\textrm{cond.}}}{dt}(x)
+\end{equation*}
+
+At the surface of the sheath \((X=0)\), heat transfer in the air is
+100\% conduction because every air molecule at \((X=0)\) is colliding
+with metal and exchanging energy. Therefore
+\begin{equation*}
+C=\frac{dQ_{\textrm{cond.}}}{dt}(X=0)
+\end{equation*}
+
+Applying Fourier's Law to the temperature profile found in
+\hyperref[conduction-temp-profile]{equation \ref{conduction-temp-profile}}
+give us equations for the rate of heat tranfer due to conduction,
+and finally this leads to
+\begin{equation*}
+\dot{Q}_{\textrm{cond.}}(x)=Q_{0}e^{\nicefrac{-x}{\delta}}
+\end{equation*}
+and
+\begin{equation*}
+\dot{Q}_{\textrm{conv.}}(x)=Q_{0}\left(1-e^{\nicefrac{-x}{\delta}}\right)
+\end{equation*}
+
+where
+\begin{equation*}
+Q_{0}=\frac{kAT_{0}}{\delta}e^{\nicefrac{-t}{\alpha}}
+\end{equation*}
+
+Finally, if we absorb $e^{\nicefrac{-t}{\alpha}}$ into $T_{0}$ for steady state, then
+\begin{equation}
+Q_{0}=\frac{kA}{\delta}T_{0}
+\end{equation}
+
+
+
+
 
 \subsection{Component Selection \& SPICE Modeling}
 
