@@ -1,7 +1,7 @@
-all: generate-scr-file
+all: generate-iso-projection
 
-generate-scr-file: scr-generator.o
-	gcc scr-generator.c -std=c11 -o generate-scr-file
+generate-iso-projection: generate-iso-projection.o
+	gcc generate-iso-projection.o -o generate-iso-projection
 
-scr-generator: scr-generator.c
-	gcc scr-generator.c -c
+generate-iso-projection.o: generate-iso-projection.c
+	gcc generate-iso-projection.c -c
