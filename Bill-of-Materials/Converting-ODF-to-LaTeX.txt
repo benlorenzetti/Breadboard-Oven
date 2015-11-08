@@ -1,0 +1,6 @@
+(1) Install Write2LaTeX
+sudo apt-get install libreoffice-writer2latex writer2latex -y
+
+(2) Convert yourfile.odt to yourfile.tex
+w2l yourfile.odt
+
