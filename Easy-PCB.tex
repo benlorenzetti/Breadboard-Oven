@@ -92,9 +92,45 @@ within the range of capabilities of independent hobbyists.
 
 \section{User Interface}
 
+Easy--PCB presents temperature and time information on a four digit LED display.
+After pressing the green `start' button, the current temperature and process
+runtime are alternately displayed at 1 Hz.
+
+The red `stop' button can be pressed at anytime to stop the current process
+or reset the microcontroller.
+
+Set point programming with the 4 nav keys is used to enter a time--temperature profile.
+Use the `left' and `right' keys to move between set points and the `up' and `down'
+keys to edit each set point value.
+
+A total of 128 set points can be entered. The first set point is always $(0s,\,20^{o}C)$,
+and the process will terminate at the next occurance of $20^{o}$ in a point.
+Temperatures can take any value in the range \mbox{$20^{o}C<T<275^{o}C=527^{o}F$.}
+The time between two points must be between \mbox{$0<t<255$ seconds.}
+
 \section{Plant Design}
 
 \subsection{Temperature Objectives}
+
+A typical solder reflow profile is shown in
+\hyperref[standard-reflow-profile]{\mbox{figure \ref{standard-reflow-profile}}}.
+The optimal shape and peak temperature depend on the components and,
+more significantly, on the use of leaded solder.
+\begin{equation*}
+T_{p}=\left\{\begin{array}{c c}
+220-235^{o}C	&\textrm{Leaded solder}	\\
+245-260^{o}C	&\textrm{Pb--free}	\\
+\end{array}\right.
+\end{equation*}
+\begin{equation*}
+t_{p}=\left\{\begin{array}{c c}
+20s	&\textrm{Leaded solder}	\\
+30s	&\textrm{Pb--free}	\\
+\end{array}\right.
+\end{equation*}
+
+Easy--PCB was designed from the ground up for faithfully producing these
+reflow profiles. The design of the thermodynamic system is detailed below.
 
 \subsection{Thermodynamics Theory}
 
