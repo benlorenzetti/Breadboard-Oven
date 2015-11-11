@@ -92,16 +92,32 @@ within the range of capabilities of independent hobbyists.
 
 \section{User Interface}
 
-Easy--PCB presents temperature and time information on a four digit LED display.
+\emph{Easy--PCB} presents temperature and time information on a four digit LED display.
 After pressing the green `start' button, the current temperature and process
 runtime are alternately displayed at 1 Hz.
+
+\begin{center}
+	\begin{minipage}[b]{0.5\columnwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/clock-display.pdf}
+	\end{minipage}
+	\begin{minipage}[b]{0.5\columnwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/temperature-display.pdf}
+	\end{minipage}	
+%	\captionof*{figure}{Time and Temperature Displays}
+\end{center}
 
 The red `stop' button can be pressed at anytime to stop the current process
 or reset the microcontroller.
 
+(pushbuttons screenshot from EAGLE here)
+
 Set point programming with the 4 nav keys is used to enter a time--temperature profile.
 Use the `left' and `right' keys to move between set points and the `up' and `down'
 keys to edit each set point value.
+
+(Set point programming diagram here)
 
 A total of 128 set points can be entered. The first set point is always $(0s,\,20^{o}C)$,
 and the process will terminate at the next occurance of $20^{o}$ in a point.
@@ -112,12 +128,19 @@ The time between two points must be between \mbox{$0<t<255$ seconds.}
 
 \subsection{Temperature Objectives}
 
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/standard-reflow-profile.pdf}
+	\caption{Standard Solder Reflow Profile, per \href{J-STD-020D-1.pdf}{IPC/JEDEC STD-1-020D.1}}
+	\label{standard-reflow-profile}
+\end{figure*}
+
 A typical solder reflow profile is shown in
 \hyperref[standard-reflow-profile]{\mbox{figure \ref{standard-reflow-profile}}}.
 The optimal shape and peak temperature depend on the components and,
 more significantly, on the use of leaded solder.
 \begin{equation*}
-T_{p}=\left\{\begin{array}{c c}
+T_{p}\approx T_{c}=\left\{\begin{array}{c c}
 220-235^{o}C	&\textrm{Leaded solder}	\\
 245-260^{o}C	&\textrm{Pb--free}	\\
 \end{array}\right.
@@ -129,8 +152,8 @@ t_{p}=\left\{\begin{array}{c c}
 \end{array}\right.
 \end{equation*}
 
-Easy--PCB was designed from the ground up for faithfully producing these
-reflow profiles. The design of the thermodynamic system is detailed below.
+\emph{Easy--PCB} was designed from the ground up for faithfully producing these
+reflow profiles. This design of the thermodynamic system is detailed below.
 
 \subsection{Thermodynamics Theory}
 
@@ -163,7 +186,7 @@ where \(d\vec{A}\) is a differential area element of a closed \mbox{surface \(S\
 \end{equation}
 where \(h\) is the heat transfer coefficient with \mbox{units \(\left[\frac{W}{m^{2}*K}\right]\)}.
 
-\subsection{Conceptual Design}
+\subsection{Thermodynamic Design}
 
 Most microwaves draw between 600 and 1200 Watts of power.
 An IR toaster oven may draw 1500 Watts into its lamps.
@@ -175,6 +198,20 @@ and then model their thermodynamic responses using PSPICE.
 Thermodynamics can be modeled in SPICE because temperature is
 mathematically analogous to voltage (both are potential functions)
 and heat energy to electric charge.
+\begin{equation*}
+T[^{o}C]\Leftrightarrow V[V]\quad
+\end{equation*}
+\begin{equation*}
+\frac{dQ}{dt}[W]\Leftrightarrow I[A]
+\end{equation*}
+A first conceptual design of \emph{Easy--PCB} is shown in
+\hyperref[first-oven-concept]{figure \ref{first-oven-concept}}.
+
+\begin{center}
+	\includegraphics[width=\columnwidth]{Figures/first-oven-concept.pdf}
+	\captionof{figure}{Concept for Thermodynamic System}
+	\label{first-oven-concept}
+\end{center}
 
 Starting from the source of heat and moving towards the heat sinks,
 the first component in a convection oven is a heating element.
