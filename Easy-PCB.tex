@@ -9,6 +9,20 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{listings}
+\usepackage{color}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes, snakes, arrows, automata, positioning}
+
+\definecolor{mygray}{rgb}{.9,.9,.9}
+\lstset{ %
+	breaklines=true
+	language=[x86masm]Assembler,
+  	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+	numberstyle=\small\color{mygray}, % the style that is used for the line-numbers
+	numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+}
+
 
 \title{%
 	\makebox[\textwidth][s]{%
@@ -38,12 +52,11 @@
 		\fontsize{10}{12}\bfseries\selectfont
 		\item Insulated aluminum frame with XxYxZ interior chamber
 		\item XXX Watt heating element with solid state relay control
+		\item 120 VAC power supply with surge and short protection
 		\item Forced convection fan driven by bipolar stepper motor with speed control
 		\item Type X thermocouple for temperature feedback loop
-		\item XXXXX based feedback control
-		\item Integrated 120 VAC power supply with surge and short protection
-		\item Combined temperature/run time \mbox{7--segment} display
-		\item Convenient pushbutton/menu interface for temperature profile programming
+		\item PIC18F14K50 based control
+		\item Convenient \mbox{7--segment} display and pushbutton user interface
 	\end{itemize}
 \end{flushleft}
 
@@ -97,11 +110,11 @@ After pressing the green `start' button, the current temperature and process
 runtime are alternately displayed at 1 Hz.
 
 \begin{center}
-	\begin{minipage}[b]{0.5\columnwidth}
+	\begin{minipage}[b]{0.45\columnwidth}
 		\centering
 		\includegraphics[width=\textwidth]{Figures/clock-display.pdf}
 	\end{minipage}
-	\begin{minipage}[b]{0.5\columnwidth}
+	\begin{minipage}[b]{0.45\columnwidth}
 		\centering
 		\includegraphics[width=\textwidth]{Figures/temperature-display.pdf}
 	\end{minipage}	
@@ -111,13 +124,80 @@ runtime are alternately displayed at 1 Hz.
 The red `stop' button can be pressed at anytime to stop the current process
 or reset the microcontroller.
 
-(pushbuttons screenshot from EAGLE here)
+\begin{center}
+	\begin{tikzpicture}[font=\fontsize{10pt}{11pt}\selectfont]
+		\node [draw, thick,fill=black] (left) at (0cm, 0.5cm) {\textcolor{white}{$\leftarrow$}};
+		\node [draw, thick,fill=black] (right) at (1.5cm, .5cm) {\textcolor{white}{$\rightarrow$}};
+		\node [draw, thick, fill=black] (up) at (0.75cm, 1cm) {\textcolor{white}{$\uparrow$}};
+		\node [draw, thick, fill=black] (down) at (0.75cm, 0cm) {\textcolor{white}{$\downarrow$}};
+		\node [draw, thick, fill=ForestGreen] (start) at (2.75cm, 1cm) {\textcolor{white}{Start}};
+		\node [draw, thick, fill=red] (stop) at (2.75cm, 0cm) {\textcolor{white}{Stop}};
+	\end{tikzpicture}
+	\captionof*{figure}{Pushbutton Interface}
+\end{center}
 
 Set point programming with the 4 nav keys is used to enter a time--temperature profile.
 Use the `left' and `right' keys to move between set points and the `up' and `down'
 keys to edit each set point value.
 
-(Set point programming diagram here)
+\begin{center}
+	\begin{tikzpicture}[font=\fontsize{8pt}{9pt}\selectfont]
+		\path [draw, -latex', thick] (1cm, 4cm) -- (1cm, 7.5cm);
+		\path [draw, -latex', thick] (1cm, 4cm) -- (6.5cm, 4cm);
+		\path [draw, thick] (1cm, 4cm) -- (1.5cm, 5cm);
+		\path [draw, thick] (3cm, 5.5cm) -- (1.5cm, 5cm);
+		\path [draw, thick, dashed] (3cm, 5.5cm) -- (3.5cm, 6.5cm);
+		\path [draw, thick, dashed] (4cm,7cm) -- (3.5cm, 6.5cm);
+		\path [draw, thick, dashed] (4cm,7cm) -- (4.5cm, 6.5cm);
+		\path [draw, thick, dashed] (5.5cm,4cm) -- (4.5cm, 6.5cm);
+		\node [draw, thick] (tzero) at (0cm, 2cm) {$0s$};
+		\node [draw, thick] (Tzero) at (1cm, 2cm) {$20^{o}$};
+		\path [draw, -latex', thick] (tzero) -- (Tzero);
+		\node [draw, thick] (tone) at (2cm, 2cm) {$t_{1}$};
+		\path [draw, -latex', thick] (Tzero) -- (tone);
+		\node [draw, thick] (Tone) at (3cm, 2cm) {$T_{1}$};
+		\path [draw, -latex', thick] (tone) -- (Tone);
+		\node [draw, thick] (ttwo) at (4cm, 2cm) {$t_{2}$};
+		\path [draw, -latex', thick] (Tone) -- (ttwo);
+		\node [draw, thick] (Ttwo) at (5cm, 2cm) {$T_{2}$};
+		\path [draw, -latex', thick] (ttwo) -- (Ttwo);
+		\node [draw, thick] (tn) at (6.5cm, 2cm) {$t_{n}$};
+		\path [draw, -latex', thick, dashed] (Ttwo) -- (tn);
+		\node [draw, thick] (Tn) at (7.5cm, 2cm) {$20^{o}$};
+		\path [draw, -latex', thick] (tn) to (Tn);
+		\path [draw, thick] (Tn) -- (7.5cm, 0.5cm);
+		\path [draw, thick] (7.5cm, 0.5cm) -- (0cm, 0.5cm);
+		\path [draw, -latex', thick] (0cm,0.5cm) -- (tzero);
+		\path [draw, -latex', thick] (tone) -- (2cm, 2.5cm);
+		\path [draw, -latex', thick] (tone) -- (2cm, 1.5cm);
+		\path [draw, -latex', thick] (Tone) -- (3cm, 2.5cm);
+		\path [draw, -latex', thick] (Tone) -- (3cm, 1.5cm);
+		\path [draw, -latex', thick] (ttwo) -- (4cm, 2.5cm);
+		\path [draw, -latex', thick] (ttwo) -- (4cm, 1.5cm);
+		\node (TtwoMax) at (5cm, 2.75cm) {$275^{o}C$};
+		\node (TtwoMin) at (5cm, 1.25cm) {$20^{o}C$};
+		\node (tnMax) at (6.5cm, 2.75cm) {$(t_{n-1}+255s)$};
+		\node (tnMin) at (6.5cm, 1.25cm) {$t_{n-1}$};
+		\path [draw, -latex', thick] (Ttwo) -- (TtwoMax);
+		\path [draw, -latex', thick] (Ttwo) -- (TtwoMin);
+		\path [draw, -latex', thick] (tn) -- (tnMax);
+		\path [draw, -latex', thick] (tn) -- (tnMin);
+		\node (t1label) at (1.5cm, 3.5cm) {$t_{1}$};
+		\node (t2label) at (3cm, 3.5cm) {$t_{2}$};
+		\node (tnlabel) at (5.5cm, 3.5cm) {$t_{n}$};
+		\node (T1label) at (0.5cm, 5cm) {$T_{1}$};
+		\node (T2label) at (0.5cm, 5.5cm) {$T_{2}$};
+		\path [draw, dashed] (t1label) -- (1.5cm, 5cm);
+		\path [draw, dashed] (t2label) -- (3cm, 5.5cm);
+		\path [draw, dashed] (T1label) -- (1.5cm, 5cm);
+		\path [draw, dashed] (T2label) -- (3cm, 5.5cm);
+		\path [draw, dashed] (tnlabel) -- (5.5cm, 4cm);
+		\node (Tlabel) at (0.25cm, 7cm) {$T\,(^{o}C)$};
+		\node (tlabel) at (6.5cm, 3.5cm) {$\textrm{time}\,(s)$};
+	\end{tikzpicture}
+	\captionof*{figure}{Set Point Programming}
+	\label{set-point-programming}
+\end{center}
 
 A total of 128 set points can be entered. The first set point is always $(0s,\,20^{o}C)$,
 and the process will terminate at the next occurance of $20^{o}$ in a point.
