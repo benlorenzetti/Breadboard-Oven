@@ -67,7 +67,7 @@
 
 As integrated circuits continue to become smaller and faster,
 many $\mu$Controllers, FPGAs, and other ICs are no longer available in
-DIP form for breadboard prototyping or solder iron soldering.
+DIP form for breadboard prototyping or iron soldering.
 Similar to the shift away from PC parallel ports in the early 2000s,
 the shift away from DIPs means modern electronics hobbyists need more
 complicated equipment than their predessesors.
@@ -89,12 +89,12 @@ temperature controller for a typical solder reflow profile.
 	\captionof*{figure}{The \emph{Easy--PCB} Control System: not just a controller bolted onto a disjoint oven.}
 \end{center}
 
-\emph{Easy--PCB} allows hobbyists to produce solder reflow temperature profiles with
+\emph{Easy--PCB} allows hobbyists to produce reflow temperature profiles with
 a high degree of accuracy and repeatability.
 Alongside freely available PCB design programs like Eagle and low-quantity
 fabrication services like OSH Park, \emph{Easy--PCB} makes
 modern integrated components, such as digital CMOS cameras,
-within the range of capabilities of independent hobbyists.
+within the design space of hobbyists and hackers.
 
 \begin{center}
 	\includegraphics[width=\columnwidth]{Figures/control-results.pdf}
@@ -107,7 +107,7 @@ within the range of capabilities of independent hobbyists.
 
 \emph{Easy--PCB} presents temperature and time information on a four digit LED display.
 After pressing the green `start' button, the current temperature and process
-runtime are alternately displayed at 1 Hz.
+runtime are alternately displayed every second.
 
 \begin{center}
 	\begin{minipage}[b]{0.45\columnwidth}
@@ -121,7 +121,7 @@ runtime are alternately displayed at 1 Hz.
 %	\captionof*{figure}{Time and Temperature Displays}
 \end{center}
 
-The red `stop' button can be pressed at anytime to stop the current process
+The red `stop' button can be pressed at anytime to quit the current process
 or reset the microcontroller.
 
 \begin{center}
@@ -202,7 +202,7 @@ keys to edit each set point value.
 A total of 128 set points can be entered. The first set point is always $(0s,\,20^{o}C)$,
 and the process will terminate at the next occurance of $20^{o}$ in a point.
 Temperatures can take any value in the range \mbox{$20^{o}C<T<275^{o}C=527^{o}F$.}
-The time between two points must be between \mbox{$0<t<255$ seconds.}
+The time between two points must be between \mbox{$0<=t<255$ seconds.}
 
 \section{Plant Design}
 
@@ -301,7 +301,7 @@ then its heat transfer can be modeled as a 1--D transmission line, like shown in
 
 \begin{center}
 \includegraphics[width=0.85\columnwidth]{Figures/unidirectional-conduction.pdf}
-\captionof*{figure}{Heat Conduction in 1--D}
+\captionof{figure}{Heat Conduction in 1--D}
 \label{unidirectional-conduction}
 \end{center}
 
@@ -343,7 +343,7 @@ negligible compared to heat transfered at the end faces.
 
 \begin{center}
 	\includegraphics[width=1\columnwidth]{Figures/bidirectional-conduction.pdf}
-	\captionof*{figure}{1--D Conduction in Both Directions}
+	\captionof{figure}{1--D Conduction in Both Directions}
 	\label{bidirectional-conduction}
 \end{center}
 
