@@ -237,34 +237,129 @@ reflow profiles. This design process for the thermodynamic system is detailed be
 
 \subsection{Thermodynamics Theory}
 
-The heat required to increase temperature of a unit mass of material by one degree is
+\textbf{Heat} is everyone's least favorite form of energy because it
+tends to dissipate everywhere and is difficult to transform into useful work.
+Nevertheless, it is a form of energy so it is measured in joules.
+\begin{equation*}
+Q:=\textrm{Heat}\,[\textrm{Joules}]
+\end{equation*}
+
+From a microscopic view, heat is the kinetic energy of gas molecules or the
+vibrational energy of bonds in solids. In both cases, summed over every
+molecule, every bond, and every vibrational mode in the system.
+
+\begin{center}
+	\includegraphics[width=1\columnwidth]{Figures/microscopic-view.pdf}
+	\captionof{figure}{Heat Energy on a Molecular Scale}
+	\label{microscopic-view}
+\end{center}
+
+\textbf{Temperature} is a potential field that measures an objects
+tendancy to give up or absorb heat.
+On average, heat always flows from regions of hotter temperature temperature
+to lower temperature.
+Temperature is usually measured in Kelvin or Celsius, which are related by
+\begin{equation*}
+T_{\textrm{Celsius}}=T_{\textrm{Kelvin}}+273.16.
+\end{equation*}
+
+Another way to think of temperature is a measure of heat density that also
+incorporates the types of bonds (or lack thereof) in which heat energy is stored.
+For example, a glacier contains more heat than a pot of boiling water, but
+has a much lower heat density.
+
+The relationship between temperature and heat stored in an object is given by
 \begin{equation}
-dQ=mc_{p}dT
+dQ=mc_{p}dT,
 \label{specific-heat-eq}
 \end{equation}
-where \(c_{p}\) is the specific heat of the material with \mbox{units \(\left[\frac{kJ}{kg*K}\right]\)}.
+where $c_{p}$ is the specific heat of the material with units $\left[\frac{kJ}{kg*K}\right]$.
 
-\begin{equation}
-\vec{q}=-k\vec{\nabla}T
-\label{fouriers-law-differential-form}
-\end{equation}
-where \(k\) is thermal conductivity with \mbox{units \(\left[\frac{W}{m*K}\right]\)}.
+So heat flows spontaneously to reduce
+temperature gradients, but how does heat flow and at what rate?
+There are three mechanisms of heat transfer:
+\emph{conduction}, \emph{convection}, and \emph{radiation}.
 
+\textbf{Conduction} of heat is caused by molecular interactions,
+such as the push--pull of nearby atomic bonds in solids or
+elastic collisions between molecules of air.
+
+The empirical relation for conduction is Fourier's Law, which
+says the rate of heat transfer due to conduction is proportional
+to both the difference in temperature and the media:
 \begin{equation*}
-\frac{dQ}{dt}=-k\oint _{S}\vec{\nabla}T*d\vec{A}
+\vec{q}=k\vec{\nabla}T
 \end{equation*}
-where \(d\vec{A}\) is a differential area element of a closed \mbox{surface \(S\)}.
+where $\vec{q}$ is the rate of heat transfer per unit surface area
+and $k$ is the thermal conductivity of the medium with units
+$\left[\frac{W}{m*K}\right]$.
 
+In integral form, Fourier's Law is
+\begin{equation*}
+\frac{\delta Q}{\delta t}=k\oint_{S}\vec{\nabla}T*d\vec{A}.
+\end{equation*}
+
+And, in the one dimensional case,
 \begin{equation}
-\frac{\delta Q}{\delta t}=-kA\frac{\delta T}{\delta x}
-\label{fouriers-law-in-1D}
+\frac{\delta Q}{\delta t}=kA\frac{\delta T}{\delta x}.
+\label{1D-fouriers-law-eq}
 \end{equation}
 
+\textbf{Convection} is the second mechanism of heat transfer,
+involving the bulk movement of particles driven by diffusion.
+
+Every air molecule is moving in a random direction with random
+kinetic energy, but a region of air with higher average kinetic
+energy (temperature) will see more molecules leaving than entering
+on average, because those leaving are moving faster than those
+entering.
+
+Note that in convection, no molecules gain or lose energy;
+molecules of different energy simply trade places.
+
+If a fan is used to apply work to a gas, the rate of convection
+increases and then Newtons' Law of Cooling can predict the
+rate of convection in gas near a solid surface of different
+temperature.
 \begin{equation}
 \frac{dQ}{dt}=hA\Delta T
 \label{newtons-cooling-law}
 \end{equation}
 where \(h\) is the heat transfer coefficient with \mbox{units \(\left[\frac{W}{m^{2}*K}\right]\)}.
+
+\textbf{Radiation}, the third mechanism of heat transfer, is more
+familiar to electrical engineers. In any material, electrons
+have discrete amounts of energy based on the wave patterns that can
+exist for the atomic geometry. When an electron spontaneously falls
+to a less energetic patter, that energy is emitted as a photon of
+light.
+
+The classic, physics--history example is black body radiation,
+when a metal is heated to high temperature and glows.
+A more modern examle is the LED.
+
+The empirical relation for radiation is the Stefan--Boltzmann Law,
+which says that the total energy radiated, over all wavelengths
+and per unit surface area, is proportional to the fourth power of
+the body's temperature.
+\begin{equation}
+j^{*}=\sigma T^{4}
+\end{equation}
+where $\sigma$ is a proportionality constant derived from other
+constants of nature.
+
+\textbf{Mechanisms \& Media} Usually one mechanism of heat transfer
+is dominant in a particular medium, so much so that we can ignore the
+other two. Typically this means conduction in solids,
+convection in fluids or gas, and radiation in space.
+However, sometimes the picture is more complicated including
+two cases in an oven:
+\begin{enumerate}
+	\item At the boundary of metal and air, where conduction
+	and convection are both significant.
+	\item In a thermocouple loop, where thermal diffusion (convection)
+	of electrons in metal is more important to us than conduction.
+\end{enumerate}
 
 \subsection{Thermodynamic Design}
 
@@ -293,6 +388,7 @@ A first conceptual design of \emph{Easy--PCB} is shown in
 	\label{first-oven-concept}
 \end{center}
 
+\subsubsection*{Conduction through Metals \& Insulation}
 In the concept, the oven chamber is isolated from the outside with walls of
 mineral wool insulation and aluminum.
 If the wall is relatively thin compared to the square root of its surface area,
@@ -307,7 +403,7 @@ then its heat transfer can be modeled as a 1--D transmission line, like shown in
 
 Assuming conduction is the dominant mechanism of heat transfer
 and using Fourier's Law of heat conduction in 1--D,
-(\hyperref[fouriers-law-in-1D]{equation \ref{fouriers-law-in-1D}})
+(\hyperref[1D-fouriers-law-eq]{equation \ref{1D-fouriers-law-eq}})
 the rate of heat passing through a thin slice is
 \begin{equation*}
 \frac{\delta Q}{\delta t}=kA\frac{\delta T}{\delta x}
@@ -375,6 +471,8 @@ Material	&Linear Region (K--K)	&k \(\left(\frac{W}{m*K}\right)\)	&\(c_{p}\) \(\l
 \end{tabular}
 \label{thermal-properties-table}
 \end{table*}
+
+\subsubsection*{Conductivity of Metal--Air Interface}
 
 At any moment in time, we can plot the temperature of air as one
 moves away from the sheath surface. We see there is a certain
@@ -457,7 +555,7 @@ Finally, if we absorb $e^{\nicefrac{-t}{\alpha}}$ into $T_{0}$ for steady state,
 Q_{0}=\frac{kA}{\delta}T_{0}
 \end{equation}
 
-
+\subsubsection*{Heat Capacity of Chamber Air}
 
 
 
