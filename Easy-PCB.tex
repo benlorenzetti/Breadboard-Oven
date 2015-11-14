@@ -582,85 +582,55 @@ initial value and $\tau$ is a time constant related to the skin depth by
 \label{transport-time-constant-eq}
 \end{equation}
 
-At any moment in time, we can plot the temperature of air as one
-moves away from the sheath surface. We see there is a certain
-distance, called the skin depth $\delta$, over which the temperature
-gradient is nearly dissipaited and the bulk air begins.
+Make some arguments and plot the temperature and heat transfer curves.
+Assume steady state and somehow that active cooling makes it all valid.
 
-PLOT with T0et/alpha and Tbulk on y axis and x on x axis
-
-Forced convection from the fan causes the bulk air, uniform temperature
-region to be pushed closer to the sheath's surface.
-If the skin depth can be pushed sufficiently close to the surface,
-then the time constant shrinks due to the relation $\alpha=\frac{k}{\rho c_{p}}\delta$.
-Thus, for sufficiently strong circullation and close skin depth, the time
-constant becomes small enough that the system is effectively always in
-steady state, where
+Applying Fourier's law to the temperature profile found in
+\hyperref[transport-solution-eq]{equation \ref{transport-solution-eq}},
+gives us the rate of heat trasfer in the air due to conduction.
 \begin{equation*}
-\frac{dT}{dt}\approx 0
+\frac{dQ}{dt}=-kA\frac{dT}{dx}=
+\frac{kA}{\delta}\Delta T_{0}e^{-(\nicefrac{x}{\delta}+\nicefrac{t}{\tau})}
 \end{equation*}
 
-From the first law of thermodynamics (conservation of energy),
-the difference between heat flowing in and out of a thin slice by
-all mechanisms is equal to the heat stored within that slice, for all t and x.
-\begin{equation*}
-\frac{\delta Q_{\textrm{cap.}}}{\delta t}*\frac{1}{\delta x}=
-\frac{\delta Q_{\textrm{cond.}}}{\delta t}*\frac{1}{\delta x}+
-\frac{\delta Q_{\textrm{conv.}}}{\delta t}*\frac{1}{\delta x}
-\end{equation*}
-
-Substituting
-\hyperref[differential-capacitance-eq]{equation \ref{differential-capacitance-eq}}
-for the heat capacity of a thin slice yields:
-
-\begin{equation*}
-\rho A c_{p}\frac{\delta T}{\delta t}=
-\frac{\delta Q_{\textrm{cond.}}}{\delta t}*\frac{1}{\delta x}+
-\frac{\delta Q_{\textrm{conv.}}}{\delta t}*\frac{1}{\delta x}
-\end{equation*}
-
-But we have just argued that if the skin depth can be made very close
-by forced convection, then $\frac{dT}{dt}\rightarrow 0$.
-
-\begin{equation*}
-\frac{\delta Q_{\textrm{conv.}}}{\delta t}*\frac{1}{\delta x}=-
-\frac{\delta Q_{\textrm{cond.}}}{\delta t}*\frac{1}{\delta x}
-\end{equation*}
-
-Integrating across x is easy.
-
-\begin{equation*}
-\frac{dQ_{\textrm{conv.}}}{dt}(x)=C-
-\frac{dQ_{\textrm{cond.}}}{dt}(x)
-\end{equation*}
-
-At the surface of the sheath \((X=0)\), heat transfer in the air is
-100\% conduction because every air molecule at \((X=0)\) is colliding
-with metal and exchanging energy. Therefore
-\begin{equation*}
-C=\frac{dQ_{\textrm{cond.}}}{dt}(X=0)
-\end{equation*}
-
-Applying Fourier's Law to the temperature profile found in
-\hyperref[conduction-temp-profile]{equation \ref{conduction-temp-profile}}
-give us equations for the rate of heat tranfer due to conduction,
-and finally this leads to
-\begin{equation*}
-\dot{Q}_{\textrm{cond.}}(x)=Q_{0}e^{\nicefrac{-x}{\delta}}
-\end{equation*}
-and
-\begin{equation*}
-\dot{Q}_{\textrm{conv.}}(x)=Q_{0}\left(1-e^{\nicefrac{-x}{\delta}}\right)
-\end{equation*}
-
-where
-\begin{equation*}
-Q_{0}=\frac{kAT_{0}}{\delta}e^{\nicefrac{-t}{\alpha}}
-\end{equation*}
-
-Finally, if we absorb $e^{\nicefrac{-t}{\alpha}}$ into $T_{0}$ for steady state, then
+Again assuming steady state, the rate of heat trasfer at any distance from
+the wall is equal to the rate of conduction at the wall.
 \begin{equation}
-Q_{0}=\frac{kA}{\delta}T_{0}
+\frac{dQ}{dt}=\frac{kA}{\delta}\Delta T_{0}=h_{c}A\Delta T_{0}
+\label{derived-cooling-law-eq}
+\end{equation}
+
+This is the information we were after and, ironically, it turns out this is 
+Newton's Law of Cooling
+(\hyperref[newtons-cooling-law]{equation \ref{newtons-cooling-law}})
+where $h_{c}=\nicefrac{k}{\delta}$. Since we do not have any way of predicting
+the skin depth except by experimentation, some common values for
+the convective heat transfer coefficient $h_{c}$ are listed in
+\hyperref[typical-h-values-table]{table \ref{typical-h-values-table}}.
+
+\begin{table}
+	\centering
+	\begin{tabular}{c | c | c}
+	\hline\hline
+	Fluid	&Conv.	&$h_{c}\,\left[\frac{W}{m^{2}*K}\right]$	\\
+	\hline
+	Gases, \& dry vapors	&free	&$0.5-1000$	\\
+				&forced	&$10-1000$	\\
+	Water \& liquids	&free	&$50-3000$	\\
+				&forced	&$50-10000$	\\
+	Boiling Water		&-	&$3-100$	\\
+	Condensing $H_{2}O$ Vapor&-	&$5-100$	\\
+	\hline\hline
+	\end{tabular}
+	\caption{Typical Convective Heat Transfer Coefficients}
+	\label{typical-h-values-table}
+\end{table}
+
+\hyperref[derived-cooling-law-eq]{Equation \ref{derived-cooling-law-eq}}
+can be rewrittent to look like Ohms' law for SPICE analysis.
+\begin{equation}
+\Delta T=R_{c}\frac{dQ}{dt},\quad R_{c}=\frac{1}{h_{c}A}=\frac{\delta}{kA}
+\label{cooling-resistance-eq}
 \end{equation}
 
 \subsubsection*{Heat Capacity of Chamber Air}
