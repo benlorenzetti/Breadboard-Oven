@@ -9,6 +9,7 @@
 \usepackage[colorlinks=false, hidelinks]{hyperref}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{amsmath}
 \usepackage{listings}
 \usepackage{color}
 \usepackage[dvipsnames]{xcolor}
@@ -610,6 +611,7 @@ the convective heat transfer coefficient $h_{c}$ are listed in
 
 \begin{table}
 	\centering
+	\caption{Typical Convective Heat Transfer Coefficients}
 	\begin{tabular}{c | c | c}
 	\hline\hline
 	Fluid	&Conv.	&$h_{c}\,\left[\frac{W}{m^{2}*K}\right]$	\\
@@ -622,7 +624,6 @@ the convective heat transfer coefficient $h_{c}$ are listed in
 	Condensing $H_{2}O$ Vapor&-	&$5-100$	\\
 	\hline\hline
 	\end{tabular}
-	\caption{Typical Convective Heat Transfer Coefficients}
 	\label{typical-h-values-table}
 \end{table}
 
@@ -635,6 +636,80 @@ can be rewrittent to look like Ohms' law for SPICE analysis.
 
 \subsubsection*{Heat Capacity of Chamber Air}
 
+The heat capacity of the air in the chamber cannot be analyzed
+with constant coefficient assumptions.
+\begin{equation}
+dQ=m(T)c_{p}(T)dT
+\label{specific-heat-with-variable-coefficients-eq}
+\end{equation}
+
+\begin{table}
+	\centering
+	\caption{Properties of Air}
+	\begin{tabular}{c | c | c | c}
+\hline\hline
+$T\,[^{o}C]$	&$\rho\left[\frac{kg}{m^{3}}\right]$	&$c_{p}\left[\frac{kJ}{kg*K}\right]$	&$k\left[\frac{W}{m*K}\right]$	\\
+\hline
+20	&1.205	&1.005	&0.0257	\\
+40	&1.127	&1.005	&0.0271	\\
+60	&1.067	&1.009	&0.0285	\\
+80	&1.000	&1.009	&0.0299	\\
+100	&0.946	&1.009	&0.0314	\\
+120	&0.898	&1.013	&0.0328	\\
+140	&0.854	&1.013	&0.0343	\\
+160	&0.815	&1.017	&0.0358	\\
+180	&0.779	&1.022	&0.0372	\\
+200	&0.746	&1.026	&0.0386	\\
+250	&0.675	&1.034	&0.0421	\\
+300	&0.616	&1.047	&0.0454	\\
+\hline\hline
+	\end{tabular}
+	\label{air-properties-table}
+\end{table}
+
+From \hyperref[air-properties-table]{table \ref{air-properties-table}},
+we can see that the specific heat of air does not vary much over the
+temperature range of the oven; less than 0.3\% from $c_{p(20^{o}C)}$
+over the range $20-300^{o}C$. However, the density/mass of air
+in the chamber may change significantly.
+
+Assuming that the air in the chamber behaves like an ideal gas
+and is made up of the normal percentages of $N_{2}$, $O_{2}$, $CO_{2}$, etc., then mass and temperature are related by
+\begin{equation*}
+PV=\frac{m}{M}RT\quad\Rightarrow m(T)=\frac{MPV}{R}T
+\end{equation*}
+where the ideal gas constant is
+\begin{equation*}
+R=5.00745\,\left[\frac{\textrm{atm}*\textrm{in}^{3}}{\textrm{mol}*K}\right]
+\end{equation*}
+and the molar mass of air is
+\begin{equation*}
+M=28.97\,\left[\frac{g}{\textrm{mol}}\right]
+\end{equation*}
+
+For the first oven concept in
+\hyperref[first-oven-concept]{figure \ref{first-oven-concept}},
+the volume of the chamber is fixed in natural units of $in^{3}$
+and there will likely be small leaks that keep the chamber
+pressure in equilibrium with atmospheric pressure, $1\,\textrm{atm}$.
+
+Substituting $m(T)$ into
+\hyperref[specific-heat-with-variable-coefficients-eq]
+{equation \ref{specific-heat-with-variable-coefficients-eq}},
+converting from absolute Kelvin scale to Celsius, and
+manipulating to look like a current--voltage relationship results in
+\begin{equation}
+\frac{dQ}{dt}=C_{c}(T)\frac{dT}{dt}
+\end{equation}
+where
+\begin{equation}
+C_{c}(T)=\frac{c_{p(20^{o}C)}MPV}{R}*\left(T+273.16^{o}C\right).
+\end{equation}
+
+Equivalently,
+\begin{equation*}
+C_{c}(T)=\left(5.8143\left[\frac{J}{in^{3}}\right]\right)V*(T+273.16^{o}C).
+\end{equation*}
 
 
 \subsection{Component Selection \& SPICE Modeling}
