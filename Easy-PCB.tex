@@ -2,6 +2,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{microtype}
+\usepackage{nicefrac}
 \usepackage{verbatim}
 \usepackage{amsmath}
 \usepackage{nicefrac}
@@ -301,7 +302,7 @@ In integral form, Fourier's Law is
 
 And, in the one dimensional case,
 \begin{equation}
-\frac{\delta Q}{\delta t}=kA\frac{\delta T}{\delta x}.
+\frac{\delta Q}{\delta t}=-kA\frac{\delta T}{\delta x}.
 \label{1D-fouriers-law-eq}
 \end{equation}
 
@@ -358,7 +359,7 @@ two cases in an oven:
 	\item At the boundary of metal and air, where conduction
 	and convection are both significant.
 	\item In a thermocouple loop, where thermal diffusion (convection)
-	of electrons in metal is more important to us than conduction.
+	of electrons is useful despite conduction still being dominant.
 \end{enumerate}
 
 \subsection{Thermodynamic Design}
@@ -369,16 +370,8 @@ How much power does \emph{Easy-PCB} need to produce the required temperature pro
 
 Our approach for answering this question is to browse available parts on McMaster.com,
 imagine how they would be assembled into an oven,
-and then model their thermodynamic responses using PSPICE.
-Thermodynamics can be modeled in SPICE because temperature is
-mathematically analogous to voltage (both are potential functions)
-and heat energy to electric charge.
-\begin{equation*}
-T[^{o}C]\Leftrightarrow V[V]\quad
-\end{equation*}
-\begin{equation*}
-\frac{dQ}{dt}[W]\Leftrightarrow I[A]
-\end{equation*}
+and then model their thermodynamic response using SPICE.
+
 A first conceptual design of \emph{Easy--PCB} is shown in
 \hyperref[first-oven-concept]{figure \ref{first-oven-concept}}.
 
@@ -402,11 +395,11 @@ then its heat transfer can be modeled as a 1--D transmission line, like shown in
 \end{center}
 
 Assuming conduction is the dominant mechanism of heat transfer
-and using Fourier's Law of heat conduction in 1--D,
+and using Fourier's Law in 1--D,
 (\hyperref[1D-fouriers-law-eq]{equation \ref{1D-fouriers-law-eq}})
 the rate of heat passing through a thin slice is
 \begin{equation*}
-\frac{\delta Q}{\delta t}=kA\frac{\delta T}{\delta x}
+\frac{\delta Q}{\delta t}=-kA\frac{\delta T}{\delta x}
 \end{equation*} 
  
 And, from \hyperref[specific-heat-eq]{equation \ref{specific-heat-eq}},
@@ -473,6 +466,121 @@ Material	&Linear Region (K--K)	&k \(\left(\frac{W}{m*K}\right)\)	&\(c_{p}\) \(\l
 \end{table*}
 
 \subsubsection*{Conductivity of Metal--Air Interface}
+
+In the bulk volume of air, convection is the dominant form of heat
+transfer and collisions are relatively rare. However, where the
+air meets a solid surface, the net convection must go to zero because
+there can be no net movement of air molecules into the solid.
+Furthermore, every air molecule that reaches the surface experiences
+a collision so there is 100\% conduction at the surface.
+
+For some distance away from the surface, there is a larger than
+normal chance of head--on collisions and slower rates of diffusion
+due to the nearby wall. In this region, both conduction and convection
+may be significant. To analyze this transition region,
+we will start at the surface where there is 100\% conduction
+because that is the mechanism we have equations for.
+
+From the first law of thermodynamics, the rate of heat being stored
+in a differential volume is equal to the rate of heat entering less
+the rate of heat leaving the volume element.
+\begin{equation*}
+\frac{\delta Q_{\textrm{stored}}}{\delta t}=
+\frac{\delta Q_{\textrm{in}}}{\delta t}-
+\frac{\delta Q_{\textrm{out}}}{\delta t}
+\end{equation*}
+
+Looking back at
+\hyperref[unidirectional-conduction]{figure \ref{unidirectional-conduction}},
+the differential volume element is a plane, so
+\begin{equation*}
+\frac{\delta Q_{\textrm{stored}}}{\delta t}=
+\frac{\delta Q_{x}}{\delta t}-
+\frac{\delta Q_{x+\delta x}}{\delta t}.
+\end{equation*}
+
+Substituting in
+\hyperref[heat-capacity-eq]{equation \ref{specific-heat-eq}}
+for stored heat capacity and
+\hyperref[1D-fouriers-law-eq]{equation \ref{1D-fouriers-law-eq}} for
+conduction through the element yields a transport equation.
+
+\begin{equation}
+mc_{p}\frac{\delta T}{\delta t}=kA\frac{\delta T}{\delta x}
+\label{transport-eq}
+\end{equation}
+
+This cannot be solved analytically unless space and time are independent.
+Sorry Albert.
+\begin{equation}
+T(x\,,t)=T_{x}(x)*T_{t}(t)
+\end{equation}
+
+Applying the chain rule to equation \ref{transport-eq}
+\begin{equation*}
+mc_{p}\frac{\delta T_{t}(t)}{\delta t}T_{x}(x)=
+kA\frac{\delta T_{x}(x)}{\delta x}T_{t}(t)
+\end{equation*}
+and separating variables gives
+\begin{equation*}
+mc_{p}\frac{\delta T_{t}(t)}{\delta t}*\frac{1}{T_{t}(t)}=
+kA\frac{\delta T_{x}(x)}{\delta x}*\frac{1}{T_{x}(x)}.
+\end{equation*}
+
+The only way for the equality to be true for all space and time
+is if both sides are equal to a common constant.
+\begin{equation*}
+\alpha=mc_{p}\frac{\delta T_{t}(t)}{\delta t}*\frac{1}{T_{t}(t)}
+\end{equation*}
+\begin{equation*}
+\alpha=kA\frac{\delta T_{x}(x)}{\delta x}*\frac{1}{T_{x}(x)}
+\end{equation*}
+
+Each of these can be solved by separation of variables.
+\begin{equation*}
+\frac{\alpha}{kA}\delta x=\frac{\delta T_{x}(x)}{T_{x}(x)}
+\end{equation*}
+
+\begin{equation*}
+\frac{\alpha}{kA}\int \delta x=\int \frac{1}{T_{x}(x)}*\delta T_{x}(x)
+\end{equation*}
+
+\begin{equation*}
+\frac{\alpha x}{kA}=ln\left(T_{x}(x)\right)+\beta_{1}
+\end{equation*}
+
+\begin{equation*}
+T_{x}(x)=\beta_{1}^{'}e^{\nicefrac{\alpha x}{kA}}
+\end{equation*}
+
+Similarly for time,
+\begin{equation*}
+T_{t}(t)=\beta_{2}^{'}e^{\nicefrac{\alpha t}{mc_{p}}}.
+\end{equation*}
+
+Recombining the independent components gives
+\begin{equation*}
+\Delta T(x\,,t)=\beta_{1}^{'}\beta_{2}^{'}e^{\nicefrac{\alpha x}{kA}+\nicefrac{\alpha t}{mc_{p}}}
+\end{equation*}
+
+The boundary conditions are that at $t=0$ and $x=0$, the temperature difference is
+the initial temperature difference, and at $t\rightarrow\infty$ and $x\rightarrow\infty$,
+the temperature difference dissipates to zero.
+\begin{equation*}
+\Delta T(x\,,t)=\Delta T_{0}e^{\nicefrac{-\alpha x}{kA}-\nicefrac{\alpha t}{mc_{p}}}
+\end{equation*}
+
+Now, for the sake of physical intuition we can write
+\begin{equation}
+\Delta T(x\,,t)=\Delta T_{0}e^{-(\nicefrac{x}{\delta}+\nicefrac{t}{\tau})},
+\label{transport-solution-eq}
+\end{equation}
+where $\delta$ is a `skin depth' over which the spacial gradient decays to $1/e$ its
+initial value and $\tau$ is a time constant related to the skin depth by
+\begin{equation}
+\tau=\frac{mc_{p}}{kA}\delta.
+\label{transport-time-constant-eq}
+\end{equation}
 
 At any moment in time, we can plot the temperature of air as one
 moves away from the sheath surface. We see there is a certain
