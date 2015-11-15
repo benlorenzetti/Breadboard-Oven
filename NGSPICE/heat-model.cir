@@ -1,0 +1,32 @@
+*** heat-model.cir ***
+* Nodes:
+* gnd, sheathCenter, sheathSurface, bulkAir
+.param wattage=500
+.param sheathHalfWidth=3.97mm
+.param Rxsheath=3.9866
+.param Cxsheath=61.936k
+.param Rcsheath=6.458
+.param chamberVolume=360
+
+Ielement gnd sheathCenter PULSE(0 wattage 1s 1ns 1ns 100s 100s)
+* (initial_value, pulsed_value, delay_time, rise_time, fall_time, pulse_width, period)
+
+Usheath sheathCenter sheathSurface gnd sheathModel L={sheathHalfWidth}
+.MODEL sheathModel URC RPERL={Rxsheath} CPERL={Cxsheath}
+
+RsheathSurface sheathSurface bulkAir {Rcsheath}
+
+XairCapacitance bulkAir gnd varCap VOLUME={chamberVolume}
+
+.subckt varCap n1 n2 VOLUME=360 ; inches squared
+B1 n1 intermediate V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
+Vammeter intermediate n2 0
+F1 gnd int B1 1
+C1 int gnd 1
+.ends varCap
+
+.control
+tran 10ms 200s; tstep, tstop
+plot v(sheathCenter) v(sheathSurface) v(bulkAir)
+
+.end

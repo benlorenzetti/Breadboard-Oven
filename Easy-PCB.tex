@@ -708,16 +708,97 @@ manipulating to look like a current--voltage relationship results in
 \end{equation}
 where
 \begin{equation}
-C_{c}(T)=\frac{c_{p(20^{o}C)}MPV}{R}*\left(T+273.16^{o}C\right).
+C_{c}(T)=\frac{c_{p(20^{o}C)}MPV}{R(T+273.16^{o}C)}.
+\label{bulk-air-capacitance-eq}
 \end{equation}
 
 Equivalently,
 \begin{equation*}
-C_{c}(T)=\left(5.8143\left[\frac{J}{in^{3}}\right]\right)V*(T+273.16^{o}C).
+C_{c}(T)=\frac{\left(5.8143\left[\frac{J}{in^{3}}\right]\right)*V}{T+273.16^{o}C}.
 \end{equation*}
 
-
 \subsection{Component Selection \& SPICE Modeling}
+
+From
+\hyperref[bulk-air-capacitance-eq]{ equation \ref{bulk-air-capacitance-eq}},
+the heat capacity of the bulk air varies with temperature because of the
+changes in density and thus quantity of molecules in the chamber.
+Unfortunately, SPICE does not have a primitive circuit element for
+a variable capacitor. We must build a subcircuit that behaves according to
+\begin{equation*}
+i_{c}=C(v_{c})\frac{dv_{c}}{dt},
+\label{capacitor-iv-relation}
+\end{equation*}
+or, alternatively,
+\begin{equation}
+\int i_{c}dt=\int C(v_{c})dv_{c}.
+\label{capacitor-integrated-iv-relation}
+\end{equation}
+
+The interface of the SPICE circuit will be a dependent source
+where either $v_{c}$ is dependent on $i_{c}$ or vice versa.
+
+The left side of \hyperref[capacitor-integrated-iv-relation]
+{equation \ref{capacitor-integrated-iv-relation}} is an integrator,
+which can be implemented with a buffer and a capacitor.
+For the SPICE circuit shown in
+\hyperref[variable-capacitance-circuit]{figure \ref{variable-capacitance-circuit}},
+the integrated current is proportional to the voltage of
+the `int' node.
+\begin{equation*}
+\int i_{c}dt=C_{\textrm{int}}*v_{int}
+\end{equation*}
+
+\begin{center}
+	\includegraphics[width=1\columnwidth]{Figures/variable-capacitance-circuit.pdf}
+	\captionof{figure}{Voltage Variable Capacitor in SPICE}
+	\label{variable-capacitance-circuit}
+\end{center}
+
+For the right side of
+\hyperref[capacitor-integrated-iv-relation]
+{equation \ref{capacitor-integrated-iv-relation}},
+it can be solved for the variable heat capacitance
+of an ideal gas found in
+\hyperref[bulk-air-capacitance-eq]{equation \ref{bulk-air-capacitance-eq}}.
+\begin{equation*}
+\begin{array}{c l}
+\int C(v_{c})dv_{c}	&=\frac{c_{p}MPV}{R}\int\frac{dv_{c}}{v_{c}+273.16}	\\
+&\\
+&=\frac{c_{p}MPV}{R}ln(v_{c}+273.16)+A	\\
+\end{array}
+\end{equation*}
+
+Recombining the left and right halves gives
+\begin{equation*}
+C_{int}v_{int}=\frac{c_{p}MPV}{R}ln(v_{c}+273.16)+A,
+\end{equation*}
+which can be solved to find a nonlinear expression
+for a dependent source $v_{c}$.
+
+Solving...
+\begin{equation*}
+\frac{RC_{int}}{c_{p}MPV}*v_{int}=ln(v_{c}+273.16)+A
+\end{equation*}
+
+\begin{equation*}
+v_{c}=A^{'}e^{\nicefrac{v_{int}}{B}}-273.16
+\end{equation*}
+
+Finally, applying boundary conditions $v_{c}(0)=0$ and $v_{int}(0)=0$ gives
+\begin{equation}
+v_{c}=273.16\left(e^{\nicefrac{v_{int}}{B}}-1\right)
+\end{equation}
+where constant $B$ is
+\begin{equation}
+\begin{array}{c c l}
+B&=&\frac{c_{p}MP}{R}*V*C_{int}\\
+&&\\
+&=&\left(5.8413\left[\frac{J}{in^{3}}\right]\right)*V*C_{int}\\
+\end{array}
+\end{equation}
+and $V$ is the constant volume of air.
+
 
 \subsection{Transfer Model}
 
