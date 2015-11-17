@@ -719,12 +719,11 @@ C_{c}(T)=\frac{\left(5.8143\left[\frac{J}{in^{3}}\right]\right)*V}{T+273.16^{o}C
 
 \subsection{Component Selection \& SPICE Modeling}
 
-From
-\hyperref[bulk-air-capacitance-eq]{ equation \ref{bulk-air-capacitance-eq}},
-the heat capacity of the bulk air varies with temperature because of the
-changes in density and thus quantity of molecules in the chamber.
+
 Unfortunately, SPICE does not have a primitive circuit element for
-a variable capacitor. We must build a subcircuit that behaves according to
+a variable capacitor.
+In order to simulate the heat capacity of an ideal gas,
+we must build a subcircuit that behaves according to
 \begin{equation*}
 i_{c}=C(v_{c})\frac{dv_{c}}{dt},
 \label{capacitor-iv-relation}

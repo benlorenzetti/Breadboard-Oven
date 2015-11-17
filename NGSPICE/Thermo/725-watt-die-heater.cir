@@ -1,0 +1,58 @@
+*** heat-model.cir ***
+* Nodes:
+* gnd, sheathCenter, sheathSurface, crossbeam, bulkAir
+.param wattage=725
+.param sheathHalfWidth=3.97mm
+.param Rxsheath=3.357
+.param Cxsheath=73.55k
+.param Rcsheath=5.44
+.param chamberVolume=360
+.param Rinsulation=3.8
+.param hangLength=50mm
+.param Rxhang=(155.95/2)
+.param Cxhang=(2*1503.2)
+.param Cxcrossbeam=1560
+.param Rxcrossbeam=9.287
+.param crossbeamHalfLength=203mm
+.param frameWidth=4.76mm
+.param Rxframe=0.0181
+.param Cxframe=798.3k
+.param Rcframe=6.06
+
+Vroomtemp atm gnd DC 20
+
+Ielement gnd sheathCenter PULSE(0 wattage 1s 1ns 1ns 100s 100s)
+* (initial_value, pulsed_value, delay_time, rise_time, fall_time, pulse_width, period)
+
+Usheath sheathCenter sheathSurface gnd sheathModel L={sheathHalfWidth}
+.MODEL sheathModel URC RPERL={Rxsheath} CPERL={Cxsheath}
+
+Uhangbar sheathSurface crossbeamCenter gnd hangModel L={hangLength}
+.MODEL hangModel URC RPERL={Rxhang} CPERL={Cxhang}
+
+Ucrossbeam crossbeamCenter interiorFrame gnd crossbeamModel L={crossbeamHalfLength}
+.MODEL crossbeamModel URC RPERL={Rxcrossbeam} CPERL={Cxcrossbeam}
+
+Uframe interiorFrame exteriorFrame gnd frameModel L={frameWidth}
+.MODEL frameModel URC RPERL={Rxframe} CPERL={Cxframe}
+
+Rframe exteriorFrame atm {Rcframe}
+
+RsheathSurface sheathSurface bulkAir {Rcsheath}
+
+XairCapacitance bulkAir atm varCap VOLUME={chamberVolume}
+
+Rinsulate bulkAir atm {Rinsulation}
+
+.subckt varCap n1 n2 VOLUME=360 ; inches squared
+B1 n1 intermediate V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
+Vammeter intermediate n2 0
+F1 gnd int B1 1
+C1 int gnd 1
+.ends varCap
+
+.control
+tran 10ms 300s; tstep, tstop
+plot v(sheathCenter) v(sheathSurface) v(bulkAir) v(crossbeamCenter) v(interiorFrame) v(exteriorFrame)
+
+.end
