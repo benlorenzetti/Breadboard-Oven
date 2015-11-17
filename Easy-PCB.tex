@@ -466,6 +466,7 @@ Type 304 Stainless Steel	&0--100	&16.2	&0.5	&8000	\\
 Cast Iron			&25	&55.0	&0.46	&6800--7800	\\
 1.0 K--factor Insulation	&-	&0.1442	&-	&-	\\
 0.23 K--factor Insulation	&-	&0.0332	&-	&-	\\
+Nichrome NiCr C Alloy		&-	&0.450	&0.135	&8244	\\
 \hline\hline
 \end{tabular}
 \label{thermal-properties-table}
@@ -798,6 +799,20 @@ B&=&\frac{c_{p}MP}{R}*V*C_{int}\\
 \end{equation}
 and $V$ is the constant volume of air.
 
+\begin{table}
+	\centering
+	\caption{Nichrome Wire Properties (NiCr C)}
+	\begin{tabular}{c | c | c | c | c}
+\hline
+Composition	&59.2\%Ni	&16\%Cr	&23.5\%Fe	&1.3\%Si	\\
+Resistivity ($\rho$)	&$675*\pi$	&$\left[\frac{\Omega*\textrm{mil}^{2}}{ft}\right]$	&	&	\\
+Melting Pt.	&1350	&$[^{o}C]$	&	&	\\
+\hline\hline
+Temp. [$^{o}C$]	&20	&93	&204	&315	\\
+\% $\rho$ Increase	&0	&1.7	&3.5	&5.2	\\
+\hline
+	\end{tabular}
+\end{table}
 
 \subsection{Transfer Model}
 
@@ -810,6 +825,25 @@ and $V$ is the constant volume of air.
 \subsection{Power Requirements}
 
 \section{Power Circuit Design}
+
+\subsection{PCB Trace Width}
+
+The minimum width and clearance for high current, high voltage traces
+on a PCB can be calculated using
+\begin{equation}
+I=0.048[A]*\left(\frac{\Delta T}{[^{o}C]}\right)^{0.44}*\left(\frac{A}{[mil^{2}]}\right)^{0.725}
+\label{trace-width-eq}
+\end{equation}
+and
+\begin{equation}
+\textrm{Clearance}=0.023[in]+\frac{0.0002[in]}{[V]}*V_{\textrm{peak}}
+\end{equation}
+from the design standard for PCB trace width ANSI/IPC--2221. Note that
+equation \ref{trace-width-eq} is only for exterior traces.
+
+For $10\,A$, $120\,VAC$ power with a maximum temperature rise of $10^{o}C$
+and standard copper thickless $1\,oz=1.4\,mil$, the minimum trace width
+is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
 \section{Controller Design}
 
