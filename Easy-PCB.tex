@@ -15,6 +15,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{shapes, snakes, arrows, automata, positioning}
+\usepackage[american]{circuitikz}
 
 \definecolor{mygray}{rgb}{.9,.9,.9}
 \lstset{ %
@@ -816,7 +817,14 @@ Temp. [$^{o}C$]	&20	&93	&204	&315	\\
 
 \subsection{Transfer Model}
 
-\section{Thermocouple Amplifier Design}
+\section{Temperature Feedback Design}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/temperature-feedback-circuit.pdf}
+	\caption{Temperature Feedback Circuit}
+	\label{temperature-feedback-circuit}
+\end{figure*}
 
 \subsection{Controller and Power Requirements}
 
