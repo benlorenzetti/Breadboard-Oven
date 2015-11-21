@@ -383,7 +383,8 @@ A first conceptual design of \emph{Easy--PCB} is shown in
 	\label{first-oven-concept}
 \end{center}
 
-\subsubsection*{Conduction through Metals \& Insulation}
+\subsubsection*{Transmission through Metals \& Insulation}
+
 In the concept, the oven chamber is isolated from the outside with walls of
 mineral wool insulation and aluminum.
 If the wall is relatively thin compared to the square root of its surface area,
@@ -473,7 +474,7 @@ Nichrome NiCr C Alloy		&-	&0.450	&0.135	&8244	\\
 \label{thermal-properties-table}
 \end{table*}
 
-\subsubsection*{Conductivity of Metal--Air Interface}
+\subsubsection*{Resistivity of Metal--Air Interface}
 
 In the bulk volume of air, convection is the dominant form of heat
 transfer and collisions are relatively rare. However, where the
@@ -817,7 +818,7 @@ Temp. [$^{o}C$]	&20	&93	&204	&315	\\
 
 \subsection{Transfer Model}
 
-\section{User Interface PCB Design}
+\section{User Interface Design}
 
 The user interface is designed to be assembled on a separate PCB
 from the main controller board. This separation allows the high power
@@ -834,6 +835,11 @@ is shown in blue in \emph{Easy--PCB} block diagram.
 The user interface board contains a 4--digit, 7--segment, common--cathode
 display and a matching common--cathode driver. The display driver
 is connected to the controller board via 4 wire serial peripheral interface (SPI).
+From the MAX7219 datasheet, the worst case current draw by the display driver
+is
+\begin{equation}
+I_{\textrm{LED Display}}<200\,mA.
+\end{equation}
 
 There are 6 active low
 pushbuttons on the front facing board and with 6 corresponding low pass filters
@@ -851,7 +857,17 @@ Finally, there is a form A (normal open; active closed) kill switch
 that is compressed when the door is closed. The current through this
 switch directly drives the form A (normally open) safety relay on the controller board.
 The kill switch circuit is shown in
-\hyperref[killswitch-circuit]{figure \ref{killswitch-circuit}} below.
+\hyperref[killswitch-circuit]{figure \ref{killswitch-circuit}}.
+The flyback diode should be rated for currents greater than the saturation
+current of the relay coil.
+\begin{equation}
+I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
+\end{equation}
+
+For the Omron Safety G4W relays, the saturation current is
+\begin{equation}
+I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
+\end{equation}
 
 \begin{figure}
 	\centering
