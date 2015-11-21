@@ -1,6 +1,8 @@
 *** heat-model.cir ***
-* Nodes:
-* gnd, sheathCenter, sheathSurface, crossbeam, bulkAir
+; Nodes:
+; gnd, atm, bulkAir, interiorFrame, exteriorFrame, elementSurface, hotBolts, boltRadiators
+;
+; Nichrome Wire Heating Element Parameters:
 .param Diameter=32	; [0.001 in]
 .param Length=240	; [in]
 .param Relement={(Length/12)*675/(Diameter*Diameter)}	; [Ohms]
@@ -8,41 +10,45 @@
 .param Volume={3.1415*Diameter*Diameter*0.000001*0.25*Length}	; [in^3]
 .param SurfaceArea={3.1415*0.001*Diameter*Length*0.0254*0.0254}	; [m^2]
 .param Cnichrome={0.1251*450*Volume}	; [J/K]
-.param Rcnichrome={0.1/SurfaceArea}	; [K/W]
+.param Rnichrome={0.1/SurfaceArea}	; [K/W]
+;
+; Frame Parameters:
 .param chamberVolume=360
 .param Rinsulation=3.8
-.param hangLength=50mm
 .param frameWidth=4.76mm
 .param Rxframe=0.0181
 .param Cxframe=798.3k
-.param Rcframe=6.06
+.param RexteriorFrame=6.06
+
+.param hangLength=50mm
 
 Vroomtemp atm gnd DC 20
 
-*Ielement atm nichrome PULSE(0 {wattage} 1s 1ns 1ns 100s 100s)
+*Ielement atm elementSurface PULSE(0 {wattage} 1s 1ns 1ns 100s 100s)
 * (initial_value, pulsed_value, delay_time, rise_time, fall_time, pulse_width, period)
-Velement nichrome atm PULSE(0 800 1s 1ns 1ns 100s 100s)
+Velement elementSurface atm PULSE(0 800 1s 1ns 1ns 100s 100s)
 
-Celement nichrome atm {Cnichrome}
-RelementSurface nichrome bulkAir {Rcnichrome}
+Celement elementSurface atm {Cnichrome}
+RnichromeSuface elementSurface bulkAir {Rnichrome}
 
 Rinsulate bulkAir interiorFrame {Rinsulation}
 
-Uframe interiorFrame exteriorFrame gnd frameModel L={frameWidth}
+Ualuminumframe interiorFrame exteriorFrame gnd frameModel L={frameWidth}
 .MODEL frameModel URC RPERL={Rxframe} CPERL={Cxframe}
 
-Rframe exteriorFrame atm {Rcframe}
-XairCapacitance bulkAir atm varCap VOLUME={chamberVolume}
+Rframe exteriorFrame atm {RexteriorFrame}
+
+Xairheatcapacity bulkAir atm varCap VOLUME={chamberVolume}
 
 .subckt varCap n1 n2 VOLUME=360 ; inches squared
 B1 n1 int2 V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
 Vammeter int2 n2 0
-F1 gnd int B1 1
+F1 gnd int Vammeter 1
 C1 int gnd 1
 .ends varCap
 
 .control
 tran 10ms 100s; tstep, tstop
-plot v(nichrome) v(bulkAir) v(interiorFrame) v(exteriorFrame)
+plot v(elementSurface) v(bulkAir) ;v(interiorFrame) v(exteriorFrame)
 
 .end

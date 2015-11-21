@@ -817,6 +817,49 @@ Temp. [$^{o}C$]	&20	&93	&204	&315	\\
 
 \subsection{Transfer Model}
 
+\section{User Interface PCB Design}
+
+The user interface is designed to be assembled on a separate PCB
+from the main controller board. This separation allows the high power
+components to be mounted on the back of the oven---far away from the user.
+The front facing user interface PCB mounted near the door and has no
+voltages greater than 5V for safety. Everything on this front facing PCB
+is shown in blue in \emph{Easy--PCB} block diagram.
+
+\begin{center}
+	\includegraphics[width=\columnwidth]{Figures/control-system.pdf}
+	\captionof*{figure}{The \emph{Easy--PCB} Control System: not just a controller bolted onto a disjoint oven.}
+\end{center}
+
+The user interface board contains a 4--digit, 7--segment, common--cathode
+display and a matching common--cathode driver. The display driver
+is connected to the controller board via 4 wire serial peripheral interface (SPI).
+
+There are 6 active low
+pushbuttons on the front facing board and with 6 corresponding low pass filters
+on the controller board. The pushbutton circuit is shown in
+\hyperref[pushbutton-circuit]{figure \ref{pushbutton-circuit}}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/pushbutton-circuit.pdf}
+	\caption{Hardware Debounced Pushbuttons}
+	\label{pushbutton-circuit}
+\end{figure}
+
+Finally, there is a form A (normal open; active closed) kill switch
+that is compressed when the door is closed. The current through this
+switch directly drives the form A (normally open) safety relay on the controller board.
+The kill switch circuit is shown in
+\hyperref[killswitch-circuit]{figure \ref{killswitch-circuit}} below.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/killswitch-circuit.pdf}
+	\caption{Kill Switch Safety Circuit}
+	\label{killswitch-circuit}
+\end{figure}
+
 \section{Temperature Feedback Design}
 
 \begin{figure*}
