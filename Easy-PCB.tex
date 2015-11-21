@@ -821,10 +821,63 @@ Temp. [$^{o}C$]	&20	&93	&204	&315	\\
 
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/temperature-feedback-circuit.pdf}
-	\caption{Temperature Feedback Circuit}
-	\label{temperature-feedback-circuit}
+	\begin{circuitikz}[scale=.75]\draw
+		(3,0) node [circ] (kn) {} to [R, l=$R_{1}$] (6,0)
+		(3,.25) node [] {$K_{N}$}
+		(2.5,-1) node [circ] (kp) {$\,K_{P}$} to (2.5,-1.5) node [ground] {}
+		(6,0) to (6,1.5) to [R, l=$R_{2}$] (10,1.5) to (10,-.5)
+		(8,-.5) node [op amp] (opamp) {}
+		(6,0) node [circ] {} -- (opamp.-)
+		(opamp.out) to (11,-.5) node [ocirc] {~to ADC}
+		(opamp.+) -- (6,-1) to (6,-1.5) node [ground] {};
+		\draw (.5,.5) node [] {K--Thermocouple};
+		\draw (0,-.25) -- (.25,0) -- (.75,-.5) -- (1.25,0) -- (1.75,-.5) -- (2.5, -.5) -- (kp);
+		\draw (0,-.25) -- (.25,-.5) -- (.75, 0) -- (1.25,-.5) -- (1.75,-0) -- (kn);
+	\end{circuitikz}
+	\caption{Thermocouple Amplifier}
+	\label{thermocouple-amplifier}
 \end{figure*}
+
+The Seebeck voltage is the electromotive force that develops in a conductive loop
+made of two different metal alloys. It is described by
+\begin{equation}
+E_{S}=\int _{TR}^{T}\alpha_{A,B}dT,
+\end{equation}
+where $T$ and $T_{R}$ are the temperatures of the hot and cold junctions and
+$\alpha_{A,B}$ is the Seebeck coefficient between materials $A$ and $B$.
+
+A type--K thermocouple was selected because they are readily available and
+resist oxidation at temperatures up to $1260^{o}C$.
+From the `Manual on the use of Thermocouples in Temperature Measurement' \mbox{(STP 470A)}, the nominal
+Seebeck coefficients for type--K thermocouples is
+\begin{equation}
+\alpha_{KP,KN}=\left\{\begin{array}{c c}
+0^{o}C		&39.4\,\mu V/^{o}C	\\
+200^{o}C	&40.0\,\mu V/^{o}C	\\
+400^{o}C	&42.3\,\mu V/^{o}C	\\
+\end{array}\right..
+\end{equation}
+
+The positive wire $KP$ is one of the following alloys: Chromel, Tophel, T--1, or ThermoKanthal KP.
+The negative wire $KN$ is Alumel, Nial, T--2, or ThermoKanthal KN.
+
+The thermoelectric potential in a K loop is very small; 
+for a temperature difference of $T-T_{R}=500^{o}C$,
+the voltage developed is only on the order of $E_{S}=20\,mV$.
+Consequently, the signal needs to be amplified before it can be read by and ADC.
+The op amp circuit shown in
+\hyperref[thermocouple-amplifier]{figure \ref{thermocouple-amplifier}}
+can be used.
+
+Five volt $\mu$controllers usually have ADC ranges of 0--3.3 V.
+To scale $20\,mV$ to $3.3\,V$ and $0\,V$ to $0\,V$, the feedback resistors
+should be
+\begin{equation}
+\frac{V_{\textrm{ADC(max)}}}{V_{\textrm{K(max)}}}=\frac{R_{2}}{R_{1}}
+\end{equation}
+\begin{equation*}
+\frac{3.3\,mV}{20\,mV}=165
+\end{equation*}
 
 \subsection{Controller and Power Requirements}
 

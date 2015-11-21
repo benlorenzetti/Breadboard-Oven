@@ -35,8 +35,8 @@ Rframe exteriorFrame atm {Rcframe}
 XairCapacitance bulkAir atm varCap VOLUME={chamberVolume}
 
 .subckt varCap n1 n2 VOLUME=360 ; inches squared
-B1 n1 intermediate V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
-Vammeter intermediate n2 0
+B1 n1 int2 V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
+Vammeter int2 n2 0
 F1 gnd int B1 1
 C1 int gnd 1
 .ends varCap
