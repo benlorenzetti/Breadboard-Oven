@@ -1,7 +1,6 @@
 *** heat-model.cir ***
-; Nodes:
-; gnd, atm, bulkAir, interiorFrame, exteriorFrame, elementSurface,
-; ceramicSurface, bulkBolt, boltRadiators
+; Nodes:  gnd, atm, bulkAir, interiorFrame, exteriorFrame, elementSurface,
+; 	ceramicSurface, bulkBolt, boltRadiators
 ;
 ; Nichrome Wire Heating Element Parameters:
 .param Diameter=45	; [0.001 in]
@@ -35,26 +34,23 @@
 Vroomtemp atm gnd DC 20
 Ielement atm elementSurfacePrime PULSE(0 {wattage} 1s 1ns 1ns 100s 100s)
 Vflowmeter elementSurfacePrime elementSurface DC 0
-; (initial_value, pulsed_value, delay_time, rise_time, fall_time, pulse_width, period)
+; (init_value, pulse_value, delay_t, rise_t, fall_t, pulse_width, period)
 
 Cnichrome elementSurface atm {Celement}
 Rnichrome elementSurface bulkAir {Relement}
 Xairheatcapacity bulkAir atm varCap VOLUME={chamberVolume}
 Rinsulate bulkAir interiorFrame {Rinsulation}
-
 Ualuminumframe interiorFrame exteriorFrame gnd frameModel L={frameWidth}
-.MODEL frameModel URC RPERL={Rxframe} CPERL={Cxframe}
 Rframe exteriorFrame atm {RexteriorFrame}
-
 Rparasitics elementSurface ceramicSurface {Rparasitic}
 UceramicSpacers ceramicSurface bulkBolt gnd ceramicModel L={ceramicThickness}
-.MODEL ceramicModel URC RPERL={Rxc} CPERL={Cxc}
 CbulkBolt bulkBolt atm {Cbolt}
-
 Ubolt bulkBolt boltEnd gnd boltTmodel L={boltTLength}
-.MODEL boltTmodel URC RPERL={Rxb} CPERL={Cxc}
 Rboltsink boltEnd atm {Rsink}
 
+.MODEL frameModel URC RPERL={Rxframe} CPERL={Cxframe}
+.MODEL ceramicModel URC RPERL={Rxc} CPERL={Cxc}
+.MODEL boltTmodel URC RPERL={Rxb} CPERL={Cxc}
 .subckt varCap n1 n2 VOLUME=360 ; inches squared
 B1 n1 int2 V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
 Vammeter int2 n2 0
