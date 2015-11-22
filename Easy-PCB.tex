@@ -32,11 +32,11 @@
 		\hfill
 		\begin{tabular}[b]{@{}c@{}}
 				\fontsize{14}{20}\bfseries\selectfont \emph{Easy--PCB} Solder Reflow Oven\\
-				\fontsize{12}{18}\selectfont Ben Lorenzetti\\
+				\fontsize{12}{18}\selectfont Ben Lorenzetti \& Adam Meece\\
  		\end{tabular}%
     		\hfill
     		\makebox[0pt][r]{%
-      			\includegraphics[width=0.2\textwidth]{Figures/easy-pcb-oven.pdf}}%
+      			\includegraphics[width=0.2\textwidth]{Figures/aluminum-frame-concept.pdf}}%
  	}% end makebox
 }% end title
 
@@ -53,11 +53,11 @@
 \begin{flushleft}
 	\begin{itemize}
 		\fontsize{10}{12}\bfseries\selectfont
-		\item Insulated aluminum frame with XxYxZ interior chamber
-		\item XXX Watt heating element with solid state relay control
+		\item Insulated aluminum frame with 6"x6"x10" interior chamber
+		\item 400 Watt nichrome heating element with door killswitch
 		\item 120 VAC power supply with surge and short protection
-		\item Forced convection fan driven by bipolar stepper motor with speed control
-		\item Type X thermocouple for temperature feedback loop
+		\item Forced convection fan driven by bipolar stepper motor
+		\item Type K thermocouple for temperature feedback loop
 		\item PIC18F14K50 based control
 		\item Convenient \mbox{7--segment} display and pushbutton user interface
 	\end{itemize}
@@ -365,6 +365,7 @@ two cases in an oven:
 \end{enumerate}
 
 \subsection{Thermodynamic Design}
+\label{thermodynamic-design-section}
 
 Most microwaves draw between 600 and 1200 Watts of power.
 An IR toaster oven may draw 1500 Watts into its lamps.
@@ -469,6 +470,7 @@ Cast Iron			&25	&55.0	&0.46	&6800--7800	\\
 1.0 K--factor Insulation	&-	&0.1442	&-	&-	\\
 0.23 K--factor Insulation	&-	&0.0332	&-	&-	\\
 Nichrome NiCr C Alloy		&-	&0.450	&0.135	&8244	\\
+Steatite L5 Ceramic		&-	&2.9	&0.92	&2710	\\
 \hline\hline
 \end{tabular}
 \label{thermal-properties-table}
@@ -720,13 +722,13 @@ Equivalently,
 C_{c}(T)=\frac{\left(5.8143\left[\frac{J}{in^{3}}\right]\right)*V}{T+273.16^{o}C}.
 \end{equation*}
 
-\subsection{Component Selection \& SPICE Modeling}
-
+\subsubsection*{Variable Capacitor for Chamber Air}
 
 Unfortunately, SPICE does not have a primitive circuit element for
 a variable capacitor.
-In order to simulate the heat capacity of an ideal gas,
-we must build a subcircuit that behaves according to
+Before simulating and iterating the oven design, we must build a
+SPICE subcircuit to model heat capacity of ideal gasses.
+The subcircuit black box must have two terminals with I--V relation
 \begin{equation*}
 i_{c}=C(v_{c})\frac{dv_{c}}{dt},
 \label{capacitor-iv-relation}
@@ -736,9 +738,6 @@ or, alternatively,
 \int i_{c}dt=\int C(v_{c})dv_{c}.
 \label{capacitor-integrated-iv-relation}
 \end{equation}
-
-The interface of the SPICE circuit will be a dependent source
-where either $v_{c}$ is dependent on $i_{c}$ or vice versa.
 
 The left side of \hyperref[capacitor-integrated-iv-relation]
 {equation \ref{capacitor-integrated-iv-relation}} is an integrator,
@@ -814,7 +813,81 @@ Temp. [$^{o}C$]	&20	&93	&204	&315	\\
 \% $\rho$ Increase	&0	&1.7	&3.5	&5.2	\\
 \hline
 	\end{tabular}
+	\label{nichrome-properties-table}
 \end{table}
+
+\subsection{Design Iteration \& SPICE Modeling}
+
+Many designs with different shapes, sizes, metals, insulators,
+heating elements, and wattage levels were modeled in SPICE for their
+thermodynamic response to a unit step signal from the power relay.
+Parameters of interest were the heating rate of the air in the chamber
+and wattage consumed.
+
+The SPICE models were based on the equations from
+\hyperref[thermodynamic-design-section]{section \ref{thermodynamic-design-section}};
+material properties from tables \ref{thermal-properties-table}, \ref{typical-h-values-table},
+\ref{air-properties-table}, and \ref{nichrome-properties-table}; and
+geometry of the design.
+Unitwise, $1\,\textrm{Volt}=1^{o}C$, $1\,\textrm{Ampere}=1\,\textrm{Watt}$,
+\mbox{and $1\,\textrm{Coulomb}=1\,\textrm{Joule}$.}
+
+Eventually a design using 28 ft of 45 mil nichrome wire inside a 8"x8"x12"
+aluminum frame was selected.
+
+The shape of the aluminum frame is shown in
+\mbox{\hyperref[aluminum-frame-concept]{figure \ref{aluminum-frame-concept}}}.
+The inside of the frame is lined with 1" thick mineral wool insulation,
+leaving an inside chamber with dimensions 6"x6"x10".
+The fan is mounted in the back.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/aluminum-frame-concept.pdf}
+	\caption{Aluminum Frame Concept}
+	\label{aluminum-frame-concept}
+\end{figure}
+
+Inside the frame, the nichrome wire is mounted using high temperature
+ceramic capacitors for electrical insulation. Structurally, the nichrome
+element is tensioned by two size 10 steel bolts spanning the width of the
+chamber, as shown in
+\mbox{\hyperref[heating-element-concept]{figure ref{heating-element-concept}}}.
+Direct contact between the nichrome heating element and the chamber air
+is critical for fast heating rates.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/heating-element-concept.pdf}
+	\caption{Heating Element Concept}
+	\label{heating-element-concept}
+\end{figure}
+
+The thermodynamic model is shown in
+\hyperref[thermodynamic-spice-circuit]{figure \ref{thermodynamic-spice-circuit}}.
+
+DISCUSSION/MATH OF MODEL VALUES
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/thermodynamic-spice-circuit.pdf}
+	\caption{Thermodynamic SPICE Model Circuit Diagram}
+	\label{thermodynamic-spice-circuit}
+\end{figure*}
+
+The circuit netlist passed to SPICE is listed in
+\hyperref[heat-model-listing]{section \ref{heat-model-listing}}.
+The circuit was modeled for its transient reponse if the heating element
+were connected to 120 VAC power for 100 second.
+The results are shown in
+\hyperref[heat-model-results]{figure \ref{heat-model-results}}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Figures/heat-model-results.pdf}
+	\caption{Simulated Temperature Response to a Unit Step}
+	\label{heat-model-results}
+\end{figure}
 
 \subsection{Transfer Model}
 
@@ -848,7 +921,7 @@ on the controller board. The pushbutton circuit is shown in
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\columnwidth]{Figures/pushbutton-circuit.pdf}
+	\includegraphics[width=0.8\columnwidth]{Figures/pushbutton-circuit.pdf}
 	\caption{Hardware Debounced Pushbuttons}
 	\label{pushbutton-circuit}
 \end{figure}
@@ -871,7 +944,7 @@ I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\columnwidth]{Figures/killswitch-circuit.pdf}
+	\includegraphics[width=0.8\columnwidth]{Figures/killswitch-circuit.pdf}
 	\caption{Kill Switch Safety Circuit}
 	\label{killswitch-circuit}
 \end{figure}
@@ -966,5 +1039,14 @@ and standard copper thickless $1\,oz=1.4\,mil$, the minimum trace width
 is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
 \section{Controller Design}
+
+\appendix
+
+\section{SPICE Netlists}
+
+\subsection{Thermodynamic Model}
+\label{heat-model-listing}
+\lstinputlisting[basicstyle=\small, float=*]{NGSPICE/Thermo/heat-model.cir}
+
 
 \end{document}

@@ -1,0 +1,68 @@
+*** heat-model.cir ***
+; Nodes:
+; gnd, atm, bulkAir, interiorFrame, exteriorFrame, elementSurface,
+; ceramicSurface, bulkBolt, boltRadiators
+;
+; Nichrome Wire Heating Element Parameters:
+.param Diameter=45	; [0.001 in]
+.param Length=336	; [in]
+.param Relectric={225*Length/(Diameter*Diameter)}	; [Ohms]
+.param wattage={(120*120)/Relectric}			; [Joules]
+.param Volume={(1.287e-11)*Diameter*Diameter*Length}	; [m^3]
+.param SurfaceArea={(2.027e-6)*Diameter*Length}		; [m^2]
+.param Celement={(1.113e6)*Volume}	; [J/K]
+.param Relement={0.1/SurfaceArea}	; [K/W]
+;
+; Frame Parameters:
+.param chamberVolume=360
+.param Rinsulation=3.8
+.param frameWidth=4.76mm
+.param Rxframe=0.0181
+.param Cxframe=798.3k
+.param RexteriorFrame=6.06
+;
+; Ceramic Insulators and Bolt Mount Parameters:
+.param Rparasitic={0.1*Relement}
+.param ceramicThickness=2.35mm
+.param Rxc=153.6
+.param Cxc=5.598k
+.param Cbolt=28.4
+.param boltTlength=25.4mm
+.param Rxb=843.7
+.param Cxb=73.16
+.param Rsink={RexteriorFrame/100}
+
+Vroomtemp atm gnd DC 20
+Ielement atm elementSurfacePrime PULSE(0 {wattage} 1s 1ns 1ns 100s 100s)
+Vflowmeter elementSurfacePrime elementSurface DC 0
+; (initial_value, pulsed_value, delay_time, rise_time, fall_time, pulse_width, period)
+
+Cnichrome elementSurface atm {Celement}
+Rnichrome elementSurface bulkAir {Relement}
+Xairheatcapacity bulkAir atm varCap VOLUME={chamberVolume}
+Rinsulate bulkAir interiorFrame {Rinsulation}
+
+Ualuminumframe interiorFrame exteriorFrame gnd frameModel L={frameWidth}
+.MODEL frameModel URC RPERL={Rxframe} CPERL={Cxframe}
+Rframe exteriorFrame atm {RexteriorFrame}
+
+Rparasitics elementSurface ceramicSurface {Rparasitic}
+UceramicSpacers ceramicSurface bulkBolt gnd ceramicModel L={ceramicThickness}
+.MODEL ceramicModel URC RPERL={Rxc} CPERL={Cxc}
+CbulkBolt bulkBolt atm {Cbolt}
+
+Ubolt bulkBolt boltEnd gnd boltTmodel L={boltTLength}
+.MODEL boltTmodel URC RPERL={Rxb} CPERL={Cxc}
+Rboltsink boltEnd atm {Rsink}
+
+.subckt varCap n1 n2 VOLUME=360 ; inches squared
+B1 n1 int2 V=273.16*(exp((v(int))/(5.8413*{VOLUME}))-1)
+Vammeter int2 n2 0
+F1 gnd int Vammeter 1
+C1 int gnd 1
+.ends varCap
+
+.control
+tran 0.1s 100s; tstep, tstop
+plot v(elementSurface) v(bulkAir) i(Vflowmeter) v(exteriorFrame) v(boltEnd)
+
