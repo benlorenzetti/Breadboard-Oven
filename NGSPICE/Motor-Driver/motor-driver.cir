@@ -1,0 +1,38 @@
+*** motor-driver.cir ***
+
+Vcc cc gnd dc 12 ac 0
+Q1 cc ppb1 out1 npn1
+Q2 cc ppb2 out2 npn1
+Q3 gnd ppb1 out1 pnp1
+Q4 gnd ppb2 out2 pnp1
+D1 out1 cc d1
+D2 out2 cc d1
+D3 gnd out1 d1
+D4 gnd out2 d1
+Lwinding out1 split 51.7mH
+Rwinding split out2 52.4
+Rc1 cc ppb1 450
+Rc2 cc ppb2 450
+Vin1 in gnd DC 0V PULSE(0V 5V 0ms 1us 1us 10ms 20mS)
+R1 in b5 1000
+R2 b5 gnd 1000
+R3 b6 cc 4000
+R4 b6 gnd 800
+Q5 ppb1 b5 ifork npn1
+Q6 ppb2 b6 ifork npn1
+Von on gnd DC 0V PULSE(0V 5V 40ms 1us 1us 40ms 80ms)
+Q7 cc on e7 npn1
+Rref e7 imirror 146.5
+Q8 imirror imirror e8 npn1
+Q9 ifork imirror e9 npn1
+Re8 e8 gnd 10
+Re9 e9 gnd 10
+
+.model npn1 NPN (BF=100 CJC=3pf CJE=5pf IS=1E-16 VAF=100 NF=1)
+.model pnp1 PNP (BF=100 CJC=3pf CJE=5pf IS=1E-16 VAF=100 NF=1)
+.model d1 D (BV=50 IS=1E-13)
+
+.control
+tran 1E-5 8E-2
+plot v(in) v(b5) v(b6) v(out1) v(out2)
+plot ((v(split)-v(out2))/52.5) (-i(Vcc))

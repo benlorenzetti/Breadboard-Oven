@@ -1034,6 +1034,136 @@ R_{f2}=165*R_{f1}
 
 \section{Motor Driver Design}
 
+The combination of needing motors and relays and already being plugged in to a 
+120 VAC source led to the decision to create a 12 V power rail. The 12 V rail
+will only be used by components that are not particularly affected by a noisy
+signal, so this rail does not need active regulation.
+
+With a 12 V rail in mind, there are many more choices for motors to drive the fan.
+A bipolar stepper motor was chosen because of its open speed control in low torque applications.
+
+\begin{center}
+	\includegraphics[width=0.25\textwidth]{Figures/bipolar-motor.pdf}
+	\captionof{figure}{Bipolar Stepper Motor}
+\end{center}
+
+The 44M100D2B motor by Portescap rotates $3.6^{o}$ per change in polarity--i.e. 100 step increments,
+according to the polarities in
+\hyperref[44M100D2B-polarities]{table \ref{44M100D2B-polarities}}.
+
+\begin{table}
+\centering
+\caption{Step Polarites for 44M100D2B Motor}
+\begin{tabular}{c | c | c | c | c | c | c}
+\hline\hline
+CW	&Step	&Red	&Gry	&Yel	&Blk	&CCW	\\
+\hline\hline
+\verb1|1	&1	&+	&-	&+	&-	&\verb1^1	\\
+\verb1|1	&2	&+	&-	&-	&+	&\verb1|1	\\
+\verb1|1	&3	&-	&+	&-	&+	&\verb1|1	\\
+v	&4	&-	&+	&+	&-	&\verb1|1	\\
+\hline\hline
+\end{tabular}
+\label{44M100D2B-polarities}
+\end{table}
+
+\subsection{Push-Pull Driver}
+
+The driving circuit for the bipolar motor must be capable if pulling 
+each winding lead to either side of the supply.
+A good implementation is with push-pull BJTs because no power
+is lost across the collectors when the output voltage matches the input.
+The driver circuit in 
+\hyperref[motor-driver-circuit]{figure \ref{motor-driver-circuit}}
+has 4 power transistors, $Q_{1-4}$, arranged in push-pull configurations.
+
+A microcontroller can only output up to 5V, with limited current, so
+$Q_{5-9}$ are needed to help bias the push-pull transistors' inputs.
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=.65\textwidth]{Figures/motor-driver-circuit.pdf}
+	\caption{Push-Pull Driver Circuit for a Bipolar Motor}
+	\label{motor-driver-circuit}
+\end{figure*}
+
+It is bad news Bearcats if the wrong combinations of push-pull BJTs
+come on simultaneously.
+To protect from programmer error, $Q_{5}$ and $Q_{6}$ are arranged 
+as a differential amplifier such that opposite transistors are biased on together. 
+
+The differential amplifier is biased by a constant current source,
+made from $Q_{7-9}$.
+If the current source is turned off, the push-pull inputs on either 
+side of the winding will both rise to $V_{CC}$.
+Soon, the outputs will match and no current will flow through the winding,
+push-pull transistors, or the biasing transistors;
+i.e. the bipolar motor can be turned off to save power.
+
+To design the driver, the electric properties of the motor windings
+and symmetric NPN/PNP BJTs are needed.
+The resistor networks should were chosen such that switching $V_{in}$ from
+0 to 5 V causes $Q_{5}$ and $Q_{6}$ to alternate cutoff and saturation.
+
+\subsection{Driver SPICE Simulation}
+
+The circuit in
+\hyperref[motor-driver-circuit]{figure \ref{motor-driver-circuit}}
+was simulated in SPICE with the net listed in
+\hyperref[motor-driver-listing]{section \ref{motor-driver-listing}}.
+Five volt step functions were applied to both $V_{on}$ and $V_{in}$ to simulate the microcontroller.
+The results in 
+\hyperref[motor-driver-voltage-simulation]{figure \ref{motor-driver-voltage-simulation}}
+and
+\hyperref[motor-driver-current-simulation]{figure \ref{motor-driver-current-simulation}}
+show how motor loads the power supply.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.75\columnwidth]{Figures/motor-driver-voltage-simulation.pdf}
+	\caption{Simulated Voltages across One Driver}
+	\label{motor-driver-voltage-simulation}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\columnwidth]{Figures/motor-driver-current-simulation.pdf}
+	\caption{Simulated Current through One Driver}
+	\label{motor-driver-current-simulation}
+\end{figure}
+
+\subsection{Bill of Materials}
+
+\begin{table}
+\centering
+\caption{44M100D2B Electrical Specifications}
+\begin{tabular}{c | c }
+\hline\hline
+&Bipolar	\\
+\hline\hline
+DC Operating Voltage	&$12V$	\\
+Resistance per Winding	&$70\Omega$	\\
+Inductance per Winding	&$35mH$	\\
+Rated Current per Phase	&$\nicefrac{12V}{70\Omega}=0.17A$	\\
+\hline\hline
+\end{tabular}
+\end{table}
+
+\begin{table*}[ht]
+\centering
+\caption{Thur-hole BJTs and Diodes}
+\begin{tabular}{c c c c c c}
+\hline\hline
+Label	&Man. Part No.	&Manufacturer	&Doping	&$h_{fe}$	&$I_{C(max)}$ or $I_{o}$	\\
+\hline\hline
+$Q_{1}$, $Q_{2}$	&\href{datasheets/MPSA06(TO-92).pdf}{MPSA06-AP}	&Micro Commercial Co	&NPN	&100	&500mA	\\
+$Q_{3}$, $Q_{4}$	&\href{datasheets/MPSA55-MPSA56(TO-92).pdf}{MPSA56-AP}	&Micro Commercial Co	&PNP	&100	&500mA	\\
+$Q_{5-9}$	&\href{datasheets/2N3904(TO-92).pdf}{2N3904-AP}	&Micro Commercial Co	&NPN	&100	&200mA	\\
+$D_{1-4}$	&\href{datasheets/1N4001-1N4007(DO-41).pdf}{1N4007-TP}	&Micro Commercial Co	&Standard PN	&N/A	&1A	\\
+\hline\hline
+\end{tabular}
+\end{table*}
+
 \section{Power Circuit Design}
 
 \subsection{PCB Trace Width}
@@ -1065,5 +1195,8 @@ is $0.278\,in$ and minimum clearance is $0.057\,in$.
 \label{heat-model-listing}
 \lstinputlisting[basicstyle=\small, float=*]{NGSPICE/Thermo/heat-model.cir}
 
+\subsection{Bipolar Motor Driver}
+\label{motor-driver-listing}
+\lstinputlisting[basicstyle=\small, float=*]{NGSPICE/Motor-Driver/motor-driver.cir}
 
 \end{document}
