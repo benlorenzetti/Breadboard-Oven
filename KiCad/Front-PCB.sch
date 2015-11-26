@@ -705,4 +705,60 @@ Wire Wire Line
 Wire Wire Line
 	1250 7750 1100 7750
 Connection ~ 1250 7500
+Text Label 7150 700  0    60   ~ 0
+dig1
+Text Label 7150 800  0    60   ~ 0
+dig2
+Text Label 7150 900  0    60   ~ 0
+dig5
+Text Label 7150 1000 0    60   ~ 0
+dig3
+Text Label 7150 1100 0    60   ~ 0
+dig4
+Text Label 8950 2250 0    60   ~ 0
+iset
+Text Label 9100 2800 0    60   ~ 0
+MOSI
+Text Label 9050 2900 0    60   ~ 0
+MISO
+Text Label 8950 3000 0    60   ~ 0
+spiclk
+Text Label 8900 3100 0    60   ~ 0
+slave
+Text Label 2700 3700 0    60   ~ 0
+sega
+Text Label 2700 3800 0    60   ~ 0
+segb
+Text Label 2700 3900 0    60   ~ 0
+segc
+Text Label 2700 4050 0    60   ~ 0
+segd
+Text Label 2700 4150 0    60   ~ 0
+sege
+Text Label 2700 4300 0    60   ~ 0
+segf
+Text Label 2700 4400 0    60   ~ 0
+segg
+Text Label 2700 4500 0    60   ~ 0
+segdp
+Text Label 900  5450 0    60   ~ 0
+left
+Text Label 2000 5450 0    60   ~ 0
+up
+Text Label 1900 6150 0    60   ~ 0
+down
+Text Label 3100 5700 0    60   ~ 0
+right
+Text Label 3850 5450 0    60   ~ 0
+start
+Text Label 5450 5600 0    60   ~ 0
+stop
+Text Label 5250 5400 0    60   ~ 0
+green
+Text Label 6550 5600 0    60   ~ 0
+red
+Text Label 3200 6450 0    60   ~ 0
+door1
+Text Label 4650 7400 0    60   ~ 0
+door2
 $EndSCHEMATC
