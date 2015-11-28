@@ -1034,6 +1034,8 @@ R_{f2}=165*R_{f1}
 
 \section{Motor Driver Design}
 
+\subsection{Bipolar Motor Selection}
+
 The combination of needing motors and relays and already being plugged in to a 
 120 VAC source led to the decision to create a 12 V power rail. The 12 V rail
 will only be used by components that are not particularly affected by a noisy
@@ -1054,31 +1056,54 @@ according to the polarities in
 \begin{table}
 \centering
 \caption{Step Polarites for 44M100D2B Motor}
-\begin{tabular}{c | c | c | c | c | c | c}
+\begin{tabular}{c | c | c | c | c | c}
 \hline\hline
-CW	&Step	&Red	&Gry	&Yel	&Blk	&CCW	\\
+CW	&Step	&Red (1)&Gry (2)&Yel (3)&Blk (4)	\\
 \hline\hline
-\verb1|1	&1	&+	&-	&+	&-	&\verb1^1	\\
-\verb1|1	&2	&+	&-	&-	&+	&\verb1|1	\\
-\verb1|1	&3	&-	&+	&-	&+	&\verb1|1	\\
-v	&4	&-	&+	&+	&-	&\verb1|1	\\
+\verb1|1	&1	&+	&-	&+	&-	\\
+\verb1|1	&2	&+	&-	&-	&+	\\
+\verb1|1	&3	&-	&+	&-	&+	\\
+v		&4	&-	&+	&+	&-	\\
 \hline\hline
 \end{tabular}
 \label{44M100D2B-polarities}
 \end{table}
 
-\subsection{Push-Pull Driver}
+\begin{table}
+\centering
+\caption{44M100D2B Electrical Specifications}
+\begin{tabular}{c | c }
+\hline\hline
+&Bipolar	\\
+\hline\hline
+DC Operating Voltage	&$12V$	\\
+Resistance per Winding	&$70\Omega$	\\
+Inductance per Winding	&$35mH$	\\
+Rated Current per Phase	&$\nicefrac{12V}{70\Omega}=0.17A$	\\
+\hline\hline
+\end{tabular}
+\end{table}
+
+\subsection{Push-Pull Driver Design}
 
 The driving circuit for the bipolar motor must be capable if pulling 
-each winding lead to either side of the supply.
-A good implementation is with push-pull BJTs because no power
-is lost across the collectors when the output voltage matches the input.
-The driver circuit in 
-\hyperref[motor-driver-circuit]{figure \ref{motor-driver-circuit}}
-has 4 power transistors, $Q_{1-4}$, arranged in push-pull configurations.
+each winding lead to either side of the supply; the classic
+`H--Bridge' circuit.
+A good implementation is with push-pull BJTs because they can be
+cutoff to save power when they are not needed.
+\hyperref[motor-driver-circuit]{Figure \ref{motor-driver-circuit}}
+shows the push--pull H--bridge for one of the two motor windings.
+An identical copy is needed for the other motor winding.
 
 A microcontroller can only output up to 5V, with limited current, so
-$Q_{5-9}$ are needed to help bias the push-pull transistors' inputs.
+$Q_{5-9}$ are needed to help bias the push--pull transistor inputs.
+From \hyperref[44M100D2B-polarities]{table \ref{44M100D2B-polarities}},
+if the motor is on then each side of the winding needs opposite
+polarity. Because of this,
+$Q_{5}$ and $Q_{6}$ are arranged as a differential amplifier
+to reduce the number of PWM pins needed from the microcontroller.
+The constant current source from $Q_{7-9}$ allows the circuit to be turned
+off to conserve power.
 
 \begin{figure*}
 	\centering
@@ -1086,19 +1111,6 @@ $Q_{5-9}$ are needed to help bias the push-pull transistors' inputs.
 	\caption{Push-Pull Driver Circuit for a Bipolar Motor}
 	\label{motor-driver-circuit}
 \end{figure*}
-
-It is bad news Bearcats if the wrong combinations of push-pull BJTs
-come on simultaneously.
-To protect from programmer error, $Q_{5}$ and $Q_{6}$ are arranged 
-as a differential amplifier such that opposite transistors are biased on together. 
-
-The differential amplifier is biased by a constant current source,
-made from $Q_{7-9}$.
-If the current source is turned off, the push-pull inputs on either 
-side of the winding will both rise to $V_{CC}$.
-Soon, the outputs will match and no current will flow through the winding,
-push-pull transistors, or the biasing transistors;
-i.e. the bipolar motor can be turned off to save power.
 
 To design the driver, the electric properties of the motor windings
 and symmetric NPN/PNP BJTs are needed.
@@ -1133,21 +1145,6 @@ show how motor loads the power supply.
 \end{figure}
 
 \subsection{Bill of Materials}
-
-\begin{table}
-\centering
-\caption{44M100D2B Electrical Specifications}
-\begin{tabular}{c | c }
-\hline\hline
-&Bipolar	\\
-\hline\hline
-DC Operating Voltage	&$12V$	\\
-Resistance per Winding	&$70\Omega$	\\
-Inductance per Winding	&$35mH$	\\
-Rated Current per Phase	&$\nicefrac{12V}{70\Omega}=0.17A$	\\
-\hline\hline
-\end{tabular}
-\end{table}
 
 \begin{table*}[ht]
 \centering
