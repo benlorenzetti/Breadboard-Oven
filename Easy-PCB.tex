@@ -928,31 +928,27 @@ on the controller board. The pushbutton circuit is shown in
 	\label{pushbutton-circuit}
 \end{figure}
 
-Finally, there is a safety switch that is compressed when the door is closed.
-
-\subsection{Door E--Stop}
-
-The safety switch on the front--facing PCB board is form A: normally open and active closed.
-The current through this door switch directly drives a form A (normally open)
-safety relay on the controller board. The safety switch circuit is shown in
-\hyperref[safety-switch-circuit]{figure \ref{safety-switch-circuit}}.
-The flyback diode should be rated for currents greater than the saturation
-current of the relay coil.
-\begin{equation}
-I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
-\end{equation}
-
-For the Omron Safety G4W relays, the saturation current is
-\begin{equation}
-I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
-\end{equation}
+An audio alarm is provided by a 2 kHz piezoelectric element and a small BJT
+amplifier circuit, like shown in
+\hyperref[piezo-circuit]{figure \ref{piezo-circuit}}.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\columnwidth]{Figures/safety-switch-circuit.pdf}
-	\caption{Safety Switch Safety Circuit}
-	\label{safety-switch-circuit}
+	\includegraphics[width=0.7\columnwidth]{Figures/piezo-circuit.pdf}
+	\caption{Piezo Alarm}
+	\label{piezo-circuit}
 \end{figure}
+
+Finally, there is a safety switch that is compressed when the door is closed.
+
+\subsection{Stop Button and Door Contact}
+
+The door contact safety switch on the front--facing PCB board is form A: normally open and active closed.
+The safety switch and the stop button are connected to interupt pins on the microcontroller.
+When activated, the interupt routine will turn off power to the nichrome heating element
+and the program will quit the current run routine.
+
+INTERUPT ROUTINE ON STATE DIAGRAM?
 
 \subsection{Bill of Materials}
 
@@ -1181,6 +1177,18 @@ The power circuit is shown in
 	\caption{Power Circuit Design}
 	\label{power-circuit}
 \end{figure*}
+
+For safety, the relay is form A so it is normally off.
+The amplifier BJT and flyback diode should be rated for currents greater than the saturation
+current of the relay coil.
+\begin{equation}
+I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
+\end{equation}
+
+For the Omron Safety G4W relays, the saturation current is
+\begin{equation}
+I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
+\end{equation}
 
 \subsection{PCB Trace Width}
 
