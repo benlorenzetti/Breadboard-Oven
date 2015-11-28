@@ -3,8 +3,8 @@
 ; 	ceramicSurface, bulkBolt, boltRadiators
 ;
 ; Nichrome Wire Heating Element Parameters:
-.param Diameter=45	; [0.001 in]
-.param Length=336	; [in]
+.param Diameter=36	; [0.001 in]
+.param Length=270	; [in]
 .param Relectric={225*Length/(Diameter*Diameter)}	; [Ohms]
 .param wattage={(120*120)/Relectric}			; [Joules]
 .param Volume={(1.287e-11)*Diameter*Diameter*Length}	; [m^3]

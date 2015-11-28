@@ -52,5 +52,7 @@ F1 "Temperature-Feedback.sch" 60
 F2 "Tk1" O L 4950 5400 60 
 F3 "Tk2" O L 4950 5600 60 
 F4 "Tref" O L 4950 5800 60 
+F5 "Kp1" I R 6300 5400 60 
+F6 "Kp2" I R 6300 5600 60 
 $EndSheet
 $EndSCHEMATC

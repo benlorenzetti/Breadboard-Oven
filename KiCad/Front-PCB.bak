@@ -757,4 +757,8 @@ Text Label 5250 5400 0    60   ~ 0
 green
 Text Label 6550 5600 0    60   ~ 0
 red
+Text Label 3200 6450 0    60   ~ 0
+door1
+Text Label 4650 7400 0    60   ~ 0
+door2
 $EndSCHEMATC

@@ -368,6 +368,161 @@ F 3 "" H 9550 3800 60  0000 C CNN
 	1    9550 3800
 	1    0    0    -1  
 $EndComp
+$Comp
+L PWR_FLAG #FLG013
+U 1 1 56550A82
+P 9100 6250
+F 0 "#FLG013" H 9100 6345 50  0001 C CNN
+F 1 "PWR_FLAG" H 9100 6430 50  0000 C CNN
+F 2 "" H 9100 6250 60  0000 C CNN
+F 3 "" H 9100 6250 60  0000 C CNN
+	1    9100 6250
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR014
+U 1 1 565547A0
+P 8400 4400
+F 0 "#PWR014" H 8400 4150 50  0001 C CNN
+F 1 "GND" H 8400 4250 50  0000 C CNN
+F 2 "" H 8400 4400 60  0000 C CNN
+F 3 "" H 8400 4400 60  0000 C CNN
+	1    8400 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L LTC-4727JR U2
+U 1 1 56556130
+P 3600 1850
+F 0 "U2" H 4000 550 100 0000 L CNN
+F 1 "LTC-4727JR" H 3050 550 100 0000 C CNN
+F 2 "Easy-PCB-footprints:LTC-4727JR" H 3600 1850 60  0001 C CNN
+F 3 "" H 3600 1850 60  0000 C CNN
+	1    3600 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L MAX7219 U1
+U 1 1 565566A6
+P 8300 2950
+F 0 "U1" H 8250 3350 60  0000 L CNN
+F 1 "MAX7219" H 8450 3450 60  0000 C CNN
+F 2 "Easy-PCB-footprints:4824-3000-CP" H 8300 2950 60  0001 C CNN
+F 3 "" H 8300 2950 60  0000 C CNN
+	1    8300 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P1
+U 1 1 5655FFD6
+P 900 7000
+F 0 "P1" H 900 7100 50  0000 C CNN
+F 1 "Mounting Vias" V 1100 6650 50  0000 C CNN
+F 2 "Easy-PCB-footprints:10-32" H 900 7000 60  0001 C CNN
+F 3 "" H 900 7000 60  0000 C CNN
+	1    900  7000
+	-1   0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P2
+U 1 1 565600BD
+P 900 7250
+F 0 "P2" H 900 7350 50  0000 C CNN
+F 1 "CONN_01X01" V 1000 7250 50  0001 C CNN
+F 2 "Easy-PCB-footprints:10-32" H 900 7250 60  0001 C CNN
+F 3 "" H 900 7250 60  0000 C CNN
+	1    900  7250
+	-1   0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P3
+U 1 1 5656018C
+P 900 7500
+F 0 "P3" H 900 7600 50  0000 C CNN
+F 1 "CONN_01X01" V 1000 7500 50  0001 C CNN
+F 2 "Easy-PCB-footprints:10-32" H 900 7500 60  0001 C CNN
+F 3 "" H 900 7500 60  0000 C CNN
+	1    900  7500
+	-1   0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P4
+U 1 1 565601F5
+P 900 7750
+F 0 "P4" H 900 7850 50  0000 C CNN
+F 1 "CONN_01X01" V 1000 7750 50  0001 C CNN
+F 2 "Easy-PCB-footprints:10-32" H 900 7750 60  0001 C CNN
+F 3 "" H 900 7750 60  0000 C CNN
+	1    900  7750
+	-1   0    0    -1  
+$EndComp
+$Comp
+L GND #PWR015
+U 1 1 56560FC4
+P 1400 7350
+F 0 "#PWR015" H 1400 7100 50  0001 C CNN
+F 1 "GND" H 1400 7200 50  0000 C CNN
+F 2 "" H 1400 7350 60  0000 C CNN
+F 3 "" H 1400 7350 60  0000 C CNN
+	1    1400 7350
+	1    0    0    -1  
+$EndComp
+Text Label 7150 700  0    60   ~ 0
+dig1
+Text Label 7150 800  0    60   ~ 0
+dig2
+Text Label 7150 900  0    60   ~ 0
+dig5
+Text Label 7150 1000 0    60   ~ 0
+dig3
+Text Label 7150 1100 0    60   ~ 0
+dig4
+Text Label 8950 2250 0    60   ~ 0
+iset
+Text Label 9100 2800 0    60   ~ 0
+MOSI
+Text Label 9050 2900 0    60   ~ 0
+MISO
+Text Label 8950 3000 0    60   ~ 0
+spiclk
+Text Label 8900 3100 0    60   ~ 0
+slave
+Text Label 2700 3700 0    60   ~ 0
+sega
+Text Label 2700 3800 0    60   ~ 0
+segb
+Text Label 2700 3900 0    60   ~ 0
+segc
+Text Label 2700 4050 0    60   ~ 0
+segd
+Text Label 2700 4150 0    60   ~ 0
+sege
+Text Label 2700 4300 0    60   ~ 0
+segf
+Text Label 2700 4400 0    60   ~ 0
+segg
+Text Label 2700 4500 0    60   ~ 0
+segdp
+Text Label 900  5450 0    60   ~ 0
+left
+Text Label 2000 5450 0    60   ~ 0
+up
+Text Label 1900 6150 0    60   ~ 0
+down
+Text Label 3100 5700 0    60   ~ 0
+right
+Text Label 3850 5450 0    60   ~ 0
+start
+Text Label 5450 5600 0    60   ~ 0
+stop
+Text Label 5250 5400 0    60   ~ 0
+green
+Text Label 6550 5600 0    60   ~ 0
+red
+Text Label 3200 6450 0    60   ~ 0
+door1
+Text Label 4650 7400 0    60   ~ 0
+door2
 Wire Wire Line
 	7700 2100 7700 700 
 Wire Wire Line
@@ -403,7 +558,11 @@ Wire Wire Line
 Wire Wire Line
 	8300 1500 8300 1700
 Wire Wire Line
-	9550 4050 9550 4400
+	9550 4050 9550 4200
+Wire Wire Line
+	9550 4200 9550 4300
+Wire Wire Line
+	9550 4300 9550 4400
 Wire Wire Line
 	9550 4300 9700 4300
 Wire Wire Line
@@ -422,7 +581,13 @@ Wire Wire Line
 Wire Wire Line
 	9300 2800 9300 4500
 Wire Wire Line
-	9400 5900 9400 6350
+	9400 5900 9400 6000
+Wire Wire Line
+	9400 6000 9400 6100
+Wire Wire Line
+	9400 6100 9400 6250
+Wire Wire Line
+	9400 6250 9400 6350
 Wire Wire Line
 	9150 1500 9150 1650
 Wire Wire Line
@@ -520,7 +685,9 @@ Wire Wire Line
 Wire Wire Line
 	5150 6300 5150 6200
 Wire Wire Line
-	5150 6200 5300 6200
+	5150 6200 5200 6200
+Wire Wire Line
+	5200 6200 5300 6200
 Connection ~ 5200 6200
 Wire Wire Line
 	5200 5900 5200 5800
@@ -559,17 +726,6 @@ Wire Wire Line
 Connection ~ 9550 4200
 Wire Wire Line
 	9550 3800 9550 4200
-$Comp
-L PWR_FLAG #FLG013
-U 1 1 56550A82
-P 9100 6250
-F 0 "#FLG013" H 9100 6345 50  0001 C CNN
-F 1 "PWR_FLAG" H 9100 6430 50  0000 C CNN
-F 2 "" H 9100 6250 60  0000 C CNN
-F 3 "" H 9100 6250 60  0000 C CNN
-	1    9100 6250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	9400 6250 9100 6250
 Connection ~ 9400 6250
@@ -593,17 +749,6 @@ Wire Wire Line
 	7600 6550 7600 5800
 Wire Wire Line
 	7600 5800 9700 5800
-$Comp
-L GND #PWR014
-U 1 1 565547A0
-P 8400 4400
-F 0 "#PWR014" H 8400 4150 50  0001 C CNN
-F 1 "GND" H 8400 4250 50  0000 C CNN
-F 2 "" H 8400 4400 60  0000 C CNN
-F 3 "" H 8400 4400 60  0000 C CNN
-	1    8400 4400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	8350 4300 8400 4300
 Wire Wire Line
@@ -614,151 +759,24 @@ Wire Wire Line
 	1000 4050 1000 3650
 Wire Wire Line
 	1150 4150 1150 3650
-$Comp
-L LTC-4727JR U2
-U 1 1 56556130
-P 3600 1850
-F 0 "U2" H 4000 550 100 0000 L CNN
-F 1 "LTC-4727JR" H 3050 550 100 0000 C CNN
-F 2 "Easy-PCB-footprints:LTC-4727JR" H 3600 1850 60  0001 C CNN
-F 3 "" H 3600 1850 60  0000 C CNN
-	1    3600 1850
-	1    0    0    -1  
-$EndComp
-$Comp
-L MAX7219 U1
-U 1 1 565566A6
-P 8300 2950
-F 0 "U1" H 8250 3350 60  0000 L CNN
-F 1 "MAX7219" H 8450 3450 60  0000 C CNN
-F 2 "Easy-PCB-footprints:4824-3000-CP" H 8300 2950 60  0001 C CNN
-F 3 "" H 8300 2950 60  0000 C CNN
-	1    8300 2950
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P1
-U 1 1 5655FFD6
-P 900 7000
-F 0 "P1" H 900 7100 50  0000 C CNN
-F 1 "Mounting Vias" V 1100 6650 50  0000 C CNN
-F 2 "Easy-PCB-footprints:10-32" H 900 7000 60  0001 C CNN
-F 3 "" H 900 7000 60  0000 C CNN
-	1    900  7000
-	-1   0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P2
-U 1 1 565600BD
-P 900 7250
-F 0 "P2" H 900 7350 50  0000 C CNN
-F 1 "CONN_01X01" V 1000 7250 50  0001 C CNN
-F 2 "Easy-PCB-footprints:10-32" H 900 7250 60  0001 C CNN
-F 3 "" H 900 7250 60  0000 C CNN
-	1    900  7250
-	-1   0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P3
-U 1 1 5656018C
-P 900 7500
-F 0 "P3" H 900 7600 50  0000 C CNN
-F 1 "CONN_01X01" V 1000 7500 50  0001 C CNN
-F 2 "Easy-PCB-footprints:10-32" H 900 7500 60  0001 C CNN
-F 3 "" H 900 7500 60  0000 C CNN
-	1    900  7500
-	-1   0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P4
-U 1 1 565601F5
-P 900 7750
-F 0 "P4" H 900 7850 50  0000 C CNN
-F 1 "CONN_01X01" V 1000 7750 50  0001 C CNN
-F 2 "Easy-PCB-footprints:10-32" H 900 7750 60  0001 C CNN
-F 3 "" H 900 7750 60  0000 C CNN
-	1    900  7750
-	-1   0    0    -1  
-$EndComp
-$Comp
-L GND #PWR015
-U 1 1 56560FC4
-P 1400 7350
-F 0 "#PWR015" H 1400 7100 50  0001 C CNN
-F 1 "GND" H 1400 7200 50  0000 C CNN
-F 2 "" H 1400 7350 60  0000 C CNN
-F 3 "" H 1400 7350 60  0000 C CNN
-	1    1400 7350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	1400 7350 1400 7250
 Wire Wire Line
-	1400 7250 1100 7250
+	1400 7250 1250 7250
+Wire Wire Line
+	1250 7250 1100 7250
 Wire Wire Line
 	1100 7000 1250 7000
 Wire Wire Line
-	1250 7000 1250 7750
+	1250 7000 1250 7250
+Wire Wire Line
+	1250 7250 1250 7500
+Wire Wire Line
+	1250 7500 1250 7750
 Connection ~ 1250 7250
 Wire Wire Line
 	1250 7500 1100 7500
 Wire Wire Line
 	1250 7750 1100 7750
 Connection ~ 1250 7500
-Text Label 7150 700  0    60   ~ 0
-dig1
-Text Label 7150 800  0    60   ~ 0
-dig2
-Text Label 7150 900  0    60   ~ 0
-dig5
-Text Label 7150 1000 0    60   ~ 0
-dig3
-Text Label 7150 1100 0    60   ~ 0
-dig4
-Text Label 8950 2250 0    60   ~ 0
-iset
-Text Label 9100 2800 0    60   ~ 0
-MOSI
-Text Label 9050 2900 0    60   ~ 0
-MISO
-Text Label 8950 3000 0    60   ~ 0
-spiclk
-Text Label 8900 3100 0    60   ~ 0
-slave
-Text Label 2700 3700 0    60   ~ 0
-sega
-Text Label 2700 3800 0    60   ~ 0
-segb
-Text Label 2700 3900 0    60   ~ 0
-segc
-Text Label 2700 4050 0    60   ~ 0
-segd
-Text Label 2700 4150 0    60   ~ 0
-sege
-Text Label 2700 4300 0    60   ~ 0
-segf
-Text Label 2700 4400 0    60   ~ 0
-segg
-Text Label 2700 4500 0    60   ~ 0
-segdp
-Text Label 900  5450 0    60   ~ 0
-left
-Text Label 2000 5450 0    60   ~ 0
-up
-Text Label 1900 6150 0    60   ~ 0
-down
-Text Label 3100 5700 0    60   ~ 0
-right
-Text Label 3850 5450 0    60   ~ 0
-start
-Text Label 5450 5600 0    60   ~ 0
-stop
-Text Label 5250 5400 0    60   ~ 0
-green
-Text Label 6550 5600 0    60   ~ 0
-red
-Text Label 3200 6450 0    60   ~ 0
-door1
-Text Label 4650 7400 0    60   ~ 0
-door2
 $EndSCHEMATC
