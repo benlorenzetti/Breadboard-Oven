@@ -1168,8 +1168,34 @@ $D_{1-4}$	&\href{datasheets/1N4001-1N4007(DO-41).pdf}{1N4007-TP}	&Micro Commerci
 
 \section{Power Circuit Design}
 
-The power circuit is shown in
-\hyperref[power-circuit]{figure \ref{power-circuit}}.
+\subsection{Safety \& Supply Requirements}
+
+The power circuit is responsible for switching on and off 120 VAC power
+to the nichrome heating element; for converting 120 VAC to 12 and 5 volt
+supplies; and for protecting against faults and surges for safety.
+Current requirements for the most power hungry components are summarized in
+\hyperref[current-requirements-table]{table \ref{current-requirements-table}}.
+
+\begin{table}
+	\centering
+	\small
+	\caption{Current Requirements}
+	\begin{tabular}{c c c}
+		\hline\hline
+		Component					&Voltage	&Current	\\
+		\hline
+		270 ft, 0.036" $\emptyset$ nichrome wire	&120 VAC	&2.5 A	\\
+		bipolar motor driver		&12 VDC		&400 mA	\\
+		SPST form A Relay				&12 VDC		&67 mA	\\
+		LED display driver				&5 VDC		&200 mA	\\
+		Op Amp quiescent current			&5 VDC		&25 $\mu$A	\\
+		PIC16F833 supply current			&5 VDC		&1 mA	\\
+		\hline\hline
+	\end{tabular}
+	\label{current-requirements-table}
+\end{table}
+
+\subsection{Power Circuit Topology}
 
 \begin{figure*}
 	\centering
@@ -1178,7 +1204,29 @@ The power circuit is shown in
 	\label{power-circuit}
 \end{figure*}
 
-For safety, the relay is form A so it is normally off.
+The nichrome wire is exposed to improve thermal conductivity with the air.
+Unfortunately it is also exposed electrically, with 120 VAC coursing through
+it when on. If a fault occured at the half way point, as much as 6 Amps could
+pass through the metal or human that touched the wire.
+
+To protect against electric faults, the power circuit will include fuses
+on both live and neutral power lines and a ground fault circuit interuptor
+wall adapter must be used. The power circuit will include a power
+switch close to the outlet and the relay actuating the nichrome wire will
+be form A so that by default it is open.
+
+A center tapped transformer will be used to produce the 12 V and 5 V supplies.
+The transformer and the form A relay with resistive load are
+inherently strong against electric surges.
+
+Downline of the transformer are two bridge rectifiers, two ripple capacitors,
+and for the 5 V supply a voltage regulator.
+
+The power circuit with all these features is shown in
+\hyperref[power-circuit]{figure \ref{power-circuit}}.
+
+\subsection{Power Circuit Design}
+
 The amplifier BJT and flyback diode should be rated for currents greater than the saturation
 current of the relay coil.
 \begin{equation}
@@ -1192,8 +1240,12 @@ I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
 
 \subsection{PCB Trace Width}
 
-The minimum width and clearance for high current, high voltage traces
-on a PCB can be calculated using
+To reduce the chances of faults due to wiring/assembly, most of the power
+circuit will be mounted on a PCB with an IEC inlet port and screw terminal
+blocks for wires that must head into the oven frame.
+
+For the PCB, the minimum width and clearance for high current,
+high voltage traces can be calculated using
 \begin{equation}
 I=0.048[A]*\left(\frac{\Delta T}{[^{o}C]}\right)^{0.44}*\left(\frac{A}{[mil^{2}]}\right)^{0.725}
 \label{trace-width-eq}
