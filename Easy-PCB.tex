@@ -59,7 +59,7 @@
 		\item 120 VAC power supply with surge and short protection
 		\item Forced convection fan driven by bipolar stepper motor
 		\item Type K thermocouple for temperature feedback loop
-		\item PIC18F14K50 based control
+		\item PIC16F883 based control
 		\item Convenient \mbox{7--segment} display and pushbutton user interface
 	\end{itemize}
 \end{flushleft}
@@ -95,7 +95,7 @@ temperature controller for a typical solder reflow profile.
 
 \emph{Easy--PCB} allows hobbyists to produce reflow temperature profiles with
 a high degree of accuracy and repeatability.
-Alongside freely available PCB design programs like Eagle and low-quantity
+Alongside freely available PCB design programs like KiCad and low-quantity
 fabrication services like OSH Park, \emph{Easy--PCB} makes
 modern integrated components, such as digital CMOS cameras,
 within the design space of hobbyists and hackers.
@@ -205,7 +205,7 @@ keys to edit each set point value.
 
 A total of 128 set points can be entered. The first set point is always $(0s,\,20^{o}C)$,
 and the process will terminate at the next occurance of $20^{o}$ in a point.
-Temperatures can take any value in the range \mbox{$20^{o}C<T<275^{o}C=527^{o}F$.}
+Temperatures can take any value in the range \mbox{$20^{o}C<T<275^{o}C$.}
 The time between two points must be between \mbox{$0<=t<255$ seconds.}
 
 \section{Plant Design}
@@ -835,7 +835,7 @@ geometry of the design.
 Unitwise, $1\,\textrm{Volt}=1^{o}C$, $1\,\textrm{Ampere}=1\,\textrm{Watt}$,
 \mbox{and $1\,\textrm{Coulomb}=1\,\textrm{Joule}$.}
 
-Eventually a design using 28 ft of 45 mil nichrome wire inside a 8"x8"x12"
+Eventually a design using 135 ft of 51 mil nichrome wire inside a 8"x8"x12"
 aluminum frame was selected.
 
 The shape of the aluminum frame is shown in
@@ -851,7 +851,7 @@ A fan is mounted in the back.
 	\label{aluminum-frame-concept}
 \end{figure}
 
-Inside the frame, the nichrome wire is mounted using high temperature
+Inside the frame, nichrome wire is mounted using high temperature
 ceramic spacers for electrical insulation. Structurally, the nichrome
 element is tensioned by two size 10 steel bolts spanning the width of the
 chamber, as shown in
@@ -899,7 +899,7 @@ The results are shown in
 	\label{heat-model-results}
 \end{figure}
 
-\subsection{Plant Bill of Materials}
+\subsection{Bill of Materials}
 
 \section{User Interface Design}
 
@@ -974,9 +974,9 @@ so old school thermocouples must be used.
 
 \subsection{Thermocouple \& Amplifier}
 
-\begin{figure*}
-	\centering
-	\begin{circuitikz}[scale=.75]\draw
+\begin{figure}
+	\begin{adjustbox}{max width=0.9\columnwidth}
+	\begin{circuitikz}[scale=1]\draw
 		(3,0) node [circ] (kn) {} to [R, l=$R_{f1}$] (6,0)
 		(3,.25) node [] {$K_{N}$}
 		(2.5,-1) node [circ] (kp) {$\,K_{P}$} to (2.5,-1.5) node [ground] {}
@@ -989,9 +989,10 @@ so old school thermocouples must be used.
 		\draw (0,-.25) -- (.25,0) -- (.75,-.5) -- (1.25,0) -- (1.75,-.5) -- (2.5, -.5) -- (kp);
 		\draw (0,-.25) -- (.25,-.5) -- (.75, 0) -- (1.25,-.5) -- (1.75,-0) -- (kn);
 	\end{circuitikz}
+	\end{adjustbox}
 	\caption{Thermocouple Amplifier}
 	\label{thermocouple-amplifier}
-\end{figure*}
+\end{figure}
 
 The Seebeck voltage is the electromotive force that develops due to temperature
 gradient in a conductive loop made of two different metals. It is described by
@@ -1161,21 +1162,6 @@ show how motor loads the power supply.
 
 \subsection{Bill of Materials}
 
-\begin{table*}[ht]
-\centering
-\caption{Thur-hole BJTs and Diodes}
-\begin{tabular}{c c c c c c}
-\hline\hline
-Label	&Man. Part No.	&Manufacturer	&Doping	&$h_{fe}$	&$I_{C(max)}$ or $I_{o}$	\\
-\hline\hline
-$Q_{1}$, $Q_{2}$	&\href{datasheets/MPSA06(TO-92).pdf}{MPSA06-AP}	&Micro Commercial Co	&NPN	&100	&500mA	\\
-$Q_{3}$, $Q_{4}$	&\href{datasheets/MPSA55-MPSA56(TO-92).pdf}{MPSA56-AP}	&Micro Commercial Co	&PNP	&100	&500mA	\\
-$Q_{5-9}$	&\href{datasheets/2N3904(TO-92).pdf}{2N3904-AP}	&Micro Commercial Co	&NPN	&100	&200mA	\\
-$D_{1-4}$	&\href{datasheets/1N4001-1N4007(DO-41).pdf}{1N4007-TP}	&Micro Commercial Co	&Standard PN	&N/A	&1A	\\
-\hline\hline
-\end{tabular}
-\end{table*}
-
 \section{Power Circuit Design}
 
 \subsection{Safety \& Supply Requirements}
@@ -1194,7 +1180,7 @@ Current requirements for the most power hungry components are summarized in
 		\hline\hline
 		Component					&Voltage	&Current	\\
 		\hline
-		270 ft, 0.036" $\emptyset$ nichrome wire	&120 VAC	&2.5 A	\\
+		135 ft, 0.051" $\emptyset$ nichrome wire	&120 VAC	&3.43 A	\\
 		bipolar motor driver		&12 VDC		&400 mA	\\
 		SPST form A Relay				&12 VDC		&67 mA	\\
 		LED display driver				&5 VDC		&200 mA	\\
@@ -1216,13 +1202,13 @@ Current requirements for the most power hungry components are summarized in
 
 The nichrome wire is exposed to improve thermal conductivity with the air.
 Unfortunately it is also exposed electrically, with 120 VAC coursing through
-it when on. If a fault occured at the half way point, as much as 6 Amps could
+it when on. If a fault occured at the half way point, as much as 7 Amps could
 pass through the metal or human that touched the wire.
 
 To protect against electric faults, the power circuit will include fuses
 on both live and neutral power lines and a ground fault circuit interuptor
 wall adapter must be used. The power circuit will include a power
-switch close to the outlet and the relay actuating the nichrome wire will
+switch close to the inlet and the relay actuating the nichrome wire will
 be form A so that by default it is open.
 
 A center tapped transformer will be used to produce the 12 V and 5 V supplies.
@@ -1243,7 +1229,7 @@ current of the relay coil.
 I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
 \end{equation}
 
-For the Omron Safety G4W relays, the saturation current is
+For the Omron Safety G4W relays, that saturation current is
 \begin{equation}
 I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
 \end{equation}
@@ -1271,6 +1257,8 @@ For $10\,A$, $120\,VAC$ power with a maximum temperature rise of $10^{o}C$
 and standard copper thickless $1\,oz=1.4\,mil$, the minimum trace width
 is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
+\subsection{Bill of Materials}
+
 \section{Controller Design}
 
 A flowchart of the microcontroller program is shown in
@@ -1283,16 +1271,17 @@ A flowchart of the microcontroller program is shown in
 	\label{program-flowchart}
 \end{figure}
 
+\onecolumn
 \appendix
 
 \section{SPICE Netlists}
 
 \subsection{Thermodynamic Model}
 \label{heat-model-listing}
-\lstinputlisting[basicstyle=\small, float=*]{NGSPICE/Thermo/heat-model.cir}
+\lstinputlisting[basicstyle=\small]{NGSPICE/Thermo/heat-model.cir}
 
 \subsection{Bipolar Motor Driver}
 \label{motor-driver-listing}
-\lstinputlisting[basicstyle=\small, float=*]{NGSPICE/Motor-Driver/motor-driver.cir}
+\lstinputlisting[basicstyle=\small]{NGSPICE/Motor-Driver/motor-driver.cir}
 
 \end{document}
