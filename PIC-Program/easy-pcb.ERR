@@ -1,0 +1,6 @@
+Message[302] /home/ben/Documents/Breadboarding-Oven/PIC-Program/easy-pcb.asm 62 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/ben/Documents/Breadboarding-Oven/PIC-Program/easy-pcb.asm 68 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/ben/Documents/Breadboarding-Oven/PIC-Program/easy-pcb.asm 81 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/ben/Documents/Breadboarding-Oven/PIC-Program/easy-pcb.asm 83 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/ben/Documents/Breadboarding-Oven/PIC-Program/easy-pcb.asm 91 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/ben/Documents/Breadboarding-Oven/PIC-Program/easy-pcb.asm 92 : Register in operand not in bank 0.  Ensure that bank bits are correct.

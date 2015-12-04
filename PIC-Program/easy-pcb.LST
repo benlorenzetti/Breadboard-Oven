@@ -1,0 +1,764 @@
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ; Blink LED Connected to PORTD 0
+                      00002 
+                      00003 #include <p16f883.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Aug 13 2015
+                      00005 ;  MPASM PIC16F883 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2015 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00781         LIST
+2007   20C4           00004         __CONFIG        _CONFIG1, _LVP_OFF & _FCMEN_OFF & _IESO_OFF & _BOR_OFF & _CPD_OFF & _CP_OFF & _M
+                            CLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
+2008   3EFF           00005         __CONFIG        _CONFIG2, _WRT_OFF & _BOR21V
+                      00006 
+                      00007 #define SS      RA5
+                      00008 #define SCK     RC3
+                      00009 #define SDI     RC4
+                      00010 #define SDO     RC5
+                      00011 #define LED_INTENSITY   .8      ; Light Intensity from 0-15
+                      00012 
+                      00013 ; Digits 0-9 have lookup indices 0-9, but :, deg, and C
+                      00014 #define SEMICOLON       .10     
+                      00015 #define DEGREE_SIGN     .11
+                      00016 #define CELSIUS .12
+                      00017 
+                      00018 
+                      00019         cblock  0x20
+  00000020            00020                 SPI_tx1 ; first byte to be transfered out by SPI
+  00000021            00021                 SPI_tx2 ; second byte to be transfered out by SPI
+                      00022         endc
+                      00023 
+0000                  00024 Reset_Vector
+0000                  00025         ORG     0x0
+0000   282B           00026         GOTO Initialize_IO
+                      00027 
+0001                  00028 Interupt_Vector
+0004                  00029         ORG     0x4
+                      00030 
+                      00031 ;________________________Function Definitions_______________________;
+                      00032 
+                      00033 ; W LED_lookup_table (W); // warning: undefined behavior if W > 12
+0004                  00034 LED_Lookup_Table
+                      00035         ; MUST MAKE SURE THE TABLE WILL NOT CROSS A 256 BYTE BOUNDARY!
+0004   0782           00036         ADDWF   PCL, F
+0005   347E           00037         RETLW   B'01111110'     ; 0
+0006   3430           00038         RETLW   B'00110000'     ; 1
+0007   346D           00039         RETLW   B'01101101'     ; 2
+0008   3479           00040         RETLW   B'01111001'     ; 3
+0009   3433           00041         RETLW   B'00110011'     ; 4
+000A   345B           00042         RETLW   B'01011011'     ; 5
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000B   345F           00043         RETLW   B'01011111'     ; 6
+000C   3470           00044         RETLW   B'01110000'     ; 7
+000D   347F           00045         RETLW   B'01111111'     ; 8
+000E   3473           00046         RETLW   B'01110011'     ; 9
+000F   3460           00047         RETLW   B'01100000'     ; semicolon for clock
+0010   3410           00048         RETLW   B'00010000'     ; degree sign for temperature
+0011   344E           00049         RETLW   B'01001110'     ; C for celsius
+                      00050 
+                      00051 ; void spi_2byte_transfer (SPI_tx1, SPI_tx2);
+0012                  00052 SPI_2byte_Transfer
+0012   1283 1303      00053         BANKSEL 0x0
+0014   1285           00054         BCF     PORTA, SS       ; pull MAX7219 slave select active low
+0015   0103           00055         CLRW                    
+0016   3C01           00056         SUBLW   0x1             ; add a delay
+0017   1D03           00057         BTFSS   STATUS, Z
+0018   2816           00058         GOTO    $-2
+0019   0820           00059         MOVF    SPI_tx1, W      ; get the first byte to transmit
+001A   0093           00060         MOVWF   SSPBUF          ; start transmission
+001B   1683 1303      00061         BANKSEL SSPSTAT
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001D   1C14           00062         BTFSS   SSPSTAT, BF     ; has data been received (transmit complete?)
+001E   281D           00063         GOTO    $-1
+001F   1283 1303      00064         BANKSEL 0x0             ; location of SPI_tx1, 2, and SSPBUF
+0021   0821           00065         MOVF    SPI_tx2, W
+0022   0093           00066         MOVWF   SSPBUF          ; start transmission
+0023   1683 1303      00067         BANKSEL SSPSTAT
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0025   1C14           00068         BTFSS   SSPSTAT, BF     ; wait for transmission completion
+0026   2825           00069         GOTO    $-1
+0027   1283 1303      00070         BANKSEL 0x0             ; return to bank 0...
+0029   1685           00071         BSF     PORTA, SS       ; rising edge on MAX7219 LOAD/SS line
+002A   0008           00072         RETURN
+                      00073 
+002B                  00074 Initialize_IO
+002B   1283 1303      00075         BANKSEL PORTA
+002D   0185           00076         CLRF    PORTA
+002E   0186           00077         CLRF    PORTB
+002F   0187           00078         CLRF    PORTC
+0030   1683 1303      00079         BANKSEL TRISA
+0032   3000           00080         MOVLW   (0<<SS)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0033   0085           00081         MOVWF   TRISA
+0034   3010           00082         MOVLW   (0<<SCK) | (1<<SDI) | (0<<SDO)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0035   0087           00083         MOVWF   TRISC
+                      00084 
+0036                  00085 Initialize_SPI
+0036   1283 1303      00086         BANKSEL SSPCON
+0038   3001           00087         MOVLW   B'0001' ; set SSPM<3:0> for Master Mode, Fosc/64
+0039   0094           00088         MOVWF   SSPCON
+003A   1614           00089         BSF     SSPCON, CKP     ; set clock idle state to high level
+003B   1683 1303      00090         BANKSEL SSPSTAT
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003D   1794           00091         BSF     SSPSTAT, SMP    ; input data sampled at end of data output time
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003E   1714           00092         BSF     SSPSTAT, CKE    ; data transmitted on rising edge of clock (rising edge for MAX7219)
+003F   1283 1303      00093         BANKSEL SSPCON
+0041   1694           00094         BSF     SSPCON, SSPEN   ; enable Serial Peripheral Interface
+                      00095 
+0042                  00096 Initialize_MAX7219
+                      00097         ; Leave Sleep Mode
+0042   300C           00098         MOVLW   0xC             ; MAX7219 shutdown address
+0043   00A0           00099         MOVWF   SPI_tx1
+0044   3001           00100         MOVLW   0x1             ; xxxx xxx1 for normal operation (xxxx xxx0 for shutdown)
+0045   00A1           00101         MOVWF   SPI_tx2
+0046   2012           00102         CALL    SPI_2byte_Transfer
+                      00103         ; Set scan limit to digits 0-4
+0047   300B           00104         MOVLW   0xB             ; MAX7219 scan limit address
+0048   00A0           00105         MOVWF   SPI_tx1
+0049   3004           00106         MOVLW   0x4             ; xxxx x100 for digits 0-4
+004A   00A1           00107         MOVWF   SPI_tx2
+004B   2012           00108         CALL    SPI_2byte_Transfer
+                      00109         ; Set BCD Mode to No Decoding
+004C   3009           00110         MOVLW   0x9             ; MAX7219 shutdown address
+004D   00A0           00111         MOVWF   SPI_tx1
+004E   3000           00112         MOVLW   0x0             ; 0000 0000 for no decoding on any digit
+004F   00A1           00113         MOVWF   SPI_tx2
+0050   2012           00114         CALL    SPI_2byte_Transfer
+                      00115         ; Set Intensity Level
+0051   300A           00116         MOVLW   0xA             ; MAX7219 intensity address
+0052   00A0           00117         MOVWF   SPI_tx1
+0053   3008           00118         MOVLW   LED_INTENSITY   ; the desired duty cycle, 0-15 are valid values
+0054   00A1           00119         MOVWF   SPI_tx2
+0055   2012           00120         CALL    SPI_2byte_Transfer
+                      00121 
+0056   3001           00122         MOVLW   0x1             ; MAX7219 intensity address
+0057   00A0           00123         MOVWF   SPI_tx1
+0058   300B           00124         MOVLW   DEGREE_SIGN
+0059   2004           00125         CALL    LED_Lookup_Table
+005A   00A1           00126         MOVWF   SPI_tx2
+005B   2012           00127         CALL    SPI_2byte_Transfer
+                      00128 
+                      00129 
+                      00130         END
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ABDEN                             00000000
+ABDOVF                            00000007
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+ANS0                              00000000
+ANS1                              00000001
+ANS10                             00000002
+ANS11                             00000003
+ANS12                             00000004
+ANS13                             00000005
+ANS2                              00000002
+ANS3                              00000003
+ANS4                              00000004
+ANS8                              00000000
+ANS9                              00000001
+ANSEL                             00000188
+ANSELH                            00000189
+BAUDCTL                           00000187
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRG0                              00000000
+BRG1                              00000001
+BRG10                             00000002
+BRG11                             00000003
+BRG12                             00000004
+BRG13                             00000005
+BRG14                             00000006
+BRG15                             00000007
+BRG16                             00000003
+BRG2                              00000002
+BRG3                              00000003
+BRG4                              00000004
+BRG5                              00000005
+BRG6                              00000006
+BRG7                              00000007
+BRG8                              00000000
+BRG9                              00000001
+BRGH                              00000002
+C                                 00000000
+C1CH0                             00000000
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+C1CH1                             00000001
+C1IE                              00000005
+C1IF                              00000005
+C1OE                              00000005
+C1ON                              00000007
+C1OUT                             00000006
+C1POL                             00000004
+C1R                               00000002
+C1RSEL                            00000005
+C1SEN                             00000005
+C2CH0                             00000000
+C2CH1                             00000001
+C2IE                              00000006
+C2IF                              00000006
+C2OE                              00000005
+C2ON                              00000007
+C2OUT                             00000006
+C2POL                             00000004
+C2R                               00000002
+C2REN                             00000004
+C2RSEL                            00000004
+C2SYNC                            00000000
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CELSIUS                           .12
+CHS0                              00000002
+CHS1                              00000003
+CHS2                              00000004
+CHS3                              00000005
+CKE                               00000006
+CKP                               00000004
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM1CON0                           00000107
+CM2CON0                           00000108
+CM2CON1                           00000109
+CREN                              00000004
+CSRC                              00000007
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DEGREE_SIGN                       .11
+D_A                               00000005
+D_NOT_A                           00000005
+ECCPAS                            0000009C
+ECCPAS0                           00000004
+ECCPAS1                           00000005
+ECCPAS2                           00000006
+ECCPASE                           00000007
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDAT                             0000010C
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+FVREN                             00000000
+GCEN                              00000007
+GIE                               00000007
+GO                                00000001
+GO_DONE                           00000001
+GO_NOT_DONE                       00000001
+HTS                               00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IOCB                              00000096
+IOCB0                             00000000
+IOCB1                             00000001
+IOCB2                             00000002
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IOCB3                             00000003
+IOCB4                             00000004
+IOCB5                             00000005
+IOCB6                             00000006
+IOCB7                             00000007
+IRCF0                             00000004
+IRCF1                             00000005
+IRCF2                             00000006
+IRP                               00000007
+Initialize_IO                     0000002B
+Initialize_MAX7219                00000042
+Initialize_SPI                    00000036
+Interupt_Vector                   00000001
+LED_INTENSITY                     .8
+LED_Lookup_Table                  00000004
+LTS                               00000001
+MC1OUT                            00000007
+MC2OUT                            00000006
+MSK                               00000093
+MSK0                              00000000
+MSK1                              00000001
+MSK2                              00000002
+MSK3                              00000003
+MSK4                              00000004
+MSK5                              00000005
+MSK6                              00000006
+MSK7                              00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000001
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OERR                              00000001
+OPTION_REG                        00000081
+OSCCON                            0000008F
+OSCTUNE                           00000090
+OSFIE                             00000007
+OSFIF                             00000007
+OSTS                              00000003
+P                                 00000004
+P1M0                              00000006
+P1M1                              00000007
+PCL                               00000002
+PCLATH                            0000000A
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PCON                              0000008E
+PDC0                              00000000
+PDC1                              00000001
+PDC2                              00000002
+PDC3                              00000003
+PDC4                              00000004
+PDC5                              00000005
+PDC6                              00000006
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTE                             00000009
+PR2                               00000092
+PRSEN                             00000007
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSSAC0                            00000002
+PSSAC1                            00000003
+PSSBD0                            00000000
+PSSBD1                            00000001
+PSTRCON                           0000009D
+PULSR                             00000002
+PULSS                             00000003
+PWM1CON                           0000009B
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RA7                               00000007
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIDL                             00000006
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RE3                               00000003
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+Reset_Vector                      00000000
+S                                 00000003
+SBOREN                            00000004
+SCK                               RC3
+SCKP                              00000004
+SCS                               00000000
+SDI                               RC4
+SDO                               RC5
+SEMICOLON                         .10
+SEN                               00000000
+SENDB                             00000003
+SMP                               00000007
+SPBRG                             00000099
+SPBRGH                            0000009A
+SPEN                              00000007
+SPI_2byte_Transfer                00000012
+SPI_tx1                           00000020
+SPI_tx2                           00000021
+SR0                               00000006
+SR1                               00000007
+SRCON                             00000185
+SREN                              00000005
+SS                                RA5
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPMSK                            00000093
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+STRA                              00000000
+STRB                              00000001
+STRC                              00000002
+STRD                              00000003
+STRSYNC                           00000004
+SWDTEN                            00000000
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1GINV                            00000007
+T1GIV                             00000007
+T1GSS                             00000001
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1GE                            00000006
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISA6                            00000006
+TRISA7                            00000007
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISE                             00000089
+TRISE3                            00000003
+TRMT                              00000001
+TUN0                              00000000
+TUN1                              00000001
+TUN2                              00000002
+TUN3                              00000003
+TUN4                              00000004
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+ULPWUE                            00000005
+ULPWUIE                           00000002
+ULPWUIF                           00000002
+VCFG0                             00000004
+VCFG1                             00000005
+VR0                               00000000
+VR1                               00000001
+VR2                               00000002
+VR3                               00000003
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+VRCON                             00000097
+VREN                              00000007
+VROE                              00000006
+VRR                               00000005
+VRSS                              00000004
+W                                 00000000
+WCOL                              00000007
+WDTCON                            00000105
+WDTPS0                            00000001
+WDTPS1                            00000002
+WDTPS2                            00000003
+WDTPS3                            00000004
+WPUB                              00000095
+WPUB0                             00000000
+WPUB1                             00000001
+WPUB2                             00000002
+WPUB3                             00000003
+WPUB4                             00000004
+WPUB5                             00000005
+WPUB6                             00000006
+WPUB7                             00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+WUE                               00000001
+Z                                 00000002
+_BOR21V                           00003EFF
+_BOR40V                           00003FFF
+_BOR4V_BOR21V                     00003EFF
+_BOR4V_BOR40V                     00003FFF
+_BOREN_NSLEEP                     00003EFF
+_BOREN_OFF                        00003CFF
+_BOREN_ON                         00003FFF
+_BOREN_SBODEN                     00003DFF
+_BOR_NSLEEP                       00003EFF
+_BOR_OFF                          00003CFF
+_BOR_ON                           00003FFF
+_BOR_SBODEN                       00003DFF
+_CONFIG1                          00002007
+_CONFIG2                          00002008
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003F7F
+_CP_OFF                           00003FFF
+_CP_ON                            00003FBF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         00001FFF
+_DEVID1                           00002006
+_EC_OSC                           00003FFB
+_EXTRC                            00003FFF
+_EXTRCIO                          00003FFE
+_EXTRC_OSC_CLKOUT                 00003FFF
+_EXTRC_OSC_NOCLKOUT               00003FFE
+_FCMEN_OFF                        000037FF
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_FCMEN_ON                         00003FFF
+_FOSC_EC                          00003FFB
+_FOSC_EXTRC_CLKOUT                00003FFF
+_FOSC_EXTRC_NOCLKOUT              00003FFE
+_FOSC_HS                          00003FFA
+_FOSC_INTRC_CLKOUT                00003FFD
+_FOSC_INTRC_NOCLKOUT              00003FFC
+_FOSC_LP                          00003FF8
+_FOSC_XT                          00003FF9
+_HS_OSC                           00003FFA
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_IESO_OFF                         00003BFF
+_IESO_ON                          00003FFF
+_INTOSC                           00003FFD
+_INTOSCIO                         00003FFC
+_INTRC_OSC_CLKOUT                 00003FFD
+_INTRC_OSC_NOCLKOUT               00003FFC
+_LP_OSC                           00003FF8
+_LVP_OFF                          00002FFF
+_LVP_ON                           00003FFF
+_MCLRE_OFF                        00003FDF
+_MCLRE_ON                         00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FEF
+_WDTE_OFF                         00003FF7
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FF7
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FF9
+__16F883                          00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXX---- ---------------- ----------------
+2000 : -------XX------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    89
+Program Memory Words Free:  4007
+
+
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 14
+
+
+
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     6 reported,     0 suppressed
+
+

@@ -1,0 +1,2 @@
+1. Fuseholders are incomplete with out corresponding fuseholder cap: Littelfuse Part # 83700000005
+2. Should add resistors/diodes for sensing the AC phase? Can relay be turned on that fast?
