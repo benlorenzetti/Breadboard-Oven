@@ -1,12 +1,10 @@
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  1
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ; Blink LED Connected to PORTD 0
-                      00002 
-                      00003 #include <p16f883.inc>
+                      00001 #include <p16f883.inc>
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -17,153 +15,278 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 ;==========================================================================
                       00009 
                       00781         LIST
-2007   20C4           00004         __CONFIG        _CONFIG1, _LVP_OFF & _FCMEN_OFF & _IESO_OFF & _BOR_OFF & _CPD_OFF & _CP_OFF & _M
+2007   20C4           00002         __CONFIG        _CONFIG1, _LVP_OFF & _FCMEN_OFF & _IESO_OFF & _BOR_OFF & _CPD_OFF & _CP_OFF & _M
                             CLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
-2008   3EFF           00005         __CONFIG        _CONFIG2, _WRT_OFF & _BOR21V
-                      00006 
-                      00007 #define SS      RA5
-                      00008 #define SCK     RC3
-                      00009 #define SDI     RC4
-                      00010 #define SDO     RC5
-                      00011 #define LED_INTENSITY   .8      ; Light Intensity from 0-15
-                      00012 
-                      00013 ; Digits 0-9 have lookup indices 0-9, but :, deg, and C
-                      00014 #define SEMICOLON       .10     
-                      00015 #define DEGREE_SIGN     .11
-                      00016 #define CELSIUS .12
+2008   3EFF           00003         __CONFIG        _CONFIG2, _WRT_OFF & _BOR21V
+                      00004 
+                      00005 #define DEBUG_LED       RC6
+                      00006 #define SS      RA5
+                      00007 #define SCK     RC3
+                      00008 #define SDI     RC4
+                      00009 #define SDO     RC5
+                      00010 #define LED_INTENSITY   .8      ; Light Intensity from 0-15
+                      00011 
+                      00012 ; Digits 0-9 have lookup indices 0-9, but :, deg, and C
+                      00013 #define SEMICOLON       .10     
+                      00014 #define DEGREE_SIGN     .11
+                      00015 #define CELSIUS .12
+                      00016 #define ALL_OFF .13
                       00017 
-                      00018 
-                      00019         cblock  0x20
-  00000020            00020                 SPI_tx1 ; first byte to be transfered out by SPI
-  00000021            00021                 SPI_tx2 ; second byte to be transfered out by SPI
-                      00022         endc
-                      00023 
-0000                  00024 Reset_Vector
-0000                  00025         ORG     0x0
-0000   282B           00026         GOTO Initialize_IO
-                      00027 
-0001                  00028 Interupt_Vector
-0004                  00029         ORG     0x4
-                      00030 
-                      00031 ;________________________Function Definitions_______________________;
-                      00032 
-                      00033 ; W LED_lookup_table (W); // warning: undefined behavior if W > 12
-0004                  00034 LED_Lookup_Table
-                      00035         ; MUST MAKE SURE THE TABLE WILL NOT CROSS A 256 BYTE BOUNDARY!
-0004   0782           00036         ADDWF   PCL, F
-0005   347E           00037         RETLW   B'01111110'     ; 0
-0006   3430           00038         RETLW   B'00110000'     ; 1
-0007   346D           00039         RETLW   B'01101101'     ; 2
-0008   3479           00040         RETLW   B'01111001'     ; 3
-0009   3433           00041         RETLW   B'00110011'     ; 4
-000A   345B           00042         RETLW   B'01011011'     ; 5
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  2
+                      00018         cblock  0x20
+  00000020            00019                 t0
+  00000021            00020                 T0
+  00000022            00021                 t1
+  00000023            00022                 T1
+  00000024            00023                 t2
+  00000025            00024                 T2
+  00000026            00025                 t3
+  00000027            00026                 T3
+  00000028            00027                 t4
+  00000029            00028                 T4
+  0000002A            00029                 t5
+  0000002B            00030                 T5
+  0000002C            00031                 t6
+  0000002D            00032                 T6
+  0000002E            00033                 t7
+  0000002F            00034                 T7
+  00000030            00035                 time_L
+  00000031            00036                 Temp
+  00000032            00037                 datapoint
+  00000033            00038                 LastTime
+  00000034            00039                 SPI_tx1 ; first byte to be transfered out by SPI
+  00000035            00040                 SPI_tx2 ; second byte to be transfered out by SPI
+  00000036            00041                 dividend        ; used for division for LED display
+  00000037            00042                 tens_Dig        ; "                               "
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000B   345F           00043         RETLW   B'01011111'     ; 6
-000C   3470           00044         RETLW   B'01110000'     ; 7
-000D   347F           00045         RETLW   B'01111111'     ; 8
-000E   3473           00046         RETLW   B'01110011'     ; 9
-000F   3460           00047         RETLW   B'01100000'     ; semicolon for clock
-0010   3410           00048         RETLW   B'00010000'     ; degree sign for temperature
-0011   344E           00049         RETLW   B'01001110'     ; C for celsius
-                      00050 
-                      00051 ; void spi_2byte_transfer (SPI_tx1, SPI_tx2);
-0012                  00052 SPI_2byte_Transfer
-0012   1283 1303      00053         BANKSEL 0x0
-0014   1285           00054         BCF     PORTA, SS       ; pull MAX7219 slave select active low
-0015   0103           00055         CLRW                    
-0016   3C01           00056         SUBLW   0x1             ; add a delay
-0017   1D03           00057         BTFSS   STATUS, Z
-0018   2816           00058         GOTO    $-2
-0019   0820           00059         MOVF    SPI_tx1, W      ; get the first byte to transmit
-001A   0093           00060         MOVWF   SSPBUF          ; start transmission
-001B   1683 1303      00061         BANKSEL SSPSTAT
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-001D   1C14           00062         BTFSS   SSPSTAT, BF     ; has data been received (transmit complete?)
-001E   281D           00063         GOTO    $-1
-001F   1283 1303      00064         BANKSEL 0x0             ; location of SPI_tx1, 2, and SSPBUF
-0021   0821           00065         MOVF    SPI_tx2, W
-0022   0093           00066         MOVWF   SSPBUF          ; start transmission
-0023   1683 1303      00067         BANKSEL SSPSTAT
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0025   1C14           00068         BTFSS   SSPSTAT, BF     ; wait for transmission completion
-0026   2825           00069         GOTO    $-1
-0027   1283 1303      00070         BANKSEL 0x0             ; return to bank 0...
-0029   1685           00071         BSF     PORTA, SS       ; rising edge on MAX7219 LOAD/SS line
-002A   0008           00072         RETURN
+  00000038            00043                 hundreds_Dig    ; "                               "
+                      00044         endc
+                      00045    
+0000                  00046 Reset_Vector
+0000                  00047         ORG     0x0
+0000   287E           00048         GOTO Initialize_RAM_Data
+                      00049 
+0001                  00050 Interupt_Vector
+0004                  00051         ORG     0x4
+                      00052 
+                      00053 ;________________________Function Definitions_______________________;
+                      00054 
+                      00055 ; W LED_lookup_table (W); // warning: undefined behavior if W > 13
+0004                  00056 LED_Lookup_Table
+                      00057         ; MUST MAKE SURE THE TABLE WILL NOT CROSS A 256 BYTE BOUNDARY!
+0004   0782           00058         ADDWF   PCL, F
+0005   347E           00059         RETLW   B'01111110'     ; 0
+0006   3430           00060         RETLW   B'00110000'     ; 1
+0007   346D           00061         RETLW   B'01101101'     ; 2
+0008   3479           00062         RETLW   B'01111001'     ; 3
+0009   3433           00063         RETLW   B'00110011'     ; 4
+000A   345B           00064         RETLW   B'01011011'     ; 5
+000B   345F           00065         RETLW   B'01011111'     ; 6
+000C   3470           00066         RETLW   B'01110000'     ; 7
+000D   347F           00067         RETLW   B'01111111'     ; 8
+000E   3473           00068         RETLW   B'01110011'     ; 9
+000F   3460           00069         RETLW   B'01100000'     ; semicolon for clock
+0010   3410           00070         RETLW   B'00010000'     ; degree sign for temperature
+0011   344E           00071         RETLW   B'01001110'     ; C for celsius
+0012   3400           00072         RETLW   B'00000000'     ; All off
                       00073 
-002B                  00074 Initialize_IO
-002B   1283 1303      00075         BANKSEL PORTA
-002D   0185           00076         CLRF    PORTA
-002E   0186           00077         CLRF    PORTB
-002F   0187           00078         CLRF    PORTC
-0030   1683 1303      00079         BANKSEL TRISA
-0032   3000           00080         MOVLW   (0<<SS)
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0033   0085           00081         MOVWF   TRISA
-0034   3010           00082         MOVLW   (0<<SCK) | (1<<SDI) | (0<<SDO)
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0035   0087           00083         MOVWF   TRISC
-                      00084 
-0036                  00085 Initialize_SPI
-0036   1283 1303      00086         BANKSEL SSPCON
-0038   3001           00087         MOVLW   B'0001' ; set SSPM<3:0> for Master Mode, Fosc/64
-0039   0094           00088         MOVWF   SSPCON
-003A   1614           00089         BSF     SSPCON, CKP     ; set clock idle state to high level
-003B   1683 1303      00090         BANKSEL SSPSTAT
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  3
+                      00074 ; void write_datapoint_to_LEDs (*datapoint);
+0013                  00075 Write_Datapoint_to_LEDs
+0013   0832           00076         MOVF    datapoint, W    ; get address of value to be displayed
+0014   0084           00077         MOVWF   FSR             ; get value
+0015   0800           00078         MOVF    INDF, W         ; store value in W
+0016   00B6           00079         MOVWF   dividend
+0017   01B7           00080         CLRF    tens_Dig
+0018   01B8           00081         CLRF    hundreds_Dig
+0019                  00082 Hundreds_Loop
+0019   3064           00083         MOVLW   .100
+001A   02B6           00084         SUBWF   dividend, 1
+001B   1803           00085         BTFSC   STATUS, C
+001C   0AB8           00086         INCF    hundreds_Dig, F
+001D   1803           00087         BTFSC   STATUS, C
+001E   2819           00088         GOTO    Hundreds_Loop
+001F   3064           00089         MOVLW   .100
+0020   07B6           00090         ADDWF   dividend, 1
+0021                  00091 Tens_Loop
+0021   300A           00092         MOVLW   .10
+0022   02B6           00093         SUBWF   dividend, F
+0023   1803           00094         BTFSC   STATUS, C
+0024   0AB7           00095         INCF    tens_Dig, F
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-003D   1794           00091         BSF     SSPSTAT, SMP    ; input data sampled at end of data output time
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-003E   1714           00092         BSF     SSPSTAT, CKE    ; data transmitted on rising edge of clock (rising edge for MAX7219)
-003F   1283 1303      00093         BANKSEL SSPCON
-0041   1694           00094         BSF     SSPCON, SSPEN   ; enable Serial Peripheral Interface
-                      00095 
-0042                  00096 Initialize_MAX7219
-                      00097         ; Leave Sleep Mode
-0042   300C           00098         MOVLW   0xC             ; MAX7219 shutdown address
-0043   00A0           00099         MOVWF   SPI_tx1
-0044   3001           00100         MOVLW   0x1             ; xxxx xxx1 for normal operation (xxxx xxx0 for shutdown)
-0045   00A1           00101         MOVWF   SPI_tx2
-0046   2012           00102         CALL    SPI_2byte_Transfer
-                      00103         ; Set scan limit to digits 0-4
-0047   300B           00104         MOVLW   0xB             ; MAX7219 scan limit address
-0048   00A0           00105         MOVWF   SPI_tx1
-0049   3004           00106         MOVLW   0x4             ; xxxx x100 for digits 0-4
-004A   00A1           00107         MOVWF   SPI_tx2
-004B   2012           00108         CALL    SPI_2byte_Transfer
-                      00109         ; Set BCD Mode to No Decoding
-004C   3009           00110         MOVLW   0x9             ; MAX7219 shutdown address
-004D   00A0           00111         MOVWF   SPI_tx1
-004E   3000           00112         MOVLW   0x0             ; 0000 0000 for no decoding on any digit
-004F   00A1           00113         MOVWF   SPI_tx2
-0050   2012           00114         CALL    SPI_2byte_Transfer
-                      00115         ; Set Intensity Level
-0051   300A           00116         MOVLW   0xA             ; MAX7219 intensity address
-0052   00A0           00117         MOVWF   SPI_tx1
-0053   3008           00118         MOVLW   LED_INTENSITY   ; the desired duty cycle, 0-15 are valid values
-0054   00A1           00119         MOVWF   SPI_tx2
-0055   2012           00120         CALL    SPI_2byte_Transfer
-                      00121 
-0056   3001           00122         MOVLW   0x1             ; MAX7219 intensity address
-0057   00A0           00123         MOVWF   SPI_tx1
-0058   300B           00124         MOVLW   DEGREE_SIGN
-0059   2004           00125         CALL    LED_Lookup_Table
-005A   00A1           00126         MOVWF   SPI_tx2
-005B   2012           00127         CALL    SPI_2byte_Transfer
-                      00128 
-                      00129 
-                      00130         END
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  4
+0025   1803           00096         BTFSC   STATUS, C
+0026   2821           00097         GOTO    Tens_Loop
+0027   300A           00098         MOVLW   .10
+0028   07B6           00099         ADDWF   dividend, F
+0029                  00100 Test_Temp_or_Time
+0029   1832           00101         BTFSC   datapoint, 0
+002A   284A           00102         GOTO    Display_Temperature
+002B                  00103 Display_Time
+002B   3001           00104         MOVLW   0x1     ; MAX7219 digit 0 address for semicolon
+002C   00B4           00105         MOVWF   SPI_tx1
+002D   300A           00106         MOVLW   SEMICOLON
+002E   2004           00107         CALL    LED_Lookup_Table        ; lookup A-DP code for semicolon
+002F   00B5           00108         MOVWF   SPI_tx2
+0030   2069           00109         CALL    SPI_2byte_Transfer
+0031   3002           00110         MOVLW   0x2     ; MAX7219 digit 1 address for thousandths digit
+0032   00B4           00111         MOVWF   SPI_tx1
+0033   300D           00112         MOVLW   ALL_OFF
+0034   2004           00113         CALL    LED_Lookup_Table        ; lookup A-DP code for 0
+0035   00B5           00114         MOVWF   SPI_tx2
+0036   2069           00115         CALL    SPI_2byte_Transfer
+0037   3003           00116         MOVLW   0x3     ; MAX7219 digit 2 address for hundreds digit
+0038   00B4           00117         MOVWF   SPI_tx1
+0039   0838           00118         MOVF    hundreds_Dig, W
+003A   2004           00119         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+003B   00B5           00120         MOVWF   SPI_tx2
+003C   2069           00121         CALL    SPI_2byte_Transfer      ; send data through SPI
+003D   3004           00122         MOVLW   0x4     ; MAX7219 digit 3 address for tens digit
+003E   00B4           00123         MOVWF   SPI_tx1
+003F   0837           00124         MOVF    tens_Dig, W
+0040   2004           00125         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+0041   00B5           00126         MOVWF   SPI_tx2
+0042   2069           00127         CALL    SPI_2byte_Transfer      ; send data through SPI
+0043   3005           00128         MOVLW   0x5     ; MAX7219 digit 4 address for ones digit
+0044   00B4           00129         MOVWF   SPI_tx1
+0045   0836           00130         MOVF    dividend, W
+0046   2004           00131         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+0047   00B5           00132         MOVWF   SPI_tx2
+0048   2069           00133         CALL    SPI_2byte_Transfer      ; send data through SPI
+0049   0008           00134         RETURN
+004A                  00135 Display_Temperature
+004A   3001           00136         MOVLW   0x1     ; MAX7219 digit 0 address for degree sign
+004B   00B4           00137         MOVWF   SPI_tx1
+004C   300B           00138         MOVLW   DEGREE_SIGN
+004D   2004           00139         CALL    LED_Lookup_Table        ; lookup A-DP code for semicolon
+004E   00B5           00140         MOVWF   SPI_tx2
+004F   2069           00141         CALL    SPI_2byte_Transfer
+0050   3002           00142         MOVLW   0x2     ; MAX7219 digit 1 address for hundreds digit
+0051   00B4           00143         MOVWF   SPI_tx1
+0052   0838           00144         MOVF    hundreds_Dig, W
+0053   2004           00145         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+0054   00B5           00146         MOVWF   SPI_tx2
+0055   2069           00147         CALL    SPI_2byte_Transfer
+0056   3003           00148         MOVLW   0x3     ; MAX7219 digit 2 address for tens digit
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0057   00B4           00149         MOVWF   SPI_tx1
+0058   0837           00150         MOVF    tens_Dig, W
+0059   2004           00151         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+005A   00B5           00152         MOVWF   SPI_tx2
+005B   2069           00153         CALL    SPI_2byte_Transfer      ; send data through SPI
+005C   3004           00154         MOVLW   0x4     ; MAX7219 digit 3 address for ones digit
+005D   00B4           00155         MOVWF   SPI_tx1
+005E   0836           00156         MOVF    dividend, W
+005F   2004           00157         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+0060   00B5           00158         MOVWF   SPI_tx2
+0061   2069           00159         CALL    SPI_2byte_Transfer      ; send data through SPI
+0062   3005           00160         MOVLW   0x5     ; MAX7219 digit 4 address for celsius C
+0063   00B4           00161         MOVWF   SPI_tx1
+0064   088C           00162         MOVF    CELSIUS
+0065   2004           00163         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
+0066   00B5           00164         MOVWF   SPI_tx2
+0067   2069           00165         CALL    SPI_2byte_Transfer      ; send data through SPI
+0068   0008           00166         RETURN
+                      00167 
+                      00168 ; void spi_2byte_transfer (SPI_tx1, SPI_tx2);
+0069                  00169 SPI_2byte_Transfer
+0069   1283 1303      00170         BANKSEL 0x0
+006B   1285           00171         BCF     PORTA, SS       ; pull MAX7219 slave select active low
+006C   0834           00172         MOVF    SPI_tx1, W      ; get the first byte to transmit
+006D   0093           00173         MOVWF   SSPBUF          ; start transmission
+006E   1683 1303      00174         BANKSEL SSPSTAT
+0070   1C14           00175         BTFSS   SSPSTAT, BF     ; has data been received (transmit complete?)
+0071   2870           00176         GOTO    $-1
+0072   1283 1303      00177         BANKSEL 0x0             ; location of SPI_tx1, 2, and SSPBUF
+0074   0835           00178         MOVF    SPI_tx2, W
+0075   0093           00179         MOVWF   SSPBUF          ; start transmission
+0076   1683 1303      00180         BANKSEL SSPSTAT
+0078   1C14           00181         BTFSS   SSPSTAT, BF     ; wait for transmission completion
+0079   2878           00182         GOTO    $-1
+007A   1283 1303      00183         BANKSEL 0x0             ; return to bank 0...
+007C   1685           00184         BSF     PORTA, SS       ; rising edge on MAX7219 LOAD/SS line
+007D   0008           00185         RETURN
+                      00186 
+                      00187 ;________________________Begin Main Program_________________________;
+                      00188     
+007E                  00189 Initialize_RAM_Data
+007E   1283 1303      00190         BANKSEL PORTA
+0080   0185           00191         CLRF    PORTA
+0081   0186           00192         CLRF    PORTB
+0082   0187           00193         CLRF    PORTC
+0083                  00194 Initialize_IO
+0083   1683 1303      00195         BANKSEL TRISA
+0085   301F           00196         MOVLW   (0<<SS) | (1<<RA0) | (1<<RA1) | (1<<RA2) | (1<<RA3) | (1<<RA4)
+0086   0085           00197         MOVWF   TRISA
+0087   3001           00198         MOVLW   (1<<RB0)
+0088   0086           00199         MOVWF   TRISB
+0089   3010           00200         MOVLW   (0<<SCK) | (1<<SDI) | (0<<SDO) | (0<<DEBUG_LED)
+008A   0087           00201         MOVWF   TRISC
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+008B   3020           00202         MOVLW   0X20
+008C   00B2           00203         MOVWF   datapoint
+008D   01B0           00204         CLRF    time_L
+008E   01B1           00205         CLRF    Temp
+                      00206 
+008F                  00207 Initialize_SPI
+008F   1283 1303      00208         BANKSEL SSPCON
+0091   3001           00209         MOVLW   B'0001' ; set SSPM<3:0> for Master Mode, Fosc/64
+0092   0094           00210         MOVWF   SSPCON
+0093   1614           00211         BSF     SSPCON, CKP     ; set clock idle state to high level
+0094   1683 1303      00212         BANKSEL SSPSTAT
+0096   1794           00213         BSF     SSPSTAT, SMP    ; input data sampled at end of data output time
+0097   1714           00214         BSF     SSPSTAT, CKE    ; data transmitted on rising edge of clock (rising edge for MAX7219)
+0098   1283 1303      00215         BANKSEL SSPCON
+009A   1694           00216         BSF     SSPCON, SSPEN   ; enable Serial Peripheral Interface
+                      00217 
+009B                  00218 Initialize_MAX7219
+                      00219         ; Leave Sleep Mode
+009B   300C           00220         MOVLW   0xC             ; MAX7219 shutdown address
+009C   00B4           00221         MOVWF   SPI_tx1
+009D   3001           00222         MOVLW   0x1             ; xxxx xxx1 for normal operation (xxxx xxx0 for shutdown)
+009E   00B5           00223         MOVWF   SPI_tx2
+009F   2069           00224         CALL    SPI_2byte_Transfer
+                      00225         ; Set scan limit to digits 0-4
+00A0   300B           00226         MOVLW   0xB             ; MAX7219 scan limit address
+00A1   00B4           00227         MOVWF   SPI_tx1
+00A2   3004           00228         MOVLW   0x4             ; xxxx x100 for digits 0-4
+00A3   00B5           00229         MOVWF   SPI_tx2
+00A4   2069           00230         CALL    SPI_2byte_Transfer
+                      00231         ; Set BCD Mode to No Decoding
+00A5   3009           00232         MOVLW   0x9             ; MAX7219 shutdown address
+00A6   00B4           00233         MOVWF   SPI_tx1
+00A7   3000           00234         MOVLW   0x0             ; 0000 0000 for no decoding on any digit
+00A8   00B5           00235         MOVWF   SPI_tx2
+00A9   2069           00236         CALL    SPI_2byte_Transfer
+                      00237         ; Set Intensity Level
+00AA   300A           00238         MOVLW   0xA             ; MAX7219 intensity address
+00AB   00B4           00239         MOVWF   SPI_tx1
+00AC   3008           00240         MOVLW   LED_INTENSITY   ; the desired duty cycle, 0-15 are valid values
+00AD   00B5           00241         MOVWF   SPI_tx2
+00AE   2069           00242         CALL    SPI_2byte_Transfer
+                      00243   
+00AF   3078           00244         MOVLW   .120
+00B0   00A0           00245         MOVWF   0x20
+00B1   2013           00246         CALL    Write_Datapoint_to_LEDs
+                      00247         END 
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  6
 
 
 SYMBOL TABLE
@@ -185,6 +308,7 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
+ALL_OFF                           .13
 ANS0                              00000000
 ANS1                              00000001
 ANS10                             00000002
@@ -221,13 +345,13 @@ BRG8                              00000000
 BRG9                              00000001
 BRGH                              00000002
 C                                 00000000
-C1CH0                             00000000
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  5
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+C1CH0                             00000000
 C1CH1                             00000001
 C1IE                              00000005
 C1IF                              00000005
@@ -280,13 +404,13 @@ CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
 CKE                               00000006
-CKP                               00000004
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  6
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+CKP                               00000004
 CM1CON0                           00000107
 CM2CON0                           00000108
 CM2CON1                           00000109
@@ -299,9 +423,12 @@ DC1B0                             00000004
 DC1B1                             00000005
 DC2B0                             00000004
 DC2B1                             00000005
+DEBUG_LED                         RC6
 DEGREE_SIGN                       .11
 D_A                               00000005
 D_NOT_A                           00000005
+Display_Temperature               0000004A
+Display_Time                      0000002B
 ECCPAS                            0000009C
 ECCPAS0                           00000004
 ECCPAS1                           00000005
@@ -327,6 +454,7 @@ GO                                00000001
 GO_DONE                           00000001
 GO_NOT_DONE                       00000001
 HTS                               00000002
+Hundreds_Loop                     00000019
 I2C_DATA                          00000005
 I2C_READ                          00000002
 I2C_START                         00000003
@@ -335,17 +463,17 @@ INDF                              00000000
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
-INTF                              00000001
-IOCB                              00000096
-IOCB0                             00000000
-IOCB1                             00000001
-IOCB2                             00000002
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  7
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+INTF                              00000001
+IOCB                              00000096
+IOCB0                             00000000
+IOCB1                             00000001
+IOCB2                             00000002
 IOCB3                             00000003
 IOCB4                             00000004
 IOCB5                             00000005
@@ -355,13 +483,15 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRP                               00000007
-Initialize_IO                     0000002B
-Initialize_MAX7219                00000042
-Initialize_SPI                    00000036
+Initialize_IO                     00000083
+Initialize_MAX7219                0000009B
+Initialize_RAM_Data               0000007E
+Initialize_SPI                    0000008F
 Interupt_Vector                   00000001
 LED_INTENSITY                     .8
 LED_Lookup_Table                  00000004
 LTS                               00000001
+LastTime                          00000033
 MC1OUT                            00000007
 MC2OUT                            00000006
 MSK                               00000093
@@ -392,6 +522,12 @@ OPTION_REG                        00000081
 OSCCON                            0000008F
 OSCTUNE                           00000090
 OSFIE                             00000007
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 OSFIF                             00000007
 OSTS                              00000003
 P                                 00000004
@@ -399,12 +535,6 @@ P1M0                              00000006
 P1M1                              00000007
 PCL                               00000002
 PCLATH                            0000000A
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  8
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 PCON                              0000008E
 PDC0                              00000000
 PDC1                              00000001
@@ -451,6 +581,12 @@ RB1                               00000001
 RB2                               00000002
 RB3                               00000003
 RB4                               00000004
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 RB5                               00000005
 RB6                               00000006
 RB7                               00000007
@@ -458,12 +594,6 @@ RBIE                              00000003
 RBIF                              00000000
 RC0                               00000000
 RC1                               00000001
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE  9
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 RC2                               00000002
 RC3                               00000003
 RC4                               00000004
@@ -504,12 +634,18 @@ SMP                               00000007
 SPBRG                             00000099
 SPBRGH                            0000009A
 SPEN                              00000007
-SPI_2byte_Transfer                00000012
-SPI_tx1                           00000020
-SPI_tx2                           00000021
+SPI_2byte_Transfer                00000069
+SPI_tx1                           00000034
+SPI_tx2                           00000035
 SR0                               00000006
 SR1                               00000007
 SRCON                             00000185
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 SREN                              00000005
 SS                                RA5
 SSPADD                            00000093
@@ -517,12 +653,6 @@ SSPBUF                            00000013
 SSPCON                            00000014
 SSPCON2                           00000091
 SSPEN                             00000005
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 10
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 SSPIE                             00000003
 SSPIF                             00000003
 SSPM0                             00000000
@@ -540,10 +670,12 @@ STRD                              00000003
 STRSYNC                           00000004
 SWDTEN                            00000000
 SYNC                              00000004
+T0                                00000021
 T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
 T0SE                              00000004
+T1                                00000023
 T1CKPS0                           00000004
 T1CKPS1                           00000005
 T1CON                             00000010
@@ -553,14 +685,26 @@ T1GSS                             00000001
 T1INSYNC                          00000002
 T1OSCEN                           00000003
 T1SYNC                            00000002
+T2                                00000025
 T2CKPS0                           00000000
 T2CKPS1                           00000001
 T2CON                             00000012
+T3                                00000027
+T4                                00000029
+T5                                0000002B
+T6                                0000002D
+T7                                0000002F
 TMR0                              00000001
 TMR0IE                            00000005
 TMR0IF                            00000002
 TMR1                              0000000E
 TMR1CS                            00000001
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TMR1GE                            00000006
 TMR1H                             0000000F
 TMR1IE                            00000000
@@ -576,12 +720,6 @@ TOUTPS1                           00000004
 TOUTPS2                           00000005
 TOUTPS3                           00000006
 TRISA                             00000085
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 11
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TRISA0                            00000000
 TRISA1                            00000001
 TRISA2                            00000002
@@ -620,11 +758,20 @@ TX8_9                             00000006
 TX9                               00000006
 TX9D                              00000000
 TXD8                              00000000
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXEN                              00000005
 TXIE                              00000004
 TXIF                              00000004
 TXREG                             00000019
 TXSTA                             00000098
+Temp                              00000031
+Tens_Loop                         00000021
+Test_Temp_or_Time                 00000029
 UA                                00000001
 ULPWUE                            00000005
 ULPWUIE                           00000002
@@ -635,12 +782,6 @@ VR0                               00000000
 VR1                               00000001
 VR2                               00000002
 VR3                               00000003
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 12
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 VRCON                             00000097
 VREN                              00000007
 VROE                              00000006
@@ -666,6 +807,7 @@ WR                                00000001
 WREN                              00000002
 WRERR                             00000003
 WUE                               00000001
+Write_Datapoint_to_LEDs           00000013
 Z                                 00000002
 _BOR21V                           00003EFF
 _BOR40V                           00003FFF
@@ -675,6 +817,12 @@ _BOREN_NSLEEP                     00003EFF
 _BOREN_OFF                        00003CFF
 _BOREN_ON                         00003FFF
 _BOREN_SBODEN                     00003DFF
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _BOR_NSLEEP                       00003EFF
 _BOR_OFF                          00003CFF
 _BOR_ON                           00003FFF
@@ -694,12 +842,6 @@ _EXTRCIO                          00003FFE
 _EXTRC_OSC_CLKOUT                 00003FFF
 _EXTRC_OSC_NOCLKOUT               00003FFE
 _FCMEN_OFF                        000037FF
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 13
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _FCMEN_ON                         00003FFF
 _FOSC_EC                          00003FFB
 _FOSC_EXTRC_CLKOUT                00003FFF
@@ -734,31 +876,45 @@ _WDT_ON                           00003FFF
 _WRT_1FOURTH                      00003BFF
 _WRT_256                          00003DFF
 _WRT_HALF                         000039FF
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FF9
 __16F883                          00000001
+datapoint                         00000032
+dividend                          00000036
+hundreds_Dig                      00000038
+t0                                00000020
+t1                                00000022
+t2                                00000024
+t3                                00000026
+t4                                00000028
+t5                                0000002A
+t6                                0000002C
+t7                                0000002E
+tens_Dig                          00000037
+time_L                            00000030
 
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
 0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
-0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXX---- ---------------- ----------------
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XX--------------
 2000 : -------XX------- ---------------- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    89
-Program Memory Words Free:  4007
-
-
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  0:51:39         PAGE 14
-
-
-
+Program Memory Words Used:   175
+Program Memory Words Free:  3921
 
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     6 reported,     0 suppressed
+Messages :     0 reported,     8 suppressed
 
 
