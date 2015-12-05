@@ -159,7 +159,7 @@ Display_Temperature
 	CALL	SPI_2byte_Transfer	; send data through SPI
 	MOVLW	0x5	; MAX7219 digit 4 address for celsius C
 	MOVWF	SPI_tx1
-	MOVF	CELSIUS
+	MOVLW	CELSIUS
 	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
 	MOVWF	SPI_tx2
 	CALL	SPI_2byte_Transfer	; send data through SPI

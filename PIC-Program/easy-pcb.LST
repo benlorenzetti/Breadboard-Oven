@@ -1,4 +1,4 @@
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  1
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
   00000035            00040                 SPI_tx2 ; second byte to be transfered out by SPI
   00000036            00041                 dividend        ; used for division for LED display
   00000037            00042                 tens_Dig        ; "                               "
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  2
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0022   02B6           00093         SUBWF   dividend, F
 0023   1803           00094         BTFSC   STATUS, C
 0024   0AB7           00095         INCF    tens_Dig, F
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  3
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0054   00B5           00146         MOVWF   SPI_tx2
 0055   2069           00147         CALL    SPI_2byte_Transfer
 0056   3003           00148         MOVLW   0x3     ; MAX7219 digit 2 address for tens digit
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  4
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -194,7 +194,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0061   2069           00159         CALL    SPI_2byte_Transfer      ; send data through SPI
 0062   3005           00160         MOVLW   0x5     ; MAX7219 digit 4 address for celsius C
 0063   00B4           00161         MOVWF   SPI_tx1
-0064   088C           00162         MOVF    CELSIUS
+0064   300C           00162         MOVLW   CELSIUS
 0065   2004           00163         CALL    LED_Lookup_Table        ; lookup appropriate A-DP code
 0066   00B5           00164         MOVWF   SPI_tx2
 0067   2069           00165         CALL    SPI_2byte_Transfer      ; send data through SPI
@@ -234,7 +234,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0088   0086           00199         MOVWF   TRISB
 0089   3010           00200         MOVLW   (0<<SCK) | (1<<SDI) | (0<<SDO) | (0<<DEBUG_LED)
 008A   0087           00201         MOVWF   TRISC
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  5
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -286,7 +286,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00B0   00A0           00245         MOVWF   0x20
 00B1   2013           00246         CALL    Write_Datapoint_to_LEDs
                       00247         END 
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  6
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  6
 
 
 SYMBOL TABLE
@@ -345,7 +345,7 @@ BRG8                              00000000
 BRG9                              00000001
 BRGH                              00000002
 C                                 00000000
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  7
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  7
 
 
 SYMBOL TABLE
@@ -404,7 +404,7 @@ CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
 CKE                               00000006
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  8
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  8
 
 
 SYMBOL TABLE
@@ -463,7 +463,7 @@ INDF                              00000000
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE  9
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE  9
 
 
 SYMBOL TABLE
@@ -522,7 +522,7 @@ OPTION_REG                        00000081
 OSCCON                            0000008F
 OSCTUNE                           00000090
 OSFIE                             00000007
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 10
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 10
 
 
 SYMBOL TABLE
@@ -581,7 +581,7 @@ RB1                               00000001
 RB2                               00000002
 RB3                               00000003
 RB4                               00000004
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 11
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 11
 
 
 SYMBOL TABLE
@@ -640,7 +640,7 @@ SPI_tx2                           00000035
 SR0                               00000006
 SR1                               00000007
 SRCON                             00000185
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 12
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 12
 
 
 SYMBOL TABLE
@@ -699,7 +699,7 @@ TMR0IE                            00000005
 TMR0IF                            00000002
 TMR1                              0000000E
 TMR1CS                            00000001
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 13
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 13
 
 
 SYMBOL TABLE
@@ -758,7 +758,7 @@ TX8_9                             00000006
 TX9                               00000006
 TX9D                              00000000
 TXD8                              00000000
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 14
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 14
 
 
 SYMBOL TABLE
@@ -817,7 +817,7 @@ _BOREN_NSLEEP                     00003EFF
 _BOREN_OFF                        00003CFF
 _BOREN_ON                         00003FFF
 _BOREN_SBODEN                     00003DFF
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 15
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 15
 
 
 SYMBOL TABLE
@@ -876,7 +876,7 @@ _WDT_ON                           00003FFF
 _WRT_1FOURTH                      00003BFF
 _WRT_256                          00003DFF
 _WRT_HALF                         000039FF
-MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-4-2015  20:34:43         PAGE 16
+MPASM 5.63  /HOME/BEN/DOCUMENTS/BREADBOARDIN   12-5-2015  12:46:57         PAGE 16
 
 
 SYMBOL TABLE
@@ -915,6 +915,6 @@ Program Memory Words Free:  3921
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     0 reported,     8 suppressed
+Messages :     0 reported,     7 suppressed
 
 

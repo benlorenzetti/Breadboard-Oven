@@ -6,7 +6,7 @@
 .param Diameter=51	; [0.001 in]
 .param Length=135	; [in]
 .param Relectric={675*Length/(Diameter*Diameter)}	; [Ohms]
-.param wattage={0.01*(120*120)/Relectric}			; [Joules]
+.param wattage={(120*120)/Relectric}			; [Joules]
 .param Volume={(1.287e-11)*Diameter*Diameter*Length}	; [m^3]
 .param SurfaceArea={(2.027e-6)*Diameter*Length}		; [m^2]
 .param Celement={(1.113e6)*Volume}	; [J/K]
