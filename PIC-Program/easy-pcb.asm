@@ -14,8 +14,11 @@
 #define	START	RA3
 #define	GRN_LED	RC6
 #define	STOP	RB0
+#define	RED_LED	RC6
+#define	ALARM	RC7
 
 #define	TMR0_PERIOD	.250
+#define	TIME_COUNTER_SET_VALUE	.256
 #define	LED_INTENSITY	.8	; Light Intensity from 0-15
 
 ; Digits 0-9 have lookup indices 0-9, but :, deg, and C
@@ -60,11 +63,17 @@
 		temp
 	endc
 	ORG 	0x0
+
 Reset_Vector
-	GOTO Initialize_RAM_Data
+	NOP
 
 Interupt_Vector
 	ORG	0x4
+	BANKSEL	0
+	CLRF	PORTA	; shut down all potential output signals
+	CLRF	PORTB	; (i.e. shut down the relay)
+	CLRF	PORTC
+	GOTO	Initialize_IO	; reinitialize program state/memory
 
 ;________________________Function Definitions_______________________;
 
@@ -199,8 +208,6 @@ SPI_2byte_Transfer
 	GOTO	$-1
 	BANKSEL	0x0		; return to bank 0...
 	BSF	PORTA, SS	; rising edge on MAX7219 LOAD/SS line
-	NOP
-	NOP
 	RETURN
     
 Waste_Time
@@ -216,16 +223,11 @@ Waste_Time
 
 ;________________________Begin Main Program_________________________;
     
-Initialize_RAM_Data
-	BANKSEL	PORTA
-	CLRF	PORTA
-	CLRF	PORTB
-	CLRF	PORTC
 Initialize_IO
 	BANKSEL	TRISA
 	MOVLW	(0<<SS) | (1<<LEFT) | (1<<UP) | (1<<DOWN) | (1<<RIGHT) | (1<<START)
 	MOVWF	TRISA
-	MOVLW	(1<<STOP)
+	MOVLW	(1 << RB0) | (1<<STOP)
 	MOVWF	TRISB
 	MOVLW	(0<<SCK) | (1<<SDI) | (0<<SDO) | (0<<GRN_LED)
 	MOVWF	TRISC
@@ -233,6 +235,29 @@ Initialize_IO
 	CLRF	ANSEL
 	BANKSEL	ANSELH
 	CLRF	ANSELH
+
+Blink_Red_Once
+	BANKSEL	PORTC
+	BSF	PORTC, RED_LED
+	MOVLW	.4	; 3 x 256 x 256 x 4 microseconds
+	MOVWF	0x22
+	DECFSZ	0x20
+	GOTO	$-1
+	DECFSZ	0x21
+	GOTO	$-3
+	DECFSZ	0x22
+	GOTO	$-5
+	BCF	PORTC, RED_LED
+	MOVLW	.4	; 3 x 256 x 256 x 4 microseconds seconds
+	MOVWF	0x22
+	DECFSZ	0x20
+	GOTO	$-1
+	DECFSZ	0x21
+	GOTO	$-3
+	DECFSZ	0x22
+	GOTO	$-5
+
+Initialize_Data
 	BANKSEL	datapoint
 	MOVLW	0X20
 	MOVWF	datapoint
@@ -240,6 +265,18 @@ Initialize_IO
 	CLRF	POSITION_EE
 	CLRF	time_L
 	CLRF	Temp
+
+Initialize_Interupts
+	BANKSEL	PORTB
+	MOVLW	1 << RB0
+	ANDWF	PORTB, W	; save portB so it can be used to determine the
+	BANKSEL	OPTION_REG	;   default state of the RB0 interupt
+	BCF	OPTION_REG, INTEDG	; interupt on falling edge of RB0/INT pin
+	BTFSC	STATUS, Z	; unless RB0 is already fallen, then
+	BSF	OPTION_REG, INTEDG	; interupt on rising edge.
+	BCF	INTCON, INTF	; clear external RB0 interupt flag
+	BSF	INTCON, INTE	; enable external RB0 interupt
+	BSF	INTCON, GIE	; set global interupt enable
 
 Initialize_SPI
 	BANKSEL	SSPCON
@@ -508,8 +545,36 @@ DELAY:				    ;WAIT FOR WRITING TO FINISH
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
     GOTO	EE_WRITE	
    
-
-
 Control_Loop
+	
+	BANKSEL	TMR0
+	MOVLW	(256 - TMR0_PERIOD)	; (because TMR0 increments until it overflows)
+	MOVWF	TMR0			; Start timing
+	BCF	INTCON, T0IF		; and Clear the Timer Interupt Flag
+
+	BANKSEL	time_counter_L		; Reset the Counter for Timer Overflows
+	CLRF	time_counter_L
+	MOVLW	TIME_COUNTER_SET_VALUE
+	MOVWF	time_counter_H	
+
+Time_Counting_Loop
+	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
+	GOTO	$-1
+	MOVLW	(256 - TMR0_PERIOD)	; Reset TMR0
+	MOVWF	TMR0
+	BANKSEL	0		; Toggle Alarm (note bank 0 for digital I/O and time_counter)
+	MOVLW	(1 << ALARM)
+	XORWF	PORTC, F
+	DECFSZ	time_counter_L	; Decrement (time_counter--) and test for zero
+	GOTO	Time_Counting_Loop
+	DECFSZ	time_counter_H
+	GOTO	Time_Counting_Loop
+
+	MOVLW	(1 << GRN_LED)
+	XORWF	PORTC, F
+
+	GOTO	Control_Loop
+	
+
 
     end
