@@ -85,12 +85,13 @@ for inexpensive reflow ovens, using converted kitchen toaster ovens.
 controlled air flow prevents parts from being blown out of position and
 convection heating obviates the uneven heat absorbtion seen in infrared radiation based systems.
 Furthermore, \emph{Easy--PCB} was designed from the ground up for soldering,
-so the heating elements and oven frame were optimized alongside the
-temperature controller for a typical solder reflow profile.
+so the heating elements, oven frame, and control system are all
+optimized for typical solder reflow profile.
 
 \begin{center}
 	\includegraphics[width=\columnwidth]{Figures/control-system.pdf}
-	\captionof*{figure}{The \emph{Easy--PCB} Control System: not just a controller bolted onto a disjoint oven.}
+	\captionof{figure}{The \emph{Easy--PCB} Control System}
+	\label{control-system-block-diagram}
 \end{center}
 
 \emph{Easy--PCB} allows hobbyists to produce reflow temperature profiles with
@@ -906,16 +907,22 @@ The results are shown in
 \subsection{Separate, Front--Facing PCB}
 
 The user interface is designed to be assembled on a separate PCB
-from the main controller board. This separation allows the high power
-components to be mounted on the back of the oven---far away from the user.
-Thus, the user interface PCB is mounted near the door and has no
-voltages greater than 12 V for safety. Everything on the front PCB
-is shown in blue in \emph{Easy--PCB} block diagram.
+from the main controller board. The separation allows the high power
+components and power entry points to be mounted on the back of the
+oven---far away from the user.
+The user interface PCB is mounted near the door and has no
+voltages greater than 5 V for safety. Everything on the front PCB
+is shown in blue in \emph{Easy--PCB} block diagram
+(\hyperref[control-system-block-diagram]{figure \ref{control-system-block-diagram}}).
 
 \begin{center}
-	\includegraphics[width=\columnwidth]{Figures/control-system.pdf}
-	\captionof*{figure}{The \emph{Easy--PCB} Control System: not just a controller bolted onto a disjoint oven.}
+	\includegraphics[width=0.75\columnwidth]{Figures/front-PCB-image.pdf}
+	\captionof*{figure}{Front--Facing PCB}
 \end{center}
+
+The front PCB was designed with mounting points
+such that a contact switch mates with the oven door and 
+level pushbutton heights for an enlosure or facade.
 
 The user interface board contains a 4--digit, 7--segment, common--cathode
 display and a matching common--cathode driver. The display driver
@@ -948,8 +955,6 @@ amplifier circuit, like shown in
 	\caption{Piezo Alarm}
 	\label{piezo-circuit}
 \end{figure}
-
-Finally, there is a safety switch that is compressed when the door is closed.
 
 \subsection{Stop Button and Door Contact}
 
@@ -1261,15 +1266,17 @@ is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
 \section{Controller Design}
 
-A flowchart of the microcontroller program is shown in
-\hyperref[program-flowchart]{figure \ref{program-flowchart}}.
+\subsection{PIC Requirements \& Circuit}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.75\columnwidth]{Figures/program-flowchart.pdf}
-	\caption{Microcontroller Program Flowchart}
-	\label{program-flowchart}
-\end{figure}
+\subsection{Memory Organization}
+
+\subsection{Timing}
+
+\subsection{Interupts and Safety}
+
+\subsection{Program Flowcharts}
+
+\subsection{Control System Design}
 
 \onecolumn
 \appendix
