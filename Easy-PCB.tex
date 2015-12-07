@@ -1010,12 +1010,20 @@ $\alpha_{A,B}$ is the Seebeck coefficient between materials $A$ and $B$.
 A type--K thermocouple was selected because they are readily available and
 resist oxidation at temperatures up to $1260^{o}C$.
 From the `Manual on the use of Thermocouples in Temperature Measurement' \mbox{(STP 470A)}, the nominal
-Seebeck coefficients for type--K thermocouples is
+Seebeck coefficients for type--K and J thermocouples are
 \begin{equation}
 \alpha_{KP,KN}=\left\{\begin{array}{c c}
 0^{o}C		&39.4\,\mu V/^{o}C	\\
 200^{o}C	&40.0\,\mu V/^{o}C	\\
 400^{o}C	&42.3\,\mu V/^{o}C	\\
+\end{array}\right.,
+\end{equation}
+and
+\begin{equation}
+\alpha_{JP,JN}=\left\{\begin{array}{c c}
+0^{o}C		&50.2\,\mu V/^{o}C	\\
+200^{o}C	&55.8\,\mu V/^{o}C	\\
+400^{o}C	&55.3\,\mu V/^{o}C	\\
 \end{array}\right..
 \end{equation}
 
@@ -1023,24 +1031,30 @@ The positive wire $KP$ is one of the following alloys: Chromel, Tophel, T--1, or
 The negative wire $KN$ is Alumel, Nial, T--2, or ThermoKanthal KN.
 
 The thermoelectric potential in a K loop is very small; 
-for a temperature difference of $T-T_{R}=500^{o}C$,
-the voltage developed is only on the order of $E_{S}=20\,mV$.
+for a temperature difference of $T-T_{R}=255^{o}C$,
+the voltage developed is only on the order of $E_{S}=10.2\,mV$.
 Consequently, the signal needs to be amplified before it can be read by and ADC.
 The op amp circuit shown in
 \hyperref[thermocouple-amplifier]{figure \ref{thermocouple-amplifier}}
 can be used.
 
 Five volt $\mu$controllers usually have ADC ranges of 0--3.3 V.
-To scale $20\,mV$ to $3.3\,V$ and $0\,V$ to $0\,V$, the feedback resistors
+To scale $10.2\,mV$ to $3.3\,V$ and $0\,V$ to $0\,V$, the feedback resistors
 should be
 \begin{equation*}
 	\frac{R_{f2}}{R_{f1}}=
 	\frac{V_{\textrm{ADC(max)}}}{V_{\textrm{K(max)}}}=
-	\frac{3.3\,V}{20\,mV}
+	\frac{3.3\,V}{10.2\,mV}
 \end{equation*}
 \begin{equation}
-R_{f2}=165*R_{f1}
+\textrm{type--K:}\quad R_{f2(K)}=323.5*R_{f1(K)}
 \end{equation}
+
+Similarly, the feedback resistor ratio for type--J thermocouples should be
+\begin{equation}
+\textrm{type--J:}\quad R_{f2}=233.2*R_{f1}
+\end{equation}
+
 
 \subsection{Bill of Materials}
 

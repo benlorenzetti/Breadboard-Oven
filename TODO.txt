@@ -6,3 +6,5 @@
 (6)	Decrease separation of thru-hole lines for Display driver package
 (7)	Decrease green and red LED resistance (too dim with 500 ohm)
 (8)	Fix pushbutton diagrams to reflect correct resistance locations
+(9)	Do ADC calculations to set and appropriate Vref+ for both sensors
+(10)	Add 10k resistor from Low voltage programming pin to ground
