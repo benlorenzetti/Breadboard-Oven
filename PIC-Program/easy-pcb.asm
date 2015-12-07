@@ -2,26 +2,32 @@
 	__CONFIG	_CONFIG1, _LVP_OFF & _FCMEN_OFF & _IESO_OFF & _BOR_OFF & _CPD_OFF & _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
 	__CONFIG	_CONFIG2, _WRT_OFF & _BOR21V
 
-#define DEBUG_LED	RC6
 #define	SS	RA5
 #define	SCK	RC3
 #define	SDI	RC4
 #define SDO	RC5
-#define	LEFT	RA1
-#define UP	RA2
-#define	DOWN	RA0
-#define	RIGHT	RA4
-#define	START	RA3
-#define	GRN_LED	RC6
+#define	LEFT	RB4
+#define UP	RB1
+#define	DOWN	RB5
+#define	RIGHT	RB7
+#define	START	RB6
+#define	GRN_LED	RB3
 #define	STOP	RB0
-#define	RED_LED	RC6
-#define	ALARM	RC7
+#define	RED_LED	RB3
+#define	ALARM	RA4
+#define	HEAT	RA3
+#define	T_REF	RA0
+#define	T_K1	RA1
+#define	T_K2	RA2
+
 
 #define	TIME_DATA	0x20
 #define	TEMP_DATA	0x20
 #define	MAX_DATA_SIZE	.8
+#define	TT_BOOLEAN	0
+#define	START_BOOLEAN	1
 
-#define	TMR0_PERIOD	.250
+#define	TMR0_PERIOD	.125
 #define	TIME_COUNTER_SET_VALUE	.255
 #define	LED_INTENSITY	.8	; Light Intensity from 0-15
 
@@ -51,7 +57,7 @@
 		time_L
 		time_H
 		Temp
-		tT_boolean
+		booleans_reg
 		time_counter_L
 		time_counter_H
 		datapoint
@@ -73,10 +79,7 @@
 
 	ORG 	0x0
 Reset_Vector
-	NOP
-	NOP
-	NOP
-	NOP
+	GOTO	Initialize_IO
 
 Interupt_Vector
 	ORG	0x4
@@ -84,6 +87,9 @@ Interupt_Vector
 	CLRF	PORTA	; shut down all potential output signals
 	CLRF	PORTB	; (i.e. shut down the relay)
 	CLRF	PORTC
+	BCF	booleans_reg, START_BOOLEAN
+	BTFSC	PORTB, START
+	BSF	booleans_reg, START_BOOLEAN
 	GOTO	Initialize_IO	; reinitialize program state/memory
 
 ;________________________Function Definitions_______________________;
@@ -114,8 +120,8 @@ Update_LED_Display
 	CLRF	dig10
 	CLRF	dig100
 	CLRF	dig1000	
-	BANKSEL	tT_boolean
-	BTFSC	tT_boolean, 0
+	BANKSEL	booleans_reg
+	BTFSC	booleans_reg, TT_BOOLEAN
 	GOTO	BDC_for_Temp
 	; else	BDC_for_Time
 BDC_for_Time
@@ -237,8 +243,9 @@ Compatibility_Function
 	MOVWF	time_L		; if time, store in time_L
 	BTFSC	temp, 0
 	MOVWF	Temp		; if Temp, store in Temp
-	MOVF	datapoint, W
-	MOVWF	tT_boolean
+	BCF	booleans_reg, TT_BOOLEAN
+	BTFSC	datapoint, 0
+	BSF	booleans_reg, TT_BOOLEAN
 	RETURN
  
 Waste_Time	MACRO	s1, s2, s3
@@ -280,22 +287,27 @@ SPI_2byte_Transfer
     
 Initialize_IO
 	BANKSEL	TRISA
-	MOVLW	(0<<SS) | (1<<LEFT) | (1<<UP) | (1<<DOWN) | (1<<RIGHT) | (1<<START)
+	MOVLW	(0<<SS) | (1<<T_K1) | (1<<T_K2) | (1<<T_REF) | (0<<HEAT) | (1<<ALARM)
 	MOVWF	TRISA
-	MOVLW	(1 << RB0) | (1<<STOP)
+	MOVLW	(1<<STOP) | (1<<LEFT) | (1<<UP) | (1<<DOWN) | (1<<RIGHT) | (1<<START)
 	MOVWF	TRISB
-	MOVLW	(0<<SCK) | (1<<SDI) | (0<<SDO) | (0<<GRN_LED)
+	MOVLW	(0<<SCK) | (1<<SDI) | (0<<SDO)
 	MOVWF	TRISC
+	BANKSEL	WPUB
+	MOVLW	(1<<LEFT) | (1<<RIGHT) | (1<<UP) | (1<<DOWN) | (1<<START) | (1<<STOP) | (0<<GRN_LED)
+	MOVWF	WPUB	; enable weak pullups for pushbutton inputs
+	BANKSEL	OPTION_REG
+	BCF	OPTION_REG, NOT_RBPU	; enable global pullups
 	BANKSEL	ANSEL
 	CLRF	ANSEL
 	BANKSEL	ANSELH
 	CLRF	ANSELH
 
 Blink_Red_Once
-	BANKSEL	PORTC
-	BSF	PORTC, RED_LED
+	BANKSEL	PORTB
+	BSF	PORTB, RED_LED
 	Waste_Time	.256, .256, .4
-	BCF	PORTC, RED_LED
+	BCF	PORTB, RED_LED
 	Waste_Time	.256, .256, .4
 
 Initialize_Data
@@ -324,6 +336,11 @@ Initialize_Interupt_Sources
 	BANKSEL	PIE2
 	CLRF	PIE2		; disable a whole bunch of interupts
 	BSF	INTCON, GIE	; set global interupt enable
+
+Initialzie_Fosc
+	BANKSEL	OSCCON
+	MOVLW	(B'110' << IRCF0) | (0<<OSTS) | (1<<SCS)
+	MOVWF	OSCCON
 
 Initialize_SPI
 	BANKSEL	SSPCON
@@ -369,15 +386,13 @@ Initialize_MAX7219
 	CALL	SPI_2byte_Transfer
   
 Initialize_ADC
-	BANKSEL	OPTION_REG
-	BSF	OPTION_REG, .7	; disable portB pullups
 
 Initialize_Timer0
 	BANKSEL	OPTION_REG
 	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
 	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
 	BCF	OPTION_REG, PS2	; Set PS<2:0> to 000, corresponding
-	BCF	OPTION_REG, PS1	; to a prescalar of 1
+	BCF	OPTION_REG, PS1	; to a prescalar of 2
 	BCF	OPTION_REG, PS0
 	BANKSEL	INTCON
 	BCF	INTCON, T0IE	; disable the Timer0 interupt
@@ -414,22 +429,27 @@ Input_Loop
 	CLRF	TEMP_DATA + MAX_DATA_SIZE
 
 	BANKSEL	PORTA
-    BTFSC	PORTA, UP		    ;UP PB
-    GOTO	UpCheck
+	BTFSC	PORTB, UP		    ;UP PB
+	GOTO	UpCheck
     
-    BTFSC	PORTA, DOWN		    ;DOWN PB
-    GOTO	DownCheck
+	BTFSC	PORTB, DOWN		    ;DOWN PB
+	GOTO	DownCheck
     
-    BTFSC	PORTA, LEFT		    ;LEFT PB
-    GOTO	LeftCheck
+	BTFSC	PORTB, LEFT		    ;LEFT PB
+	GOTO	LeftCheck
 
-    BTFSC	PORTA, RIGHT		    ;RIGHT PB
-    GOTO	RightCheck
+	BTFSC	PORTB, RIGHT		    ;RIGHT PB
+	GOTO	RightCheck
     
-;	BTFSS	PORTA, START		    ;START PB
-;	GOTO	Input
-;    	GOTO	Start
-
+	BTFSC	booleans_reg, START_BOOLEAN
+	GOTO	Start_Active_Low
+Start_Active_High
+	BTFSC	PORTB, START
+	GOTO	Start
+	GOTO	Input_Loop
+Start_Active_Low
+	BTFSS	PORTB, START		    ;START PB
+    	GOTO	Start
 	GOTO	Input_Loop
    
 UpCheck:
@@ -600,6 +620,9 @@ DELAY:				    ;WAIT FOR WRITING TO FINISH
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
     GOTO	EE_WRITE	
    
+	BANKSEL	TRISA
+	BCF	TRISA, ALARM
+
 Control_Loop
 	
 	BANKSEL	TMR0
@@ -615,18 +638,20 @@ Control_Loop
 Time_Counting_Loop
 	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
 	GOTO	$-1
-	MOVLW	(.256 - TMR0_PERIOD)	; Reset TMR0
+	BCF	INTCON, T0IF
+	BANKSEL	TMR0
+	MOVLW	(.255 - TMR0_PERIOD)	; Reset TMR0
 	MOVWF	TMR0
 	BANKSEL	0		; Toggle Alarm (note bank 0 for digital I/O and time_counter)
 	MOVLW	(1 << ALARM)
-	XORWF	PORTC, F
+	XORWF	PORTA, F
 	DECFSZ	time_counter_L	; Decrement (time_counter--) and test for zero
 	GOTO	Time_Counting_Loop
 	DECFSZ	time_counter_H
 	GOTO	Time_Counting_Loop
 
 	MOVLW	(1 << GRN_LED)
-	XORWF	PORTC, F
+	XORWF	PORTB, F
 
 	GOTO	Control_Loop
 	
