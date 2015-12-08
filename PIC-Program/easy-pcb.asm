@@ -415,15 +415,6 @@ Initialize_SPI
 	BANKSEL	SSPCON
 	BSF	SSPCON, SSPEN	; enable Serial Peripheral Interface
 
-	CALL	Initialize_MAX7219
-	MOVLW	.2
-	MOVWF	time + 1
-	MOVLW	.120
-	MOVWF	time
-	BCF	booleans_reg, TT_BOOLEAN
-	CALL	Update_LED_Display
-	END
-
 Initialize_ADC
 
 EE_READ:
