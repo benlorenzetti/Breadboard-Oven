@@ -20,10 +20,12 @@
 #define	T_K1	RA1
 #define	T_K2	RA2
 
+#define	MAX_ARRAY_SIZE	.8	; 96 bytes are available in banks 2 and 3
+#define	TIME_ARRAY	0x110
+#define	TEMP_ARRAY	0x190
 
-#define	TIME_DATA	0x20
-#define	TEMP_DATA	0x20
-#define	MAX_DATA_SIZE	.8
+#define	UINT16_T	2
+
 #define	TT_BOOLEAN	0
 #define	START_BOOLEAN	1
 
@@ -54,8 +56,7 @@
 		T6
 		t7
 		T7
-		time_L
-		time_H
+		time: UINT16_T
 		Temp
 		booleans_reg
 		time_counter_L
@@ -66,11 +67,14 @@
 		LastTime
 		SPI_tx1	; first byte to be transfered out by SPI
 		SPI_tx2	; second byte to be transfered out by SPI
-		dividend	; used for division for LED display
-		dig1		; "                               "
-		dig10		; "                               "
-		dig100		; "                               "
-		dig1000		; "                               "
+		; LED Display Function Variables
+		seconds: UINT16_T
+		minutes
+		dig1
+		dig2
+		dig3
+		dig4
+		digSpecial
 		delay1
 		delay2
 		delay3
@@ -114,122 +118,147 @@ LED_Lookup_Table
 	RETLW	B'01001110'	; C for celsius
 	RETLW	B'00000000'	; All off
 
+; void CLRF_X (uintX_t *addr);
+CLRF_X	MACRO	Addr, Addr_Size
+	local	i = 0
+	while	i < Addr_Size
+	  CLRF	(Addr + i)
+	i = i + 1
+	endw
+	ENDM
+
+; void COPY_X (uintX_t *source, uintX_t *destination);
+COPY_X	MACRO	src, dest, size
+	local	i = 0
+	while	i < size
+	  MOVF	(src + i), W
+	  MOVWF	(dest + i)
+	  i = i + 1
+	endw
+	ENDM
+
+; void SUBWF_X (uintX_t *addr, uint8_t W);
+SUBWF_X	MACRO	Addr, Addr_Size
+	; Declare a unique "break" label for each instantiation of SUBWF_X
+	; and a local variable for expanding Addr_Size times
+	local	Break, i
+	variable	i = 0
+	while	i < Addr_Size
+	  SUBWF	(Addr + i), F
+	  BTFSC	STATUS, C
+	  GOTO	Break
+	  MOVLW	1
+	  i = i + 1	
+	endw
+Break
+	ENDM
+
 ; void Update_LED_Display (uint16_t time, uint8_t Temp, uint8_t *tT_boolean);
 Update_LED_Display
 	CLRF	dig1
-	CLRF	dig10
-	CLRF	dig100
-	CLRF	dig1000	
+	CLRF	dig2
+	CLRF	dig3
+	CLRF	dig4	
 	BANKSEL	booleans_reg
 	BTFSC	booleans_reg, TT_BOOLEAN
-	GOTO	BDC_for_Temp
-	; else	BDC_for_Time
-BDC_for_Time
-	BANKSEL	time_L
-	MOVF	time_L, W
-	MOVWF	dividend
-Hundreds_Loop
-	MOVLW	.100
-	SUBWF	dividend, 1
+	GOTO	Binary_to_Decimal_for_Temp
+Seconds_to_Minutes_for_Time
+	CLRF	minutes
+	COPY_X	time, seconds, UINT16_T
+Divide_by_60_Loop
+	MOVLW	.60
+	SUBWF_X	seconds, UINT16_T
 	BTFSC	STATUS, C
-	INCF	dig100, F
+	INCF	minutes, F
 	BTFSC	STATUS, C
-	GOTO	Hundreds_Loop
-	MOVLW	.100
-	ADDWF	dividend, 1
-Tens_Loop
+	GOTO	Divide_by_60_Loop
+	MOVLW	.60
+	ADDWF	seconds, F
+Binary_to_Decimal_for_Seconds
 	MOVLW	.10
-	SUBWF	dividend, F
+	SUBWF	seconds, F
 	BTFSC	STATUS, C
-	INCF	dig10, F
+	INCF	dig2, F
 	BTFSC	STATUS, C
-	GOTO	Tens_Loop
+	GOTO	Binary_to_Decimal_for_Seconds
 	MOVLW	.10
-	ADDWF	dividend, W
+	ADDWF	seconds, F
+Binary_to_Decimal_for_Minutes
+	MOVLW	.10
+	SUBWF	minutes, F
+	BTFSC	STATUS, C
+	INCF	dig4, F
+	BTFSC	STATUS, C
+	GOTO	Binary_to_Decimal_for_Minutes
+	MOVLW	.10
+	ADDWF	minutes, F
+Prepare_to_Display_Time
+	MOVF	seconds, W
 	MOVWF	dig1
-Display_Time
-	MOVLW	0x5	; MAX7219 digit 0 address for semicolon
-	MOVWF	SPI_tx1
+	MOVF	minutes, W
+	MOVWF	dig3
 	MOVLW	SEMICOLON
-	CALL	LED_Lookup_Table	; lookup A-DP code for semicolon
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-	MOVLW	0x1	; MAX7219 digit 1 address for thousandths digit
-	MOVWF	SPI_tx1
-	MOVLW	ALL_OFF
-	CALL	LED_Lookup_Table	; lookup A-DP code for 0
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-	MOVLW	0x2	; MAX7219 digit 2 address for hundreds digit
-	MOVWF	SPI_tx1
-	MOVF	dig100, W
-	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer	; send data through SPI
-	MOVLW	0x3	; MAX7219 digit 3 address for tens digit
-	MOVWF	SPI_tx1
-	MOVF	dig10, W
-	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer	; send data through SPI
-	MOVLW	0x4	; MAX7219 digit 4 address for ones digit
-	MOVWF	SPI_tx1
-	MOVF	dig1, W
-	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer	; send data through SPI
-	RETURN
-BDC_for_Temp
+	MOVWF	digSpecial
+	GOTO	Update_5_Digits
+Binary_to_Decimal_for_Temp
 	MOVF	Temp, W
-	MOVWF	dig1
+	MOVWF	dig2
 	MOVLW	.2
-	MOVWF	dig10	; add 20, because Temp=0 represents T=20deg
+	MOVWF	dig3	; add 20, because Temp=0 represents T=20deg
 Subtract_Division_Loop
 	MOVLW	.10		
-	SUBWF	dig1, F	; subtract 10 from dividend
+	SUBWF	dig2, F	; subtract 10 from dividend
 	BTFSS	STATUS, C	; did an underflow occur?
 	GOTO	Remainder_Restoration	; if so, then division loop is complete
-	INCF	dig10, F	; increment 10s digit
-	BTFSC	dig10, 3	; test if 10s has carry over (test 8 digit)
+	INCF	dig3, F	; increment 10s digit
+	BTFSS	dig3, 3	; test if 10s has carry over (test 8 digit)
 	GOTO	Subtract_Division_Loop
-	BTFSC	dig10, 1	; (test 2 digit; 8+2 = 10)
+	BTFSS	dig3, 1	; (test 2 digit; 8+2 = 10)
 	GOTO	Subtract_Division_Loop
-	INCF	dig100, F	; increment the 100s digit from 10s carry over
+	MOVLW	.10
+	SUBWF	dig3, F	; subtract 10 from the 10s digit
+	INCF	dig4, F	; increment the 100s digit from 10s carry over
 	GOTO	Subtract_Division_Loop
 Remainder_Restoration
 	MOVLW	.10
-	ADDWF	dig1, F
-Display_Temperature
+	ADDWF	dig2, F
+Prepare_to_Display_Temp
+	MOVLW	DEGREE_SIGN
+	MOVWF	digSpecial
+	MOVLW	CELSIUS
+	MOVWF	dig1
+Update_5_Digits
 	MOVLW	0x5	; MAX7219 digit 0 address for degree sign
 	MOVWF	SPI_tx1
-	MOVLW	DEGREE_SIGN
+	MOVF	digSpecial, W
 	CALL	LED_Lookup_Table	; lookup A-DP code for semicolon
 	MOVWF	SPI_tx2
 	CALL	SPI_2byte_Transfer
-	MOVLW	0x1	; MAX7219 digit 1 address for hundreds digit
+	MOVLW	0x1	; MAX7219 digit 1 address for leftmost display digit
 	MOVWF	SPI_tx1
-	MOVF	dig100, W
+	MOVF	dig4, W
 	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
 	MOVWF	SPI_tx2
 	CALL	SPI_2byte_Transfer
-	MOVLW	0x2	; MAX7219 digit 2 address for tens digit
+	MOVLW	0x2	; MAX7219 digit 2 address for 2nd to left digit
 	MOVWF	SPI_tx1
-	MOVF	dig10, W
+	MOVF	dig3, W
 	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
 	MOVWF	SPI_tx2
 	CALL	SPI_2byte_Transfer	; send data through SPI
-	MOVLW	0x3	; MAX7219 digit 3 address for ones digit
+	MOVLW	0x3	; MAX7219 digit 3 address for 3rd to left digit
+	MOVWF	SPI_tx1
+	MOVF	dig2, W
+	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
+	MOVWF	SPI_tx2
+	CALL	SPI_2byte_Transfer	; send data through SPI
+	MOVLW	0x4	; MAX7219 digit 4 address for rightmost display digit
 	MOVWF	SPI_tx1
 	MOVF	dig1, W
 	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
 	MOVWF	SPI_tx2
 	CALL	SPI_2byte_Transfer	; send data through SPI
-	MOVLW	0x4	; MAX7219 digit 4 address for celsius C
-	MOVWF	SPI_tx1
-	MOVLW	CELSIUS
-	CALL	LED_Lookup_Table	; lookup appropriate A-DP code
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer	; send data through SPI
+
 	RETURN
 
 ; Loads time and temperature datapoints into time_L and Temp variables
@@ -239,9 +268,9 @@ Compatibility_Function
 	MOVWF	FSR		; get value
 	MOVF	INDF, W		; store value in W	
 	MOVWF	temp
-	BTFSS	temp, 0		; test if datapoint is a time or Temp
-	MOVWF	time_L		; if time, store in time_L
-	BTFSC	temp, 0
+	BTFSS	datapoint, 0	; test if datapoint is a time or Temp
+	MOVWF	time		; if time, store in time_L
+	BTFSC	datapoint, 0
 	MOVWF	Temp		; if Temp, store in Temp
 	BCF	booleans_reg, TT_BOOLEAN
 	BTFSC	datapoint, 0
@@ -283,6 +312,39 @@ SPI_2byte_Transfer
 	Waste_Time	.16, .1, .1
 	RETURN
 
+Initialize_MAX7219
+	; Leave Sleep Mode
+	MOVLW	0xC		; MAX7219 shutdown address
+	MOVWF	SPI_tx1
+	MOVLW	0x1		; xxxx xxx1 for normal operation (xxxx xxx0 for shutdown)
+	MOVWF	SPI_tx2
+	CALL	SPI_2byte_Transfer
+	; Leave Sleep Mode
+	MOVLW	0xF		; MAX7219 display test address
+	MOVWF	SPI_tx1
+	MOVLW	0x0		; xxxx xxx0 for normal operation (xxxx xxx1 for test)
+	MOVWF	SPI_tx2
+	CALL	SPI_2byte_Transfer
+	; Set scan limit to digits 0-4
+	MOVLW	0xB		; MAX7219 scan limit address
+	MOVWF	SPI_tx1
+	MOVLW	0x4		; xxxx x100 for digits 0-4
+	MOVWF	SPI_tx2
+	CALL	SPI_2byte_Transfer
+	; Set BCD Mode to No Decoding
+	MOVLW	0x9		; MAX7219 shutdown address
+	MOVWF	SPI_tx1
+	MOVLW	0x0		; 0000 0000 for no decoding on any digit
+	MOVWF	SPI_tx2
+	CALL	SPI_2byte_Transfer
+	; Set Intensity Level
+	MOVLW	0xA		; MAX7219 intensity address
+	MOVWF	SPI_tx1
+	MOVLW	LED_INTENSITY	; the desired duty cycle, 0-15 are valid values
+	MOVWF	SPI_tx2
+	CALL	SPI_2byte_Transfer
+	RETURN
+
 ;________________________Begin Main Program_________________________;
     
 Initialize_IO
@@ -316,9 +378,9 @@ Initialize_Data
 	MOVWF	datapoint
 	MOVWF	POSITION_RAM
 	CLRF	POSITION_EE
-	CLRF	time_L
-	CLRF	time_H
+	CLRF_X	time, UINT16_T
 	CLRF	Temp
+	BCF	booleans_reg, TT_BOOLEAN
 
 Initialize_Interupt_Sources
 	BANKSEL	PORTB
@@ -353,49 +415,16 @@ Initialize_SPI
 	BANKSEL	SSPCON
 	BSF	SSPCON, SSPEN	; enable Serial Peripheral Interface
 
-Initialize_MAX7219
-	; Leave Sleep Mode
-	MOVLW	0xC		; MAX7219 shutdown address
-	MOVWF	SPI_tx1
-	MOVLW	0x1		; xxxx xxx1 for normal operation (xxxx xxx0 for shutdown)
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-	; Leave Sleep Mode
-	MOVLW	0xF		; MAX7219 display test address
-	MOVWF	SPI_tx1
-	MOVLW	0x0		; xxxx xxx0 for normal operation (xxxx xxx1 for test)
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-	; Set scan limit to digits 0-4
-	MOVLW	0xB		; MAX7219 scan limit address
-	MOVWF	SPI_tx1
-	MOVLW	0x4		; xxxx x100 for digits 0-4
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-	; Set BCD Mode to No Decoding
-	MOVLW	0x9		; MAX7219 shutdown address
-	MOVWF	SPI_tx1
-	MOVLW	0x0		; 0000 0000 for no decoding on any digit
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-	; Set Intensity Level
-	MOVLW	0xA		; MAX7219 intensity address
-	MOVWF	SPI_tx1
-	MOVLW	LED_INTENSITY	; the desired duty cycle, 0-15 are valid values
-	MOVWF	SPI_tx2
-	CALL	SPI_2byte_Transfer
-  
-Initialize_ADC
+	CALL	Initialize_MAX7219
+	MOVLW	.2
+	MOVWF	time + 1
+	MOVLW	.120
+	MOVWF	time
+	BCF	booleans_reg, TT_BOOLEAN
+	CALL	Update_LED_Display
+	END
 
-Initialize_Timer0
-	BANKSEL	OPTION_REG
-	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
-	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
-	BCF	OPTION_REG, PS2	; Set PS<2:0> to 000, corresponding
-	BCF	OPTION_REG, PS1	; to a prescalar of 2
-	BCF	OPTION_REG, PS0
-	BANKSEL	INTCON
-	BCF	INTCON, T0IE	; disable the Timer0 interupt
+Initialize_ADC
 
 EE_READ:
 	BANKSEL	POSITION_RAM    
@@ -416,17 +445,33 @@ EE_READ:
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
     GOTO	EE_READ
 
-Set_Point_Programming
+Input_Loop_Timeout_Routine
 	CALL	Compatibility_Function
+	CALL	Initialize_MAX7219
 	CALL	Update_LED_Display
-	Waste_Time	.256, .256, .2
+
+Reinitialize_Input_Loop_Timeout
+	BANKSEL	OPTION_REG
+	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
+	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
+	BSF	OPTION_REG, PS2	; Set PS<2:0> to 111, corresponding
+	BSF	OPTION_REG, PS1	; to a prescalar of 256
+	BSF	OPTION_REG, PS0
+	BANKSEL	TMR0
+	CLRF	TMR0
+	BCF	INTCON, T0IE	; disable the Timer0 interupt
+	BCF	INTCON, T0IF	; clear the Timer0 overflow flag
+
 Input_Loop
 
-	BANKSEL	TIME_DATA
-	CLRF	TIME_DATA
-	BANKSEL	TEMP_DATA
-	CLRF	TEMP_DATA
-	CLRF	TEMP_DATA + MAX_DATA_SIZE
+	BANKSEL	TIME_ARRAY
+	CLRF	TIME_ARRAY + 0
+	BANKSEL	TEMP_ARRAY
+	CLRF	TEMP_ARRAY + 0
+	CLRF	TEMP_ARRAY + MAX_ARRAY_SIZE
+
+	BTFSC	INTCON, T0IF
+	GOTO	Input_Loop_Timeout_Routine
 
 	BANKSEL	PORTA
 	BTFSC	PORTB, UP		    ;UP PB
@@ -504,7 +549,9 @@ UpCheck:
     MOVF	datapoint,w	    ;MOVE ADDR OF CURRENT DATAPOINT INTO IND ADDR 
     MOVWF	FSR
     INCF	INDF,F		    ;INCREMENT VALUE AT CURRENT DATAPOINT ADDR
-    GOTO	Set_Point_Programming
+	CALL	Update_LED_Display
+	Waste_Time	.255, .255, .1
+    GOTO	Input_Loop
     
 DownCheck:			    ;ARE YOU TRYING TO ADJUST 
 				    ;1ST, 2ND, & 16TH DATAPOINTS?
@@ -549,7 +596,9 @@ ImplementDown:
     MOVF	datapoint,w	    ;MOVE ADDR OF CURRENT DATAPOINT INTO IND ADDR 
     MOVWF	FSR
     DECF	INDF,F		    ;DECREMENT VALUE AT CURRENT DATAPOINT ADDR
-	GOTO	Set_Point_Programming
+	CALL	Update_LED_Display
+	Waste_Time	.255, .255, .1
+	GOTO	Input_Loop
     
 LeftCheck:			    ;ARE YOU TRYING TO MOVE
 				    ;BEFORE THE 1ST DATAPOINT?
@@ -562,7 +611,9 @@ LeftCheck:			    ;ARE YOU TRYING TO MOVE
     	    ;YOU FOLLOWED THE RULES. GOOD WORK.
 	    
     DECF	datapoint,F
-	GOTO	Set_Point_Programming
+	CALL	Update_LED_Display
+	Waste_Time	.255, .255, .4
+	GOTO	Input_Loop
     
 RightCheck:			    ;ARE YOU TRYING TO MOVE
 				    ;PAST THE 16TH DATAPOINT?
@@ -574,8 +625,10 @@ RightCheck:			    ;ARE YOU TRYING TO MOVE
     
     	    ;YOU FOLLOWED THE RULES. GOOD WORK.
 	    
-    INCF	datapoint,F
-	GOTO	Set_Point_Programming
+	INCF	datapoint,F
+	CALL	Update_LED_Display
+	Waste_Time	.255, .255, .4
+	GOTO	Input_Loop
     
 Start:				    ;WRITE ALL POINTS TO EEPROM
     MOVLW	0X20
@@ -622,6 +675,16 @@ DELAY:				    ;WAIT FOR WRITING TO FINISH
    
 	BANKSEL	TRISA
 	BCF	TRISA, ALARM
+
+Reinitialize_Timer0
+	BANKSEL	OPTION_REG
+	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
+	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
+	BCF	OPTION_REG, PS2	; Set PS<2:0> to 000, corresponding
+	BCF	OPTION_REG, PS1	; to a prescalar of 2
+	BCF	OPTION_REG, PS0
+	BANKSEL	INTCON
+	BCF	INTCON, T0IE	; disable the Timer0 interupt
 
 Control_Loop
 	

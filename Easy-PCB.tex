@@ -9,6 +9,7 @@
 \usepackage[colorlinks=false, hidelinks]{hyperref}
 \usepackage{adjustbox}
 \usepackage{caption}
+\usepackage{float}
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{listings}
@@ -90,9 +91,11 @@ optimized for typical solder reflow profile.
 
 \begin{center}
 	\includegraphics[width=\columnwidth]{Figures/control-system.pdf}
-	\captionof{figure}{The \emph{Easy--PCB} Control System}
-	\label{control-system-block-diagram}
+	\captionof*{figure}{The \emph{Easy--PCB} Control System}
 \end{center}
+
+A more detailed diagram of the control system is shown in
+\hyperref[detailed-system-diagram]{figure \ref{detailed-system-diagram}}.
 
 \emph{Easy--PCB} allows hobbyists to produce reflow temperature profiles with
 a high degree of accuracy and repeatability.
@@ -103,11 +106,21 @@ within the design space of hobbyists and hackers.
 
 \begin{center}
 	\includegraphics[width=\columnwidth]{Figures/control-results.pdf}
-	\captionof*{figure}{Faithful Temperature Profile Control}
+	\captionof{figure}{Faithful Temperature Profile Control}
+	\label{temperature-control-results}
 \end{center}
 
+\begin{figure*}
+	\centering
+	\includegraphics[width=\textwidth]{Figures/detailed-system-diagram.pdf}
+	\caption{\emph{Easy--PCB} Control System with Functional Components}
+	\label{detailed-system-diagram}
+\end{figure*}
+
+\pagebreak
 \tableofcontents
 
+\pagebreak
 \section{User Interface}
 
 \emph{Easy--PCB} presents temperature and time information on a four digit LED display.
@@ -209,7 +222,7 @@ and the process will terminate at the next occurance of $20^{o}$ in a point.
 Temperatures can take any value in the range \mbox{$20^{o}C<T<275^{o}C$.}
 The time between two points must be between \mbox{$0<=t<255$ seconds.}
 
-\section{Plant Design}
+\section{Oven Design}
 
 \subsection{Temperature Objectives}
 
@@ -913,7 +926,7 @@ oven---far away from the user.
 The user interface PCB is mounted near the door and has no
 voltages greater than 5 V for safety. Everything on the front PCB
 is shown in blue in \emph{Easy--PCB} block diagram
-(\hyperref[control-system-block-diagram]{figure \ref{control-system-block-diagram}}).
+\mbox{(\hyperref[detailed-system-diagram]{figure \ref{detailed-system-diagram}})}.
 
 \begin{center}
 	\includegraphics[width=0.75\columnwidth]{Figures/front-PCB-image.pdf}
@@ -934,18 +947,29 @@ I_{\textrm{LED Display}}<200\,mA.
 \end{equation}
 
 There are 6 active low
-pushbuttons on the front facing board with 6 corresponding low pass filters
-on the controller board. The pushbutton circuit is shown in
+pushbuttons on the front--facing board that are designed to be used
+with the internal pull--up resistors available in \textrm{PORTB}
+on the PIC microcontroller. The pushbutton circuit is shown in
 \hyperref[pushbutton-circuit]{figure \ref{pushbutton-circuit}}.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\columnwidth]{Figures/pushbutton-circuit.pdf}
-	\caption{Hardware Debounced Pushbuttons}
+	\includegraphics[width=0.6\columnwidth]{Figures/pushbutton-circuit.pdf}
+	\caption{Pushbutton Circuit using Interal Pull--Ups}
 	\label{pushbutton-circuit}
 \end{figure}
 
-An audio alarm is provided by a 2 kHz piezoelectric element and a small BJT
+\subsection{Alarm, ICSP, and USART}
+
+This section is loaded with assumption and implication.
+
+First, if you look at the block diagram in
+\mbox{\hyperref[detailed-system-diagram]{figure \ref{detailed-system-diagram}}},
+the alarm is supposed to actuate the oven door for the control system.
+The only way to make this true is to design a horribly annoying alarm
+and not acknowledge it is a part of the user interface.
+
+The audio alarm is provided by a 2 kHz piezoelectric element and a small BJT
 amplifier circuit, like shown in
 \hyperref[piezo-circuit]{figure \ref{piezo-circuit}}.
 
@@ -956,28 +980,34 @@ amplifier circuit, like shown in
 	\label{piezo-circuit}
 \end{figure}
 
-\subsection{Stop Button and Door Contact}
+Second, the PIC In--Circuit Serial Programming (ICSP) header is a part of the user
+interface more than it is a part of the controller because I doubt \emph{Easy--PCB}
+will ever be bug free.
 
-The door contact safety switch on the front--facing PCB board is form A: normally open and active closed.
-The safety switch and the stop button are connected to interupt pins on the microcontroller.
-When activated, the interupt routine will turn off power to the nichrome heating element
-and the program will quit the current run routine.
+The ICSP circuit is shown in
+\hyperref[pic16f883-circuit]{figure \ref{pic16f883-circuit}}.
+The low voltage programming is geared toward production environments
+or products which may need firmare updated by other ICs in the system.
+It is not necessary for programming with the PICkit3 at home.
+The data and clock (DAT and CLK) pins can shared with other hardware
+as long as there is no bus contention during programming.
+
+Third, a header for USART is provided for debugging
+\ldots another assumption being made about my audience.
+
+\subsection{Safety Stop Button}
 
 INTERUPT ROUTINE ON STATE DIAGRAM?
 
 \subsection{Bill of Materials}
 
-\section{Temperature Feedback Design}
+\section{Thermocouple Amplifier Design}
+
+\subsection{Thermocouple Selection}
 
 To develop accurate temperature control, real time temperature feedback
 is necessary. The temperature is too hot for thermisters or temperature ICs,
 so old school thermocouples must be used.
-
-\begin{center}
-	\includegraphics[width=\columnwidth]{Figures/control-system.pdf}
-\end{center}
-
-\subsection{Thermocouple \& Amplifier}
 
 \begin{figure}
 	\begin{adjustbox}{max width=0.9\columnwidth}
@@ -1030,6 +1060,8 @@ and
 The positive wire $KP$ is one of the following alloys: Chromel, Tophel, T--1, or ThermoKanthal KP.
 The negative wire $KN$ is Alumel, Nial, T--2, or ThermoKanthal KN.
 
+\subsection{Amplifier Design}
+
 The thermoelectric potential in a K loop is very small; 
 for a temperature difference of $T-T_{R}=255^{o}C$,
 the voltage developed is only on the order of $E_{S}=10.2\,mV$.
@@ -1047,7 +1079,7 @@ should be
 	\frac{3.3\,V}{10.2\,mV}
 \end{equation*}
 \begin{equation}
-\textrm{type--K:}\quad R_{f2(K)}=323.5*R_{f1(K)}
+\textrm{type--K:}\quad R_{f2}=323.5*R_{f1}
 \end{equation}
 
 Similarly, the feedback resistor ratio for type--J thermocouples should be
@@ -1181,6 +1213,28 @@ show how motor loads the power supply.
 
 \subsection{Bill of Materials}
 
+\section{Heat Relay Design}
+
+\subsection{Relay Selection \& Circuit}
+
+The amplifier BJT and flyback diode should be rated for currents greater than the saturation
+current of the relay coil.
+\begin{equation}
+I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
+\end{equation}
+
+For the Omron Safety G4W relays, that saturation current is
+\begin{equation}
+I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
+\end{equation}
+
+\subsection{Door Contact Safety Switch}
+
+The door contact safety switch on the front--facing PCB board is form A: normally open and active closed.
+The safety switch and the stop button are connected to interupt pins on the microcontroller.
+When activated, the interupt routine will turn off power to the nichrome heating element
+and the program will quit the current run routine.
+
 \section{Power Circuit Design}
 
 \subsection{Safety \& Supply Requirements}
@@ -1242,17 +1296,6 @@ The power circuit with all these features is shown in
 
 \subsection{Power Circuit Design}
 
-The amplifier BJT and flyback diode should be rated for currents greater than the saturation
-current of the relay coil.
-\begin{equation}
-I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
-\end{equation}
-
-For the Omron Safety G4W relays, that saturation current is
-\begin{equation}
-I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
-\end{equation}
-
 \subsection{PCB Trace Width}
 
 To reduce the chances of faults due to wiring/assembly, most of the power
@@ -1280,15 +1323,102 @@ is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
 \section{Controller Design}
 
+As of today, the following features are implemented on
+our demo breadboard:
+\begin{enumerate}
+\item LED display
+\item User interface with set point programming of up to 8 points
+\item Safety interupt with stop button
+\item EEPROM reading and writing
+\item Timer 0 and the beginning of the control loop
+\item Piezo Alarm (without masking yet)
+\item Thermocouple amplifier circuit
+\item Heat relay circuit is tested but not a part of the program yet
+\end{enumerate}
+
+The controller PCB is shown in
+\hyperref[controller-pcb-photo]{figure \ref{controller-pcb-photo}}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/controller-pcb-photo}
+	\caption{Implementation Photo--as of 12/7}
+	\label{controller-pcb-photo}
+\end{figure}
+
 \subsection{PIC Requirements \& Circuit}
 
 \subsection{Memory Organization}
 
-\subsection{Timing}
+\subsection{Timing Design}
 
 \subsection{Interupts and Safety}
 
 \subsection{Program Flowcharts}
+
+The program is separated into two logical halves:
+the user interface loop and the control loop.
+Pressing start from the user interface loop causes the
+program to enter the control loop.
+Pressing stop at any time triggers an interupt which
+restarts the user interface loop.
+
+The user interface loop is shown in
+\hyperref[user-interface-flowchart]{figure \ref{user-interface-flowchart}}
+and the control loop is shown in
+\hyperref[control-flowchart]{figure \ref{control-flowchart}}.
+
+Initialization and several subfunctions are depicted in figures
+\ref{user-interface-flowchart-1},
+\ref{user-interface-flowchart-2},
+\ref{user-interface-flowchart-3}, and
+\ref{user-interface-flowchart-4}.
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=1\textwidth]{Figures/user-interface-flowchart-1.pdf}
+	\caption{User Interface Program Flowchart}
+	\label{user-interface-flowchart}
+\end{figure*}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=\textwidth]{Figures/control-flowchart.pdf}
+	\caption{Runtime Control Program Flowchart}
+	\label{control-flowchart}
+\end{figure*}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/user-interface-flowchart.pdf}
+	\caption{Program Initialization Flowchart}
+	\label{user-interface-flowchart-1}
+\end{figure}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/user-interface-flowchart-2.pdf}
+	\caption{Down Button Subroutine}
+	\label{user-interface-flowchart-2}
+\end{figure*}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/user-interface-flowchart-3.pdf}
+	\caption{Up Button Subroutine}
+	\label{user-interface-flowchart-3}
+\end{figure*}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/user-interface-flowchart-4.pdf}
+	\caption{EEPROM Write Subroutine}
+	\label{user-interface-flowchart-4}
+\end{figure}
+
+The program itself is listed in
+\hyperref[easy-pcb-listing]{appendix \ref{easy-pcb-listing}}.
+
 
 \subsection{Control System Design}
 
@@ -1304,5 +1434,13 @@ is $0.278\,in$ and minimum clearance is $0.057\,in$.
 \subsection{Bipolar Motor Driver}
 \label{motor-driver-listing}
 \lstinputlisting[basicstyle=\small]{NGSPICE/Motor-Driver/motor-driver.cir}
+
+\pagebreak
+\section{PIC Assembly Listings}
+
+\subsection{easy--pcb.asm}
+\label{easy-pcb-listing}
+\lstinputlisting[basicstyle=\small]{PIC-Program/easy-pcb.asm}
+
 
 \end{document}
