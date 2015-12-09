@@ -17,8 +17,11 @@
 #define	ALARM	RA4
 #define	HEAT	RA3
 #define	T_REF	RA0
-#define	T_K1	RA1
-#define	T_K2	RA2
+#define	A_REF	0	; The analog input channel corresponding to pin T_REF
+#define	T_K	RA1
+#define	A_K	1	; The analog input channel corresponding to pin T_K
+#define	V_REF_MINUS	RA2	; the negative reference voltage for Kn-
+#define	A_REF_MINUS	2	; the analog input channel corresponding to Vref-
 
 #define	MAX_ARRAY_SIZE	.8	; 96 bytes are available in banks 2 and 3
 #define	TIME_ARRAY	0x110
@@ -29,8 +32,8 @@
 #define	TT_BOOLEAN	0
 #define	START_BOOLEAN	1
 
-#define	TMR0_PERIOD	.125
-#define	TIME_COUNTER_SET_VALUE	.255
+#define	TMR0_PERIOD	.125	; 125 selected for 2kHz piezo
+#define	TIME_COUNTER_SET_VALUE	.25
 #define	LED_INTENSITY	.8	; Light Intensity from 0-15
 
 ; Digits 0-9 have lookup indices 0-9, but :, deg, and C
@@ -56,6 +59,7 @@
 		T6
 		t7
 		T7
+		data_index
 		time: UINT16_T
 		Temp
 		booleans_reg
@@ -349,7 +353,7 @@ Initialize_MAX7219
     
 Initialize_IO
 	BANKSEL	TRISA
-	MOVLW	(0<<SS) | (1<<T_K1) | (1<<T_K2) | (1<<T_REF) | (0<<HEAT) | (1<<ALARM)
+	MOVLW	(0<<SS) | (1<<T_REF)| (1<<T_K) | (1<<V_REF_MINUS) | (1<<HEAT) | (1<<ALARM)
 	MOVWF	TRISA
 	MOVLW	(1<<STOP) | (1<<LEFT) | (1<<UP) | (1<<DOWN) | (1<<RIGHT) | (1<<START)
 	MOVWF	TRISB
@@ -361,9 +365,19 @@ Initialize_IO
 	BANKSEL	OPTION_REG
 	BCF	OPTION_REG, NOT_RBPU	; enable global pullups
 	BANKSEL	ANSEL
-	CLRF	ANSEL
+	MOVLW	(1<<A_REF) | (1<<A_K) | (1<<A_REF_MINUS)
+	MOVWF	ANSEL
 	BANKSEL	ANSELH
 	CLRF	ANSELH
+
+Initialize_ADC
+	BANKSEL	ADCON1
+	BCF	ADCON1, ADFM	; Left justify the result (upper 8 bits of result will be stored in ADRESH)
+	BSF	ADCON1, VCFG1	; Set Vref- to Vss
+	BCF	ADCON1, VCFG0	; Set Vref+ to Vdd
+	BANKSEL	ADCON0	
+	BCF	ADCON0, ADCS1	; Select Fosc/8 for ADC clock period because that is recommended for Fosc=4MHz
+	BSF	ADCON0, ADCS0	; the code for this is 01 from datasheet page 108
 
 Blink_Red_Once
 	BANKSEL	PORTB
@@ -414,8 +428,6 @@ Initialize_SPI
 	BSF	SSPSTAT, CKE	; data transmitted on rising edge of clock (rising edge for MAX7219)
 	BANKSEL	SSPCON
 	BSF	SSPCON, SSPEN	; enable Serial Peripheral Interface
-
-Initialize_ADC
 
 EE_READ:
 	BANKSEL	POSITION_RAM    
@@ -603,7 +615,7 @@ LeftCheck:			    ;ARE YOU TRYING TO MOVE
 	    
     DECF	datapoint,F
 	CALL	Update_LED_Display
-	Waste_Time	.255, .255, .4
+	Waste_Time	.255, .255, .2
 	GOTO	Input_Loop
     
 RightCheck:			    ;ARE YOU TRYING TO MOVE
@@ -618,7 +630,7 @@ RightCheck:			    ;ARE YOU TRYING TO MOVE
 	    
 	INCF	datapoint,F
 	CALL	Update_LED_Display
-	Waste_Time	.255, .255, .4
+	Waste_Time	.255, .255, .2
 	GOTO	Input_Loop
     
 Start:				    ;WRITE ALL POINTS TO EEPROM
@@ -663,9 +675,6 @@ DELAY:				    ;WAIT FOR WRITING TO FINISH
     INCF	POSITION_EE,F
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
     GOTO	EE_WRITE	
-   
-	BANKSEL	TRISA
-	BCF	TRISA, ALARM
 
 Reinitialize_Timer0
 	BANKSEL	OPTION_REG
@@ -677,17 +686,72 @@ Reinitialize_Timer0
 	BANKSEL	INTCON
 	BCF	INTCON, T0IE	; disable the Timer0 interupt
 
+Check_for_Door_Closure
+	BANKSEL	TRISA
+	BCF	TRISA, ALARM
+
+Initialize_Runtime_and_Data_Index
+	BANKSEL	time
+	CLRF_X	time, UINT16_T
+	CLRF	data_index
+
 Control_Loop
 	
+	; Reset Timer 0
 	BANKSEL	TMR0
 	MOVLW	(.256 - TMR0_PERIOD)	; (because TMR0 increments until it overflows)
 	MOVWF	TMR0			; Start timing
 	BCF	INTCON, T0IF		; and Clear the Timer Interupt Flag
 
-	BANKSEL	time_counter_L		; Reset the Counter for Timer Overflows
+	; Reset the Variables for Timer Overflow Counting
+	BANKSEL	time_counter_L		
 	CLRF	time_counter_L
 	MOVLW	TIME_COUNTER_SET_VALUE
 	MOVWF	time_counter_H	
+
+	; Measure the Thermocouple Analog Input
+	BANKSEL	ADCON0
+	BSF	ADCON0, CHS0	; select analog channel 1 (CHS<3:0> = 0001)
+	BCF	ADCON0, CHS1
+	BCF	ADCON0, CHS2
+	BCF	ADCON0, CHS3	
+	BSF	ADCON0, ADON	; enable ADC
+	NOP			; wait 5us aquisition time, based on small Rout
+	NOP			; of op-amp and Tacq equation on page 111 of datasheet
+	NOP
+	NOP
+	NOP
+	BSF	ADCON0, GO	; start ADC conversion
+	BTFSC	ADCON0, GO	; is conversion done?
+	GOTO	$-1		; Estimated completion time is (Fosc/8) * 11
+	BANKSEL	ADRESH
+	MOVF	ADRESH, W	; save result to Temp register. No additional math is
+	BANKSEL	Temp		; necessary because the op-amp gain was selected
+	MOVWF	Temp		; to match the full range of the ADC to 255 degrees delta T
+
+	; Wait for Timer0 to Maintain Accurate Timing
+	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
+	GOTO	$-1
+	BCF	INTCON, T0IF
+	BANKSEL	TMR0
+	MOVLW	(.255 - TMR0_PERIOD)	; Reset TMR0
+
+	; Measure the Temperature Reference Analog Input
+
+	; Calculate Absolute Temperature
+
+	; Wait for Timer 0 to Maintain Accurate Timing
+
+	; Update LED Display 
+	BANKSEL	time
+	BCF	booleans_reg, TT_BOOLEAN	; (assume it is time for time to be displayed)
+	BTFSC	time, 0		; test if time or temperature should be displayed
+	BSF	booleans_reg, TT_BOOLEAN	; (alternate every second)
+	CALL	Update_LED_Display
+
+	; Wait for Timer 0 to Maintain Accurate Timing
+
+
 
 Time_Counting_Loop
 	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
@@ -704,9 +768,11 @@ Time_Counting_Loop
 	DECFSZ	time_counter_H
 	GOTO	Time_Counting_Loop
 
-	MOVLW	(1 << GRN_LED)
-	XORWF	PORTB, F
-
+Increment_Time_and_Continue_to_Next_Iteration
+	BANKSEL	time
+	INCF	(time)
+	BTFSC	STATUS, Z
+	INCF	(time + 1)	
 	GOTO	Control_Loop
 	
 
