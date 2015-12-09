@@ -349,6 +349,23 @@ Initialize_MAX7219
 	CALL	SPI_2byte_Transfer
 	RETURN
 
+; void Time_Counting_Loop (uint8_t *time_counter_L, uint8_t *time_counter_H);
+Time_Counting_Loop
+	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
+	GOTO	$-1
+	BCF	INTCON, T0IF
+	BANKSEL	TMR0
+	MOVLW	(.255 - TMR0_PERIOD)	; Reset TMR0
+	MOVWF	TMR0
+	BANKSEL	0		; Toggle Alarm (note bank 0 for digital I/O and time_counter)
+	MOVLW	(1 << ALARM)
+	XORWF	PORTA, F
+	DECFSZ	time_counter_L	; Decrement (time_counter--) and test for zero
+	GOTO	Time_Counting_Loop
+	DECFSZ	time_counter_H
+	GOTO	Time_Counting_Loop
+	RETURN
+
 ;________________________Begin Main Program_________________________;
     
 Initialize_IO
@@ -633,7 +650,63 @@ RightCheck:			    ;ARE YOU TRYING TO MOVE
 	Waste_Time	.255, .255, .2
 	GOTO	Input_Loop
     
-Start:				    ;WRITE ALL POINTS TO EEPROM
+Start
+
+Reinitialize_Timer0
+	BANKSEL	OPTION_REG
+	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
+	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
+	BCF	OPTION_REG, PS2	; Set PS<2:0> to 000, corresponding
+	BCF	OPTION_REG, PS1	; to a prescalar of 2
+	BCF	OPTION_REG, PS0
+	BANKSEL	INTCON
+	BCF	INTCON, T0IE	; disable the Timer0 interupt
+
+Check_Door_Contact_Switch
+	BANKSEL	PORTA
+	BTFSS	PORTA, HEAT	; if door is shut, HEAT pin will be pulled low
+	GOTO	Door_Closed
+Door_Open	; Beap three times then return to input loop
+	BANKSEL	TRISA
+	BCF	TRISA, ALARM
+	BANKSEL	time_counter_H
+	MOVLW	.3
+	MOVWF	time_counter_H
+	CALL	Time_Counting_Loop
+	BANKSEL	TRISA
+	BSF	TRISA, ALARM
+	BANKSEL	time_counter_H
+	MOVLW	.3
+	MOVWF	time_counter_H
+	CALL	Time_Counting_Loop
+	BANKSEL	TRISA
+	BCF	TRISA, ALARM
+	BANKSEL	time_counter_H
+	MOVLW	.3
+	MOVWF	time_counter_H
+	CALL	Time_Counting_Loop
+	BANKSEL	TRISA
+	BSF	TRISA, ALARM
+	BANKSEL	time_counter_H
+	MOVLW	.3
+	MOVWF	time_counter_H
+	CALL	Time_Counting_Loop
+	BANKSEL	TRISA
+	BCF	TRISA, ALARM
+	BANKSEL	time_counter_H
+	MOVLW	.3
+	MOVWF	time_counter_H
+	CALL	Time_Counting_Loop
+	BANKSEL	TRISA
+	BSF	TRISA, ALARM
+
+	GOTO	Interupt_Vector
+Door_Closed
+
+
+
+
+;WRITE ALL POINTS TO EEPROM
     MOVLW	0X20
     BANKSEL	POSITION_RAM
     MOVWF	POSITION_RAM
@@ -675,20 +748,6 @@ DELAY:				    ;WAIT FOR WRITING TO FINISH
     INCF	POSITION_EE,F
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
     GOTO	EE_WRITE	
-
-Reinitialize_Timer0
-	BANKSEL	OPTION_REG
-	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
-	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
-	BCF	OPTION_REG, PS2	; Set PS<2:0> to 000, corresponding
-	BCF	OPTION_REG, PS1	; to a prescalar of 2
-	BCF	OPTION_REG, PS0
-	BANKSEL	INTCON
-	BCF	INTCON, T0IE	; disable the Timer0 interupt
-
-Check_for_Door_Closure
-	BANKSEL	TRISA
-	BCF	TRISA, ALARM
 
 Initialize_Runtime_and_Data_Index
 	BANKSEL	time
@@ -751,22 +810,7 @@ Control_Loop
 
 	; Wait for Timer 0 to Maintain Accurate Timing
 
-
-
-Time_Counting_Loop
-	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
-	GOTO	$-1
-	BCF	INTCON, T0IF
-	BANKSEL	TMR0
-	MOVLW	(.255 - TMR0_PERIOD)	; Reset TMR0
-	MOVWF	TMR0
-	BANKSEL	0		; Toggle Alarm (note bank 0 for digital I/O and time_counter)
-	MOVLW	(1 << ALARM)
-	XORWF	PORTA, F
-	DECFSZ	time_counter_L	; Decrement (time_counter--) and test for zero
-	GOTO	Time_Counting_Loop
-	DECFSZ	time_counter_H
-	GOTO	Time_Counting_Loop
+	CALL	Time_Counting_Loop
 
 Increment_Time_and_Continue_to_Next_Iteration
 	BANKSEL	time
