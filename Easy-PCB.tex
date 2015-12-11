@@ -216,9 +216,9 @@ keys to edit each set point value.
 \end{center}
 
 A total of 128 set points can be entered. The first set point is always $(0s,\,20^{o}C)$,
-and the process will terminate at the next occurance of $20^{o}$ in a point.
-Temperatures can take any value in the range \mbox{$20^{o}C<T<275^{o}C$.}
-The time between two points must be between \mbox{$0<=t<255$ seconds.}
+and the process will terminate at the next occurance of $20^{o}C$.
+Temperatures can take any value in the range \mbox{$20\leq T \leq 275^{o}C$.}
+The time between two points must be between \mbox{$0\leq t\leq255$ seconds.}
 
 \section{Oven Design}
 
@@ -836,7 +836,7 @@ Temp. [$^{o}C$]	&20	&93	&204	&315	\\
 Many designs with different shapes, sizes, metals, insulators,
 heating elements, and wattage levels were modeled in SPICE for their
 thermodynamic response to a unit step signal from the power relay.
-The primary parameters of interest was the heating rate of the air
+The primary parameter of interest was the heating rate of the air
 in the chamber.
 
 The SPICE models were based on the equations from
@@ -910,8 +910,6 @@ The results are shown in
 	\caption{Simulated Temperature Response to a Unit Step}
 	\label{heat-model-results}
 \end{figure}
-
-\subsection{Bill of Materials}
 
 \section{User Interface Design}
 
@@ -998,8 +996,6 @@ Third, a header for USART is provided for debugging
 
 INTERUPT ROUTINE ON STATE DIAGRAM?
 
-\subsection{Bill of Materials}
-
 \section{Thermocouple Amplifier Design}
 
 \subsection{Thermocouple Theory}
@@ -1080,8 +1076,6 @@ Similarly, if a type--J thermocouples is used, the resistor ratio should be
 \end{equation}
 
 \subsection{Thermistor Amplifier Design}
-
-\subsection{Bill of Materials}
 
 \section{Motor Driver Design}
 
@@ -1204,8 +1198,6 @@ show how motor loads the power supply.
 	\label{motor-driver-current-simulation}
 \end{figure}
 
-\subsection{Bill of Materials}
-
 \section{Heat Relay Design}
 
 \subsection{Door Contact Safety Switch}
@@ -1319,25 +1311,24 @@ For $10\,A$, $120\,VAC$ power with a maximum temperature rise of $10^{o}C$
 and standard copper thickless $1\,oz=1.4\,mil$, the minimum trace width
 is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
-\subsection{Bill of Materials}
-
 \section{Controller Design}
 
-As of today, the following features are implemented on
-our demo breadboard:
-\begin{enumerate}
-\item LED display
-\item User interface with set point programming of up to 8 points
-\item Safety interupt with stop button
-\item EEPROM reading and writing
-\item Timer 0 and the beginning of the control loop
-\item Piezo Alarm (without masking yet)
-\item Thermocouple amplifier circuit
-\item Heat relay circuit is tested but not a part of the program yet
-\end{enumerate}
+\subsection{PIC Requirements \& Circuit}
 
 The controller PCB is shown in
 \hyperref[controller-pcb]{figure \ref{controller-pcb}}.
+At its heart is a 28--pin, DIP, 5V, \textrm{PIC16F883} $\mu$Controller.
+It has all of the requirements for  \textrm{Easy--PCB}:
+a 3+ channel ADC, two PWM modules, SPI, USART, and 10+
+digital I/O with at least one external interupt.
+The mapping of the pins on the \textrm{PIC16F883} are shown in figure
+\hyperref[pic16f883-circuit]{figure \ref{pic16f883-circuit}}.
+
+\begin{center}
+	\includegraphics[width=\columnwidth]{Figures/pic16f883-circuit.pdf}
+	\captionof{figure}{\textrm{PIC16F883} Pinout Diagram}
+	\label{pic16f883-circuit}
+\end{center}
 
 \begin{figure}
 	\centering
@@ -1347,8 +1338,6 @@ The controller PCB is shown in
 \end{figure}
 
 \subsection{Interupts and Safety}
-
-\subsection{PIC Requirements \& Circuit}
 
 \subsection{Memory Organization}
 
@@ -1434,6 +1423,19 @@ The program itself is listed in
 \section{Additional Items for the Final Report}
 
 \subsection{System in Action}
+
+The following features are implemented on
+our demo breadboard:
+\begin{enumerate}
+\item LED display
+\item User interface with set point programming of up to 8 points
+\item Safety interupt with stop button
+\item EEPROM reading and writing
+\item Timer 0 and the beginning of the control loop
+\item Piezo Alarm (without masking yet)
+\item Thermocouple amplifier circuit
+\item Heat relay circuit is tested but not a part of the program yet
+\end{enumerate}
 
 Photos of the system in action are shown in figures
 \ref{controller-pcb} and \ref{front-facing-pcb}. The two
