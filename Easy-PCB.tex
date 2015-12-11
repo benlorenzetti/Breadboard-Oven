@@ -1312,6 +1312,7 @@ and standard copper thickless $1\,oz=1.4\,mil$, the minimum trace width
 is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
 \section{Controller Design}
+\label{controller-section}
 
 \subsection{PIC Requirements \& Circuit}
 
@@ -1504,5 +1505,232 @@ opamp and the PIC.
 \label{easy-pcb-listing}
 \lstinputlisting[basicstyle=\small]{PIC-Program/easy-pcb.asm}
 
+\pagebreak
+\section{Bill of Materials}
+
+\begin{center}
+\captionof{table}{\emph{Easy--PCB} Bill of Materials}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{c c c c c c c c c c}
+\hline\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&Total Cost	\\
+\hline
+1	&4	&S1-4	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
+	&E-Switch		&RP3502BBLK		&2.04		&8.16	\\
+
+2	&1	&S5	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+	&E-Switch		&RP3508BBLKGRNGRNNS	&5.43		&5.43	\\
+
+3	&1	&S6	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+	&E-Switch		&RP3508BBLKREDREDNS	&5.43		&5.43	\\
+
+4	&1	&S7	&door contact block	&SPDT, momentary		&
+	&Apem Inc.		&A0151B			&6.76		&6.76	\\
+
+5	&6	&	&pushbutton I limiters	&1kOhm				&
+	&		&			&		&	\\
+
+6	&1	&	&Rset for LED display driver	&10 kOhms, 5\% tolerance	&
+	&		&			&		&	\\
+
+7	&2	&	&SW5,6 LED I limiters	&500 Ohms			&
+	&		&			&		&	\\
+
+8	&2	&	&SPI pull ups		&50 kOhms			&
+	&		&			&		&	\\
+
+9	&1	&U1	&7--seg, 8--dig disp. driver	&com.--cathode, SPI, 5V, 333 mA	&"0.1” pitch, DIP
+	&Maxim Integrated	&MAX7219CNG		&9.13		&9.13	\\
+
+10	&1	&J1	&24--pin, DIP Socket	&				&.1” pitch, 0.3” row spacing
+	&3M		&4824-3000-CP			&0.74		&0.74	\\
+
+11	&1	&U2	&7-seg, LED clock display	&com.-cathode	&0.1” pitch, DIP"
+	&Lite--On Inc.		&LTC-4727JR		&3.56		&3.56	\\
+
+12	&1	&	&decoupling capacitor	&0.1uF				&
+	&		&				&		&	\\
+
+13	&2	&J2,3	&front PCB to controller PCB	&20 pos			&1mm pitch, 1 row flat flex
+	&FCI			&HLW20R-2C7LF		&0.21		&0.42	\\
+
+14	&1	&	&18” flat flex ribbon		&20 pos		&1mm pitch, 1 row
+	&Parlex USA LLC		&100R20-457B		&7.43		&7.43	\\
+\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+15	&1	&	&2 kHz piezo buzzer	&5V(0-peak)			&
+	&TDK Corporation	&PS1420P02CT		&0.85		&0.85	\\
+
+16	&2	&R26,27	&piezo resistors	&1kOhm				&
+	&			&			&		&	\\
+
+17	&1	&	&piezo drive BJT		&NPN				&
+	&Fairchild Semiconductor	&2N3904BU	&0.18		&0.18	\\
+
+\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+18	&1	&	&type--K thermocouple	&				&
+	&			&			&		&	\\
+
+19	&1	&U4	&thermocouple Op Amp	&$V_{out}=\pm 20\,mV$ of supply	&8--pin, 0.1” DIP
+	&Microchip Technology	&MCP617--I/P		&1.02		&1.02	\\
+
+20	&1	&U3	&cold jnct temp. sensor	&Vout=500mV + 10mV/degC 	&-40 to 125$^{o}C$
+	&Microchip Technology	&MCP9700--E/TO		&0.31		&0.31	\\
+
+\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+21	&1	&	&Bipolar Stepper Motor	&12 V, 35 mH, 70 Ohms		&3mm Shaft OD, 44mm Body OD
+	&Portescap		&44M100D2B		&26.62		&26.62	\\
+
+22	&4	&Q1,2,11,12	&NPN BJTs for H--bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2\,W$	&
+	&Fairchild Semiconductor	&MJE340STU	&0.50		&2.00	\\
+
+23	&4	&Q3,4,13,14	&PNP BJTs for H-bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2W$	&
+	&Fairchild Semiconductor	&MJE350STU	&0.42		&1.68	\\
+
+24	&8	&D1--8	&H--bridge flybacks	&$V_{R}\geq1\,kV$, $I_{0}\geq 1\,A$	&
+	&Diodes Incorporated	&1N4007--T		&0.13		&1.04	\\
+
+25	&8	&	&H--bridge control	&NPN, 2N3904			&
+	&Fairchild Semiconductor	&2N3904BU	&0.18		&1.44	\\
+
+26	&4	&	&H--bridge Rcs			&					&
+	&			&			&		&	\\
+
+27	&2	&	&H--bridge R1s			&					&
+	&			&			&		&	\\
+
+28	&2	&	&H--bridge R2s			&					&
+	&			&			&		&	\\
+
+29	&2	&	&H--bridge R23s			&					&
+	&			&			&		&	\\
+
+30	&2	&	&H--bridge R4s			&					&
+	&			&			&		&	\\
+
+31	&3	&	&H--bridge Res			&					&
+	&			&			&		&	\\
+
+32	&1	&	&H--bridge Rref			&					&
+	&			&			&		&	\\
+
+\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+33	&1	&	&Heat control relay		&DC 12 V, 66.7mA; AC 250 V, 15 A	&$5x10^6$ cycles, thru-hole
+	&Omron Electronics Inc	&G4W-2212P-US-TV5-HP-DC12	&8.21	&8.21	\\
+
+34	&1	&	&Relay flyback			&$V_{R}\geq1\,kV$, $I_{0}\geq1\,A$	&
+	&Diodes Incorporated	&1N4007-T			&0.13	&0.13	\\
+
+35	&1	&	&Relay drive transistor		&NPN, $I_{C(max)}>67\,mA$		&
+	&Fairchild Semiconductor	&MJE340STU	&0.5		&0.5	\\
+
+\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+36	&1	&	&PIC16F883 $\mu$Controller	&see section \ref{controller-section}	&28--pin DIP
+	&Microchip Technology	&PIC16F883-I/SP		&1.90		&1.90	\\
+
+37	&1	&	&28--pin DIP Socket		&					&0.1" pitch
+	&		&				&		&	\\
+
+38	&1	&	&decoupling capacitor		&$0.1\,\mu F$				&
+	&		&				&		&	\\
+
+39	&1	&	&PIC ICSP header		&				&5--pos, 0.1” pitch
+	&Harwin Inc.	&M20-9990546			&0.18		&0.18	\\
+
+40	&1	&	&USART header			&				&2--pos, 0.1” pitch
+	&Harwin Inc.	&M20-9990246			&0.11		&0.11	\\
+
+\hline
+Item	&Qty	&Labels	&Description	&Electrical Specs	&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+41	&1	&P1	&1'x8”x8" Aluminum Tube		&	&6061 Al, 3/16” thick
+	&McMaster--Carr	&6546K76			&48.81		&48.81	\\
+
+42	&1	&P2	&0.5”x0.5”x12” Top Bar		&	&6061 Al
+	&McMaster--Carr	&9008K81			&2.14		&2.14	\\
+
+43	&2	&P3	&0.5”x0.5”x12” Vert. Columns	&	&6061 Al
+	&McMaster--Carr	&9008K81			&2.14		&4.28	\\
+
+44	&1	&P4	&8”x1/4”x9" Front Wall		&	&6061 Al
+	&McMaster--Carr	&8975K443			&17.91		&17.91	\\
+
+45	&2	&P5	&1/2”x3/4”x6" Door Members	&	&6061 Al
+	&McMaster--Carr	&8975K618			&2.07		&4.14	\\
+
+46	&1	&P6	&1/8”x6”x1' Door Panel		&	&6061 Al
+	&McMaster--Carr	&8975K921			&6.86		&6.86	\\
+
+47	&1	&P7	&8”x1/4”x1' Back Wall		&	&6061 Al
+	&McMaster--Carr	&8975K443			&17.91		&17.91	\\
+
+48	&1	&P8	&8”x10” High Temp. Gasket	&	&1/32” thick Aramid/Buna-N
+	&McMaster--Carr	&9402K22		&		&	\\
+
+49	&5	&A1	&8--32 angle bracket		&	&5/8” \& 3/4” sides, horizontal slot
+	&McMaster--Carr	&15275A51		&0.69	&3.45	\\
+
+\hline
+Item	&Qty	&Labels	&Description	&Electrical Specs	&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline
+
+50	&1	&130 ft, 36 mil OD Nichrome Wire	&	&Chromel C, $T_{max}=980^{o}C$
+	&McMaster--Carr	&8880K46		&71.92	&71.92	\\
+
+51	&2	&10--32 Nichrome Mounting Rod		&	&18--8 Stainless Steel
+	&McMaster--Carr	&98804A106		&3.30	&6.60	\\
+
+52	&12	&No. 10 size ceramic spacers	&insulating	&1” Lg., 3/8” OD, 0.192 ID, for No. 10 screws
+	&McMaster--Carr	&96109A235		&4.20	&50.40	\\
+
+53	&2	&No. 6 size ceramic standoffs	&insulating	&1.5” Lg., 9/16”, threaded both sides
+	&McMaster--Carr	&94335A145		&4.44	&8.88	\\
+
+54	&1	&6--32, 7/64” Ht. Nuts (100)	&	&18--8 Stainless Steel
+	&McMaster--Carr	&91841A007		&3.48	&3.48	\\
+
+55	&1	&No. 6 size washer (100)	&	&18--8 Stainless Steel
+	&McMaster--Carr	&92141A008		&1.17	&1.17	\\
+
+56	&1	&6--32, 7/8” Lg. socket head cap screws (100)	&	&18--8 Stainless Steel
+	&McMaster--Carr	&92196A152		&6.36	&6.36	\\
+
+57	&10	&12 AWG braided oven wire (by ft)	&$P_{max}=9.3\,A$	&$T_{max}=450^{o}C$
+	&McMaster--Carr	&8209K19		&3.17	&31.7	\\
+
+58	&1	&12 AWG, No. 6 ring terminals (100)	&	&$T_{max}=450^{o}C$
+	&McMaster--Carr	&69405K56		&12.36	&12.36	\\
+
+59	&1	&Screw Terminal Block		&	&6--32, 3--pos
+	&Molex LLC	&387203208		&5.16	&5.16	\\
+
+\hline\hline
+\end{tabular}
+\end{adjustbox}
+\label{bill-of-materials}
+\end{center}
 
 \end{document}
