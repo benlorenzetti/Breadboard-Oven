@@ -1316,13 +1316,20 @@ is $0.278\,in$ and minimum clearance is $0.057\,in$.
 
 \subsection{PIC Requirements \& Circuit}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\columnwidth]{Figures/controller-pcb.pdf}
+	\caption{Oven Controller Board}
+	\label{controller-pcb}
+\end{figure}
+
 The controller PCB is shown in
 \hyperref[controller-pcb]{figure \ref{controller-pcb}}.
 At its heart is a 28--pin, DIP, 5V, \textrm{PIC16F883} $\mu$Controller.
 It has all of the requirements for  \textrm{Easy--PCB}:
-a 3+ channel ADC, two PWM modules, SPI, USART, and 10+
+3+ channels of ADC, two PWM modules, SPI, USART, and 10+
 digital I/O with at least one external interupt.
-The mapping of the pins on the \textrm{PIC16F883} are shown in figure
+The mapping of the pins on the \textrm{PIC16F883} is shown in
 \hyperref[pic16f883-circuit]{figure \ref{pic16f883-circuit}}.
 
 \begin{center}
@@ -1330,13 +1337,6 @@ The mapping of the pins on the \textrm{PIC16F883} are shown in figure
 	\captionof{figure}{\textrm{PIC16F883} Pinout Diagram}
 	\label{pic16f883-circuit}
 \end{center}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{Figures/controller-pcb.pdf}
-	\caption{Oven Controller Board}
-	\label{controller-pcb}
-\end{figure}
 
 \subsection{Interupts and Safety}
 
@@ -1590,8 +1590,17 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&Manufacturer		&Part Number		&Unit Cost	&	\\
 \hline
 
-21	&1	&	&Bipolar Stepper Motor	&12 V, 35 mH, 70 Ohms		&3mm Shaft OD, 44mm Body OD
+21	&1	&	&Bipolar Stepper Motor	&12 V, 35 mH, 70 Ohms		&$3\,mm\emptyset$ Shaft, $44\,mm\emptyset$ Body, 28 AWG leads
 	&Portescap		&44M100D2B		&26.62		&26.62	\\
+
+22	&4	&	&crimp socket connectors	&			&for 24--30 AWG
+	&Molex, LLC		&0016020069		&0.12		&0.48	\\
+
+23	&1	&	&4--pos. connector housing	&			&0.1'' pitch
+	&Molex, LLC		&0050579004		&0.46		&0.46	\\
+
+24	&1	&	&4--pos. male header	&				&0.1'' pitch, tin
+	&Molex, LLC		&0022032041		&0.32		&0.32	\\
 
 22	&4	&Q1,2,11,12	&NPN BJTs for H--bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2\,W$	&
 	&Fairchild Semiconductor	&MJE340STU	&0.50		&2.00	\\
@@ -1639,6 +1648,15 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 
 35	&1	&	&Relay drive transistor		&NPN, $I_{C(max)}>67\,mA$		&
 	&Fairchild Semiconductor	&MJE340STU	&0.5		&0.5	\\
+
+36	&1	&	&relay circuit $R_{1}$ (pullup)	&$10\,k\Omega$				&
+	&				&		&		&	\\
+
+37	&1	&	&relay circuit $R_{2}$ (I limit)	&$350\,\Omega$			&
+	&				&		&		&	\\
+
+38	&1	&	&relay cir. $R_{3}$ (base--bias)	&$100\,\Omega$			&
+	&				&		&		&	\\
 
 \hline
 Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
@@ -1697,34 +1715,34 @@ Item	&Qty	&Labels	&Description	&Electrical Specs	&Mechanical Specs
 	&Manufacturer		&Part Number		&Unit Cost	&	\\
 \hline
 
-50	&1	&130 ft, 36 mil OD Nichrome Wire	&	&Chromel C, $T_{max}=980^{o}C$
+50	&1	&	&130 ft, 36 mil OD Nichrome Wire	&	&Chromel C, $T_{max}=980^{o}C$
 	&McMaster--Carr	&8880K46		&71.92	&71.92	\\
 
-51	&2	&10--32 Nichrome Mounting Rod		&	&18--8 Stainless Steel
+51	&2	&	&10--32 Nichrome Mounting Rod		&	&18--8 Stainless Steel
 	&McMaster--Carr	&98804A106		&3.30	&6.60	\\
 
-52	&12	&No. 10 size ceramic spacers	&insulating	&1” Lg., 3/8” OD, 0.192 ID, for No. 10 screws
+52	&12	&	&No. 10 size ceramic spacers	&insulating	&1” Lg., 3/8” OD, 0.192 ID, for No. 10 screws
 	&McMaster--Carr	&96109A235		&4.20	&50.40	\\
 
-53	&2	&No. 6 size ceramic standoffs	&insulating	&1.5” Lg., 9/16”, threaded both sides
+53	&2	&	&No. 6 size ceramic standoffs	&insulating	&1.5” Lg., 9/16”, threaded both sides
 	&McMaster--Carr	&94335A145		&4.44	&8.88	\\
 
-54	&1	&6--32, 7/64” Ht. Nuts (100)	&	&18--8 Stainless Steel
+54	&1	&	&6--32, 7/64” Ht. Nuts (100)	&	&18--8 Stainless Steel
 	&McMaster--Carr	&91841A007		&3.48	&3.48	\\
 
-55	&1	&No. 6 size washer (100)	&	&18--8 Stainless Steel
+55	&1	&	&No. 6 size washer (100)	&	&18--8 Stainless Steel
 	&McMaster--Carr	&92141A008		&1.17	&1.17	\\
 
-56	&1	&6--32, 7/8” Lg. socket head cap screws (100)	&	&18--8 Stainless Steel
+56	&1	&	&6--32, 7/8” Lg. cap screws (100)	&	&18--8 Stainless Steel
 	&McMaster--Carr	&92196A152		&6.36	&6.36	\\
 
-57	&10	&12 AWG braided oven wire (by ft)	&$P_{max}=9.3\,A$	&$T_{max}=450^{o}C$
+57	&10	&	&12 AWG braided oven wire (by ft)	&$P_{max}=9.3\,A$	&$T_{max}=450^{o}C$
 	&McMaster--Carr	&8209K19		&3.17	&31.7	\\
 
-58	&1	&12 AWG, No. 6 ring terminals (100)	&	&$T_{max}=450^{o}C$
+58	&1	&	&12 AWG, No. 6 ring terminals (100)	&	&$T_{max}=450^{o}C$
 	&McMaster--Carr	&69405K56		&12.36	&12.36	\\
 
-59	&1	&Screw Terminal Block		&	&6--32, 3--pos
+59	&1	&	&Screw Terminal Block		&	&6--32, 3--pos
 	&Molex LLC	&387203208		&5.16	&5.16	\\
 
 \hline\hline
