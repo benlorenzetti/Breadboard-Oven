@@ -11,8 +11,8 @@
 #define	DOWN	RB5
 #define	RIGHT	RB7
 #define	START	RB6
-#define	GRN_LED	RB3
 #define	STOP	RB0
+#define	GRN_LED	RB3
 #define	RED_LED	RB3
 #define	ALARM	RA4
 #define	HEAT	RA3
@@ -22,6 +22,9 @@
 #define	A_K	1	; The analog input channel corresponding to pin T_K
 #define	V_REF_MINUS	RA2	; the negative reference voltage for Kn-
 #define	A_REF_MINUS	2	; the analog input channel corresponding to Vref-
+#define	MOTOR_ON	RC0
+#define	WINDING1	RC2
+#define	WINDING2	RC1
 
 #define	MAX_ARRAY_SIZE	.8	; 96 bytes are available in banks 2 and 3
 #define	TIME_ARRAY	0x110
@@ -31,6 +34,10 @@
 
 #define	TT_BOOLEAN	0
 #define	START_BOOLEAN	1
+
+#define	FOSK_SELECT		B'111'	; 111 for Fosc = 8 MHz
+#define	ADC_CLOCK_SELECT	B'10'	; 10 for Fosc/32
+#define	TIMER0_PRESCALAR	B'110'	; 110 for 1:128, or Fosc/(4 * 128)
 
 #define	TMR0_PERIOD	.125	; 125 selected for 2kHz piezo
 #define	TIME_COUNTER_SET_VALUE	.25
@@ -367,17 +374,17 @@ Time_Counting_Loop
 	RETURN
 
 ;________________________Begin Main Program_________________________;
-    
+
 Initialize_IO
 	BANKSEL	TRISA
 	MOVLW	(0<<SS) | (1<<T_REF)| (1<<T_K) | (1<<V_REF_MINUS) | (1<<HEAT) | (1<<ALARM)
 	MOVWF	TRISA
-	MOVLW	(1<<STOP) | (1<<LEFT) | (1<<UP) | (1<<DOWN) | (1<<RIGHT) | (1<<START)
+	MOVLW	(1<<STOP) | (1<<LEFT) | (1<<UP) | (1<<DOWN) | (1<<RIGHT) | (1<<START) | (0<<GRN_LED) | (0<<RED_LED)
 	MOVWF	TRISB
-	MOVLW	(0<<SCK) | (1<<SDI) | (0<<SDO)
+	MOVLW	(0<<SCK) | (1<<SDI) | (0<<SDO) | (0<<MOTOR_ON) | (0<<WINDING1) | (0<<WINDING2)
 	MOVWF	TRISC
 	BANKSEL	WPUB
-	MOVLW	(1<<LEFT) | (1<<RIGHT) | (1<<UP) | (1<<DOWN) | (1<<START) | (1<<STOP) | (0<<GRN_LED)
+	MOVLW	(1<<LEFT) | (1<<RIGHT) | (1<<UP) | (1<<DOWN) | (1<<START) | (1<<STOP)
 	MOVWF	WPUB	; enable weak pullups for pushbutton inputs
 	BANKSEL	OPTION_REG
 	BCF	OPTION_REG, NOT_RBPU	; enable global pullups
@@ -387,21 +394,29 @@ Initialize_IO
 	BANKSEL	ANSELH
 	CLRF	ANSELH
 
-Initialize_ADC
-	BANKSEL	ADCON1
-	BCF	ADCON1, ADFM	; Left justify the result (upper 8 bits of result will be stored in ADRESH)
-	BSF	ADCON1, VCFG1	; Set Vref- to Vss
-	BCF	ADCON1, VCFG0	; Set Vref+ to Vdd
-	BANKSEL	ADCON0	
-	BCF	ADCON0, ADCS1	; Select Fosc/8 for ADC clock period because that is recommended for Fosc=4MHz
-	BSF	ADCON0, ADCS0	; the code for this is 01 from datasheet page 108
-
 Blink_Red_Once
 	BANKSEL	PORTB
 	BSF	PORTB, RED_LED
 	Waste_Time	.256, .256, .4
 	BCF	PORTB, RED_LED
 	Waste_Time	.256, .256, .4
+ 
+Initialize_System_Clock
+	BANKSEL	OSCCON
+	MOVLW	(FOSK_SELECT << IRCF0) | (0 << OSTS) | (1 << SCS)
+	; select the internal 8 MHz oscillator and set its prescalar
+	MOVWF	OSCCON
+	; A start-up timer is built into the hardware so no delay is needed
+
+Initialize_ADC
+	BANKSEL	ADCON1
+	BCF	ADCON1, ADFM	; Left justify the result (upper 8 bits of result will be stored in ADRESH)
+	BSF	ADCON1, VCFG1	; Set Vref- to Vss
+	BCF	ADCON1, VCFG0	; Set Vref+ to Vdd
+	BANKSEL	ADCON0
+	MOVLW	(ADC_CLOCK_SELECT << ADCS0) & ((1 << ADCS0) | (1 << ADCS1))
+	BCF	ADCON0, ADCS1	; Select Fosc/8 for ADC clock period because that is recommended for Fosc=4MHz
+	BSF	ADCON0, ADCS0	; the code for this is 01 from datasheet page 108
 
 Initialize_Data
 	BANKSEL	datapoint
@@ -430,10 +445,27 @@ Initialize_Interupt_Sources
 	CLRF	PIE2		; disable a whole bunch of interupts
 	BSF	INTCON, GIE	; set global interupt enable
 
-Initialzie_Fosc
-	BANKSEL	OSCCON
-	MOVLW	(B'110' << IRCF0) | (0<<OSTS) | (1<<SCS)
-	MOVWF	OSCCON
+Initialize_Timer1_CCP1_and_CCP2	; for motor
+	BANKSEL	T1CON
+	CLRF	T1CON	; sets T1CKPS<1:0> to '00' for prescalar 1:1
+			; and sets TMR1CS to '0' for Fosc/4
+	BSF	T1CON, TMR1ON	; enable timer 1
+	
+	BANKSEL	CCPR1L
+	CLRF	CCPR1L
+	MOVLW	.127
+	MOVWF	CCPR1H
+	BANKSEL	CCPR2L
+	CLRF	CCPR2L
+	MOVLW	.255
+	MOVWF	CCPR2H
+
+	BANKSEL	CCP1CON
+	MOVLW	B'0010'	; enable CCP and set mode to Compare/toggle on match
+	MOVWF	CCP1CON
+	BANKSEL	CCP2CON
+	MOVWF	CCP2CON
+
 
 Initialize_SPI
 	BANKSEL	SSPCON
@@ -470,13 +502,12 @@ Input_Loop_Timeout_Routine
 	CALL	Initialize_MAX7219
 	CALL	Update_LED_Display
 
-Reinitialize_Input_Loop_Timeout
+Reinitialize_Timer0_for_Input_Loop_Timeout
 	BANKSEL	OPTION_REG
-	BCF	OPTION_REG, T0CS; select instruction clock Fosc/4
-	BCF	OPTION_REG, PSA	; assign prescalar to Timer 0
-	BSF	OPTION_REG, PS2	; Set PS<2:0> to 111, corresponding
-	BSF	OPTION_REG, PS1	; to a prescalar of 256
-	BSF	OPTION_REG, PS0
+	MOVLW	(0 << T0CS) | (0 << PSA) | (TIMER0_PRESCALAR << PS0)
+	; select the instruction clock (Fosc/4), assign the prescalar
+	; to Timer0, and set the prescalar value
+	MOVWF	OPTION_REG
 	BANKSEL	TMR0
 	CLRF	TMR0
 	BCF	INTCON, T0IE	; disable the Timer0 interupt
@@ -748,6 +779,10 @@ DELAY:				    ;WAIT FOR WRITING TO FINISH
     INCF	POSITION_EE,F
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
     GOTO	EE_WRITE	
+
+Turn_on_Fan
+	BANKSEL	PORTC
+	BSF	PORTC, MOTOR_ON
 
 Initialize_Runtime_and_Data_Index
 	BANKSEL	time
