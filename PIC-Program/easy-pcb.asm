@@ -26,6 +26,7 @@
 #define	WINDING1	RC2
 #define	WINDING2	RC1
 
+#define	STATIC_VARIABLES	0x20
 #define	MAX_ARRAY_SIZE	.8	; 96 bytes are available in banks 2 and 3
 #define	TIME_ARRAY	0x110
 #define	TEMP_ARRAY	0x190
@@ -38,6 +39,8 @@
 #define	FOSK_SELECT		B'111'	; 111 for Fosc = 8 MHz
 #define	ADC_CLOCK_SELECT	B'10'	; 10 for Fosc/32
 #define	TIMER0_PRESCALAR	B'110'	; 110 for 1:128, or Fosc/(4 * 128)
+#define	HALF_BRIDGE_PERIOD	.100
+
 
 #define	TMR0_PERIOD	.125	; 125 selected for 2kHz piezo
 #define	TIME_COUNTER_SET_VALUE	.25
@@ -170,7 +173,7 @@ Update_LED_Display
 	CLRF	dig2
 	CLRF	dig3
 	CLRF	dig4	
-	BANKSEL	booleans_reg
+	BANKSEL	STATIC_VARIABLES
 	BTFSC	booleans_reg, TT_BOOLEAN
 	GOTO	Binary_to_Decimal_for_Temp
 Seconds_to_Minutes_for_Time
@@ -274,7 +277,7 @@ Update_5_Digits
 
 ; Loads time and temperature datapoints into time_L and Temp variables
 Compatibility_Function
-	BANKSEL	datapoint
+	BANKSEL	STATIC_VARIABLES
 	MOVF	datapoint, W	; get address of value to be displayed
 	MOVWF	FSR		; get value
 	MOVF	INDF, W		; store value in W	
@@ -312,8 +315,9 @@ SPI_2byte_Transfer
 	BANKSEL	SSPSTAT
 	BTFSS	SSPSTAT, BF	; has data been received (transmit complete?)
 	GOTO	$-1
-	BANKSEL	0x0		; location of SPI_tx1, 2, and SSPBUF
+	BANKSEL	STATIC_VARIABLES
 	MOVF	SPI_tx2, W
+	BANKSEL	SSPBUF
 	MOVWF	SSPBUF		; start transmission
 	BANKSEL	SSPSTAT
 	BTFSS	SSPSTAT, BF	; wait for transmission completion
@@ -358,16 +362,25 @@ Initialize_MAX7219
 
 ; void Time_Counting_Loop (uint8_t *time_counter_L, uint8_t *time_counter_H);
 Time_Counting_Loop
-	BTFSS	INTCON, T0IF	; Test for Timer Overflow (note INTCON is in all banks)
+	BTFSS	INTCON, T0IF	; Test for Timer0 Overflow (note INTCON is in all banks)
 	GOTO	$-1
 	BCF	INTCON, T0IF
 	BANKSEL	TMR0
 	MOVLW	(.255 - TMR0_PERIOD)	; Reset TMR0
 	MOVWF	TMR0
-	BANKSEL	0		; Toggle Alarm (note bank 0 for digital I/O and time_counter)
+	; Toggle Alarm (note bank 0 for digital I/O and time_counter)
+	BANKSEL	0x0
 	MOVLW	(1 << ALARM)
 	XORWF	PORTA, F
-	DECFSZ	time_counter_L	; Decrement (time_counter--) and test for zero
+	; Test for Timer1 period (timer1 is driving the fan)
+	BANKSEL	TMR1H
+	MOVLW	HALF_BRIDGE_PERIOD
+	SUBWF	TMR1H, W
+	BTFSC	STATUS, C
+	CLRF	TMR1H
+	; Decrement (time_counter--) and for time_counter loops' completions
+	BANKSEL	STATIC_VARIABLES
+	DECFSZ	time_counter_L	; Decrement (time_counter--)
 	GOTO	Time_Counting_Loop
 	DECFSZ	time_counter_H
 	GOTO	Time_Counting_Loop
@@ -419,7 +432,7 @@ Initialize_ADC
 	BSF	ADCON0, ADCS0	; the code for this is 01 from datasheet page 108
 
 Initialize_Data
-	BANKSEL	datapoint
+	BANKSEL	STATIC_VARIABLES
 	MOVLW	0x20
 	MOVWF	datapoint
 	MOVWF	POSITION_RAM
@@ -453,11 +466,11 @@ Initialize_Timer1_CCP1_and_CCP2	; for motor
 	
 	BANKSEL	CCPR1L
 	CLRF	CCPR1L
-	MOVLW	.127
+	MOVLW	(HALF_BRIDGE_PERIOD / 2)
 	MOVWF	CCPR1H
 	BANKSEL	CCPR2L
 	CLRF	CCPR2L
-	MOVLW	.255
+	MOVLW	(HALF_BRIDGE_PERIOD - 1)
 	MOVWF	CCPR2H
 
 	BANKSEL	CCP1CON
@@ -479,7 +492,7 @@ Initialize_SPI
 	BSF	SSPCON, SSPEN	; enable Serial Peripheral Interface
 
 EE_READ:
-	BANKSEL	POSITION_RAM    
+	BANKSEL	STATIC_VARIABLES
     MOVF	POSITION_RAM,w
     MOVWF	FSR
     MOVF	POSITION_EE,w	    ;EEPROM ADDRESS
@@ -491,7 +504,7 @@ EE_READ:
     BANKSEL	EEDAT
     MOVF	EEDAT,w		    ;MOVE DATA AT DESIGNATED EE ADDR TO W
     MOVWF	INDF		    ;MOVE W TO VARIABLE IN RAM
-    BANKSEL	POSITION_RAM
+    BANKSEL	STATIC_VARIABLES
     INCF	POSITION_RAM,F
     INCF	POSITION_EE,F
     BTFSS	POSITION_EE,4	    ;REPEAT 15 TIMES, FOR 15 VAR
@@ -524,7 +537,7 @@ Input_Loop
 	BTFSC	INTCON, T0IF
 	GOTO	Input_Loop_Timeout_Routine
 
-	BANKSEL	PORTA
+	BANKSEL	0x0
 	BTFSC	PORTB, UP		    ;UP PB
 	GOTO	UpCheck
     
@@ -537,13 +550,16 @@ Input_Loop
 	BTFSC	PORTB, RIGHT		    ;RIGHT PB
 	GOTO	RightCheck
     
+	BANKSEL	STATIC_VARIABLES
 	BTFSC	booleans_reg, START_BOOLEAN
 	GOTO	Start_Active_Low
 Start_Active_High
+	BANKSEL	0x0
 	BTFSC	PORTB, START
 	GOTO	Start
 	GOTO	Input_Loop
 Start_Active_Low
+	BANKSEL	0x0
 	BTFSS	PORTB, START		    ;START PB
     	GOTO	Start
 	GOTO	Input_Loop
@@ -700,31 +716,31 @@ Check_Door_Contact_Switch
 Door_Open	; Beap three times then return to input loop
 	BANKSEL	TRISA
 	BCF	TRISA, ALARM
-	BANKSEL	time_counter_H
+	BANKSEL	STATIC_VARIABLES
 	MOVLW	.3
 	MOVWF	time_counter_H
 	CALL	Time_Counting_Loop
 	BANKSEL	TRISA
 	BSF	TRISA, ALARM
-	BANKSEL	time_counter_H
+	BANKSEL	STATIC_VARIABLES
 	MOVLW	.3
 	MOVWF	time_counter_H
 	CALL	Time_Counting_Loop
 	BANKSEL	TRISA
 	BCF	TRISA, ALARM
-	BANKSEL	time_counter_H
+	BANKSEL	STATIC_VARIABLES
 	MOVLW	.3
 	MOVWF	time_counter_H
 	CALL	Time_Counting_Loop
 	BANKSEL	TRISA
 	BSF	TRISA, ALARM
-	BANKSEL	time_counter_H
+	BANKSEL	STATIC_VARIABLES
 	MOVLW	.3
 	MOVWF	time_counter_H
 	CALL	Time_Counting_Loop
 	BANKSEL	TRISA
 	BCF	TRISA, ALARM
-	BANKSEL	time_counter_H
+	BANKSEL	STATIC_VARIABLES
 	MOVLW	.3
 	MOVWF	time_counter_H
 	CALL	Time_Counting_Loop
@@ -785,7 +801,7 @@ Turn_on_Fan
 	BSF	PORTC, MOTOR_ON
 
 Initialize_Runtime_and_Data_Index
-	BANKSEL	time
+	BANKSEL	STATIC_VARIABLES
 	CLRF_X	time, UINT16_T
 	CLRF	data_index
 
@@ -798,7 +814,7 @@ Control_Loop
 	BCF	INTCON, T0IF		; and Clear the Timer Interupt Flag
 
 	; Reset the Variables for Timer Overflow Counting
-	BANKSEL	time_counter_L		
+	BANKSEL	STATIC_VARIABLES	
 	CLRF	time_counter_L
 	MOVLW	TIME_COUNTER_SET_VALUE
 	MOVWF	time_counter_H	
@@ -820,7 +836,7 @@ Control_Loop
 	GOTO	$-1		; Estimated completion time is (Fosc/8) * 11
 	BANKSEL	ADRESH
 	MOVF	ADRESH, W	; save result to Temp register. No additional math is
-	BANKSEL	Temp		; necessary because the op-amp gain was selected
+	BANKSEL	STATIC_VARIABLES;   necessary because the op-amp gain was selected
 	MOVWF	Temp		; to match the full range of the ADC to 255 degrees delta T
 
 	; Wait for Timer0 to Maintain Accurate Timing
@@ -837,7 +853,7 @@ Control_Loop
 	; Wait for Timer 0 to Maintain Accurate Timing
 
 	; Update LED Display 
-	BANKSEL	time
+	BANKSEL	STATIC_VARIABLES
 	BCF	booleans_reg, TT_BOOLEAN	; (assume it is time for time to be displayed)
 	BTFSC	time, 0		; test if time or temperature should be displayed
 	BSF	booleans_reg, TT_BOOLEAN	; (alternate every second)
@@ -848,7 +864,7 @@ Control_Loop
 	CALL	Time_Counting_Loop
 
 Increment_Time_and_Continue_to_Next_Iteration
-	BANKSEL	time
+	BANKSEL	STATIC_VARIABLES
 	INCF	(time)
 	BTFSC	STATUS, Z
 	INCF	(time + 1)	
