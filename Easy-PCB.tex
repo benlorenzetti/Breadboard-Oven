@@ -34,7 +34,7 @@
 		\hfill
 		\begin{tabular}[b]{@{}c@{}}
 				\fontsize{14}{20}\bfseries\selectfont \emph{Easy--PCB} Solder Reflow Oven\\
-				\fontsize{12}{18}\selectfont Ben Lorenzetti \& Adam Meece\\
+				\fontsize{12}{18}\selectfont Ben Lorenzetti\\
  		\end{tabular}%
     		\hfill
     		\makebox[0pt][r]{%
@@ -58,9 +58,9 @@
 		\item Insulated aluminum frame with 6"x6"x10" interior chamber
 		\item 400 Watt nichrome heating element with door safety switch
 		\item 120 VAC power supply with surge and short protection
-		\item Forced convection fan driven by bipolar stepper motor
-		\item Type K thermocouple for temperature feedback loop
-		\item PIC16F883 based control
+		\item Convection fan driven by bipolar motor
+		\item Type K thermocouple for temperature feedback
+		\item PIC16F883 microcontroller
 		\item Convenient \mbox{7--segment} display and pushbutton user interface
 	\end{itemize}
 \end{flushleft}
@@ -70,38 +70,31 @@
 
 \emph{Easy--PCB} is a small, desktop convection oven for DIY reflow soldering at home.
 
-As integrated circuits continue to become smaller and faster,
+As integrated circuits continue to become increasingly compact,
 many $\mu$Controllers, FPGAs, and other ICs are no longer available in
 DIP form for breadboard prototyping or iron soldering.
 Similar to the shift away from PC parallel ports in the early 2000s,
 the shift away from DIPs means modern electronics hobbyists need more
 complicated equipment than their predessesors.
 
-Currently, commercial solder reflow stations are available for
-soldering fine pitch, SMD, and BGA componenets.
-More recently, several hackers have created open source designs
-for inexpensive reflow ovens, using converted kitchen toaster ovens.
+At the moment, hot air gun stations are sold commercially
+and, very recently, several hackers have created open source designs
+for IR solder ovens from converted toaster ovens.
 
-\emph{Easy--PCB} is better because it is a convection oven;
-controlled air flow prevents parts from being blown out of position and
-convection heating obviates the uneven heat absorbtion seen in infrared radiation based systems.
-Furthermore, \emph{Easy--PCB} was designed from the ground up for soldering,
-so the heating elements, oven frame, and control system are all
-optimized for typical solder reflow profile.
+\emph{Easy--PCB} is better than both because it combines the two;
+a convection oven obviates the uneven heat absorbtion seen in infrared radiation based systems,
+while controllable air flow prevents parts from being blown to never never PCB land.
 
 \begin{center}
 	\includegraphics[width=\columnwidth]{Figures/control-system.pdf}
-	\captionof*{figure}{The \emph{Easy--PCB} Control System}
+	\captionof{figure}{\emph{Easy--PCB} Control System}
+	\label{control-system}
 \end{center}
 
-A more detailed diagram of the control system is shown in
-\hyperref[detailed-system-diagram]{figure \ref{detailed-system-diagram}}.
-
-\emph{Easy--PCB} allows hobbyists to produce reflow temperature profiles with
-a high degree of accuracy and repeatability.
-There is no chicken---egg problem because all the electronic components
-on \emph{Easy--PCB}
-are through hole parts and can be soldered with an iron and clumsy hands.
+The temperature control system for \emph{Easy--PCB} is adverbaly adjective,
+with only XX rise time and YY \% overshoot for a typical solder profile.
+The use of temperature feedback and a reduction in dimensions from forced
+convection are key to this success.
 
 \begin{center}
 	\includegraphics[width=\columnwidth]{Figures/control-results.pdf}
@@ -109,9 +102,17 @@ are through hole parts and can be soldered with an iron and clumsy hands.
 	\label{temperature-control-results}
 \end{center}
 
+In keeping with the hacker spirit, complete schematics, drawings,
+source code, and materials lists for \mbox{\emph{Easy--PCB}} are appended to this datasheet.
+All materials can be purchased online from Digi--Key, OSH Park and McMaster--Carr.com.
+Design files are available on GitHub and were made exclusively from open source
+or free software, including KiCad, DraftSight, NGSPICE, MPASM, and MPLAB IPE.
+Finally, \emph{Easy--PCB} avoids any meta, ``chicken or the egg'' problems
+because all its components can be soldered with an iron and clumsy hands.
+
 \begin{figure*}
 	\centering
-	\includegraphics[width=\textwidth]{Figures/detailed-system-diagram.pdf}
+	\includegraphics[width=\textwidth]{Figures/detailed-system-diagram.png}
 	\caption{\emph{Easy--PCB} Detailed Control System}
 	\label{detailed-system-diagram}
 \end{figure*}
@@ -121,6 +122,7 @@ are through hole parts and can be soldered with an iron and clumsy hands.
 
 \pagebreak
 \section{User Interface}
+\subsection{Its Easy as P--C--B!}
 
 \emph{Easy--PCB} presents temperature and time information on a four digit LED display.
 After pressing the green `start' button, the current temperature and process
@@ -979,7 +981,7 @@ amplifier circuit, like shown in
 
 Second, the PIC In--Circuit Serial Programming (ICSP) header is a part of the user
 interface more than it is a part of the controller because I doubt \emph{Easy--PCB}
-will ever be bug free.
+will ever be bug free and I am judging my audience to be other hackers.
 
 The ICSP circuit is shown in
 \hyperref[pic16f883-circuit]{figure \ref{pic16f883-circuit}}.
@@ -1010,11 +1012,11 @@ gradient in a conductive loop made of two different metals. It is described by
 E_{S}=\int _{TR}^{T}\alpha_{A,B}dT,
 \end{equation}
 where $T$ and $T_{R}$ are the temperatures of the hot and cold junctions and
-$\alpha_{A,B}$ is the Seebeck coefficient between materials $A$ and $B$.
+$\alpha_{A,B}$ is the Seebeck coefficient between metals $A$ and $B$.
 
 A type--K thermocouple was selected because they are readily available and
 resist oxidation at temperatures up to $1260^{o}C$.
-From the `Manual on the use of Thermocouples in Temperature Measurement' \mbox{(STP 470A)}, the nominal
+From the ``Manual on the use of Thermocouples in Temperature Measurement'' \mbox{(STP 470A)}, the nominal
 Seebeck coefficients for type--K and J thermocouples are
 \begin{equation}
 \alpha_{KP,KN}=\left\{\begin{array}{c c}
@@ -1047,19 +1049,19 @@ The negative wire $KN$ is Alumel, Nial, T--2, or ThermoKanthal KN.
 The thermoelectric potential in a K loop is very small; 
 for a temperature difference of $T-T_{R}=255^{o}C$,
 the voltage developed is only on the order of $E_{S}=10.2\,mV$.
-Consequently, the signal needs to be amplified before it can be read by and ADC.
+Consequently, the signal needs to be amplified before it can be read by an ADC.
 
 The op amp circuit shown in
 \hyperref[thermocouple-amplifier]{figure \ref{thermocouple-amplifier}}
 can be used. A two resistor voltage dividor network is used to lift the reference
 voltage above 0 V, because only 0 and 5 V power rails are available and most
-op amps cannot swing their output all the way to the supply rails.
+op amps cannot swing their output the full range of the supply rails.
 
-The \textrm{PIC16F883}'s ADC has the ability to operate between $V_{SS}$ and $V_{DD}$ (0--5 V),
+The \textrm{PIC16F883}'s ADC has the ability to operate between $V_{SS}$ and $V_{DD}$ (0 and 5 V),
 but external reference voltages can also be used. Therefore, we should pass the
 negative voltage reference for the op amp into the negative voltage reference pin of the PIC,
-and then design the amplifier gain such that the maximum temperature range of $0-255\,^{o}C$
-is mapped linearly to $V_{ref-}-5\,V$
+and then design the amplifier gain such that the maximum temperature range of $0\leftrightarrow255\,^{o}C$
+is mapped linearly to $V_{ref-}\leftrightarrow5\,V$
 
 \begin{equation*}
 	\frac{R_{f2}}{R_{f1}}=
@@ -1555,8 +1557,8 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 13	&2	&J2,3	&front PCB to controller PCB	&20 pos			&1mm pitch, 1 row flat flex
 	&FCI			&HLW20R-2C7LF		&0.21		&0.42	\\
 
-14	&1	&	&18” flat flex ribbon		&20 pos		&1mm pitch, 1 row
-	&Parlex USA LLC		&100R20-457B		&7.43		&7.43	\\
+14	&1	&	&12” flat flex ribbon		&20 pos		&1mm pitch, 1 row
+	&Parlex USA LLC		&100R20-305B		&6.08		&6.08	\\
 \hline
 Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&Manufacturer		&Part Number		&Unit Cost	&	\\
