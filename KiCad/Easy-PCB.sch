@@ -35,7 +35,7 @@ EELAYER 25 0
 EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
-Sheet 1 2
+Sheet 1 3
 Title "Easy-PCB-v1"
 Date ""
 Rev ""
@@ -70,9 +70,13 @@ F 3 "" H 950 2950 60  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Sheet
-S 7000 3950 950  450 
+S 7200 3700 1000 450 
 U 567EDC0D
 F0 "Heat Relay" 60
 F1 "Heat-Relay.sch" 60
+F2 "Heat" B L 7200 3800 60 
+F3 "DoorC1" B L 7200 3950 60 
+F4 "HeatLive" B R 8200 3800 60 
+F5 "DoorC2" B L 7200 4050 60 
 $EndSheet
 $EndSCHEMATC
