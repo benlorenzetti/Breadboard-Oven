@@ -1202,8 +1202,6 @@ show how motor loads the power supply.
 
 \section{Heat Relay Design}
 
-\subsection{Door Contact Safety Switch}
-
 \begin{figure}
 	\centering
 	\includegraphics[width=\columnwidth]{Figures/relay-drive-circuit.pdf}
@@ -1211,22 +1209,83 @@ show how motor loads the power supply.
 	\label{relay-drive-circuit}
 \end{figure}
 
-The door safety switch is form A (normally open, active closed) contact block that is
-mounted on the front--facing PCB. When the door is open the connection is open;
-only when the door is fully closed will the circuit be closed. With this safety switch,
-the heater cannot be turned on when the door is open.
+\subsection{Door Contact Safety Switch}
 
-\subsection{Relay Selection \& Design}
+The drive circuit for operating the heat relay is shown in
+\hyperref[relay-drive-circuit]{figure \ref{relay-drive-circuit}}.
+The switch shown in a form A contact block that is mounted on the front--facing PCB
+and closes when the oven door closes. With this safety switch,
+the microcontroller cannot turn the heating element on when the door is open.
 
-The amplifier BJT and flyback diode should be rated for currents greater than the saturation
-current of the relay coil.
+To allow the $\mu$Controller to sense the switch's state, a pullup resistor is added.
+In order to ignore the pullup resistor when designing the transistor bias network,
+the pullup should be an order of magnitude greater than the BJT base bias network.
 \begin{equation}
-I_{\textrm{Diode Rating}}>I_{\textrm{Relay Sat.}}=\frac{V_{\textrm{DC Coil Rating}}}{R_{coil}}
+R_{1}\approx 10*R_{2}
+\label{heat-relay-pullup-eq}
 \end{equation}
 
-For the Omron Safety G4W relays, that saturation current is
+\subsection{Relay \& Components Selection}
+
+The Omron G5LE--1A--E relay is rated for switching voltages up to 250 VAC
+with a contact rating of 16 A. 
+
+For the driver circuit in
+\hyperref[relay-drive-circuit]{figure \ref{relay-drive-circuit}},
+the amplifier BJT and flyback diode should be rated for currents
+greater than the saturation current of the relay coil,
+which is $33.3\,mA$ at $12\,V$ for the G5LE--1A--E.
+
+The flyback diode should be rated for power dissipation greater than
+\begin{equation*}
+P_{\textrm{diode}}>33.3\,mA*12\,V=400\,mW.
+\end{equation*}
+
+The BJT should be sized for continuous collector saturation current greater than
 \begin{equation}
-I_{\textrm{Relay Sat.}}=66.7\,mA\quad\textrm{at }12\,V
+I_{c(sat)}>I_{\textrm{relay}(sat)}=33.3\,mA
+\end{equation}
+
+\subsection{Relay Driver Design}
+
+When the relay is on, the maximum possible current drawn through the
+base depends upon the maximum possible coil saturation current of the relay
+and the minimum possible base--collector current gain of the BJT.
+For the MJE340 NPN BJT,
+\begin{equation*}
+I_{B(max)}=\frac{I_{C(sat)}}{h_{fe(min)}}=\frac{33.3\,mA}{30}=1.11\,mA
+\end{equation*}
+
+The total current from the microcontroller when the heater is on should
+be be somewhat greater than 1.11 mA to reduce the impact of variation in
+transistor $h_{fe}$, but less than the 25 mA limit of the $\mu$Controller.
+If we choose $4\,mA$, then
+\begin{equation}
+\left\{\begin{array}{c c c}
+V_{A(on)}	&=&	I_{0(on)}R_{2}+V_{B(on)}	\\
+V_{B(on)}	&=&	(I_{0(on)}-I_{B(max)})R_{3}	\\
+\end{array}\right.
+\label{heat-relay-bias-network-eq}
+\end{equation}
+
+\begin{equation*}
+\left\{\begin{array}{c c c}
+V_{A(on)}	&=&	(4\,mA)R_{2}+V_{B(on)}	\\
+V_{B(on)}	&=&	(4-1.11\,mA)R_{3}	\\
+\end{array}\right.
+\end{equation*}
+
+Choosing 1 V for $V_{B(on)}$ provides some margin for error compared to $V_{BE(on)}\approx 0.7\,V$.
+Using this with equations
+\ref{heat-relay-pullup-eq} and \ref{heat-relay-bias-network-eq}
+defines the resistor values for relay driver network.
+
+\begin{equation}
+\begin{array}{c c c}
+R_{1}	&=&	10\,k\Omega	\\
+R_{2}	&=&	1\,k\Omega	\\
+R_{3}	&=&	333\,\Omega	\\
+\end{array}
 \end{equation}
 
 \section{Power Circuit Design}
