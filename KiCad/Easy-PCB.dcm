@@ -5,4 +5,10 @@ D 0.5A Ic, 300V Vce, Silicon Switching Power Transistor NPN, TO-126
 K Switching Power Transistor NPN
 $ENDCMP
 #
+$CMP MJE350
+D 40V Vce, 0.2A Ic, PNP, Small Signal Transistor, SOT-23
+K MMBT3904 PNP Transistor
+F http://www.nxp.com/documents/data_sheet/MMBT3906.pdf
+$ENDCMP
+#
 #End Doc Library
