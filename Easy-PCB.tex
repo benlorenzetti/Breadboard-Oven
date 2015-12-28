@@ -958,6 +958,14 @@ on the PIC microcontroller. The pushbutton circuit is shown in
 	\label{pushbutton-circuit}
 \end{figure}
 
+The two active--high LEDs that are built into the red and green pushbuttons
+need current limiting resistors to protect both the diode and the $\mu$Controller.
+The LEDs in the RP3508 pushbuttons are rated for forward current of 20 mA and 1.8 V.
+For ten milliamp intensity,
+\begin{equation*}
+R_{\textrm{limit}}=\frac{V_{DD}-V_{fwd}}{I_{fwd}}=\frac{5-1.8\,V}{10\,mA}=320\,\Omega
+\end{equation*}
+
 \subsection{Alarm, ICSP, and USART}
 
 This section is loaded with assumption and implication.
