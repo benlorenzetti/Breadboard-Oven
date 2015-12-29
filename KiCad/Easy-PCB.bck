@@ -1,5 +1,10 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP DF04M
+D Diode bridge
+K Graetz
+$ENDCMP
+#
 $CMP MJE340
 D 0.5A Ic, 300V Vce, Silicon Switching Power Transistor NPN, TO-126
 K Switching Power Transistor NPN

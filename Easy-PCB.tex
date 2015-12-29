@@ -1578,23 +1578,27 @@ opamp and the PIC.
 \section{Bill of Materials}
 
 \begin{center}
-\captionof{table}{\emph{Easy--PCB} Bill of Materials}
+\captionof{table}{Digi--Key Bill of Materials}
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{c c c c c c c c c c}
 \hline\hline
 Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&Manufacturer		&Part Number		&Unit Cost	&Total Cost	\\
 \hline
-1	&4	&S1-4	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
+
+	&1	&RP1	&8 resistor array	&$320\Omega$			&DIP
+	&Bourns Inc.		&4116R-1-331LF		&0.76		&0.76		\\
+
+1	&4	&	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
 	&E-Switch		&RP3502BBLK		&2.04		&8.16	\\
 
-2	&1	&S5	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+2	&1	&	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
 	&E-Switch		&RP3508BBLKGRNGRNNS	&5.43		&5.43	\\
 
-3	&1	&S6	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+3	&1	&	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
 	&E-Switch		&RP3508BBLKREDREDNS	&5.43		&5.43	\\
 
-4	&1	&S7	&door contact block	&SPDT, momentary		&
+4	&1	&	&door contact block	&SPDT, momentary		&
 	&Apem Inc.		&A0151B			&6.76		&6.76	\\
 
 5	&6	&	&pushbutton I limiters	&1kOhm				&
@@ -1609,41 +1613,32 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 8	&2	&	&SPI pull ups		&50 kOhms			&
 	&		&			&		&	\\
 
-9	&1	&U1	&7--seg, 8--dig disp. driver	&com.--cathode, SPI, 5V, 333 mA	&"0.1” pitch, DIP
+9	&1	&	&7--seg, 8--dig disp. driver	&com.--cathode, SPI, 5V, 333 mA	&"0.1” pitch, DIP
 	&Maxim Integrated	&MAX7219CNG		&9.13		&9.13	\\
 
-10	&1	&J1	&24--pin, DIP Socket	&				&.1” pitch, 0.3” row spacing
+10	&1	&	&24--pin, DIP Socket	&				&.1” pitch, 0.3” row spacing
 	&3M		&4824-3000-CP			&0.74		&0.74	\\
 
-11	&1	&U2	&7-seg, LED clock display	&com.-cathode	&0.1” pitch, DIP"
+11	&1	&	&7-seg, LED clock display	&com.-cathode	&0.1” pitch, DIP"
 	&Lite--On Inc.		&LTC-4727JR		&3.56		&3.56	\\
 
 12	&1	&	&decoupling capacitor	&0.1uF				&
 	&		&				&		&	\\
 
-13	&2	&J2,3	&front PCB to controller PCB	&20 pos			&1mm pitch, 1 row flat flex
+13	&2	&J3,	&front PCB to controller PCB	&20 pos			&1mm pitch, 1 row flat flex
 	&FCI			&HLW20R-2C7LF		&0.21		&0.42	\\
 
 14	&1	&	&12” flat flex ribbon		&20 pos		&1mm pitch, 1 row
 	&Parlex USA LLC		&100R20-305B		&6.08		&6.08	\\
-\hline
-Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
-	&Manufacturer		&Part Number		&Unit Cost	&	\\
-\hline
 
-15	&1	&	&2 kHz piezo buzzer	&5V(0-peak)			&
+15	&1	&SP1	&2 kHz piezo buzzer	&5V(0-peak)			&
 	&TDK Corporation	&PS1420P02CT		&0.85		&0.85	\\
 
-16	&2	&R26,27	&piezo resistors	&1kOhm				&
+16	&2	&R14,15	&piezo resistors	&1kOhm				&
 	&			&			&		&	\\
 
-17	&1	&	&piezo drive BJT		&NPN				&
+17	&1	&Q1	&piezo drive BJT		&NPN				&
 	&Fairchild Semiconductor	&2N3904BU	&0.18		&0.18	\\
-
-\hline
-Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
-	&Manufacturer		&Part Number		&Unit Cost	&	\\
-\hline
 
 18	&1	&	&type--K thermocouple	&				&
 	&			&			&		&	\\
@@ -1653,11 +1648,6 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 
 20	&1	&U3	&cold jnct temp. sensor	&Vout=500mV + 10mV/degC 	&-40 to 125$^{o}C$
 	&Microchip Technology	&MCP9700--E/TO		&0.31		&0.31	\\
-
-\hline
-Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
-	&Manufacturer		&Part Number		&Unit Cost	&	\\
-\hline
 
 21	&1	&	&Bipolar Stepper Motor	&12 V, 35 mH, 70 Ohms		&$3\,mm\emptyset$ Shaft, $44\,mm\emptyset$ Body, 28 AWG leads
 	&Portescap		&44M100D2B		&26.62		&26.62	\\
@@ -1704,11 +1694,6 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 32	&1	&	&H--bridge Rref			&					&
 	&			&			&		&	\\
 
-\hline
-Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
-	&Manufacturer		&Part Number		&Unit Cost	&	\\
-\hline
-
 33	&1	&	&Heat control relay		&DC 12 V, 33.3 mA; AC 250 V, 16 A	&$10^5$ cycles, thru-hole
 	&Omron Electronics Inc	&G5LE-1A-E DC12		&2.29		&2.29	\\
 
@@ -1727,11 +1712,6 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 38	&1	&	&relay cir. $R_{3}$ (base--bias)	&$100\,\Omega$			&
 	&				&		&		&	\\
 
-\hline
-Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
-	&Manufacturer		&Part Number		&Unit Cost	&	\\
-\hline
-
 36	&1	&	&PIC16F883 $\mu$Controller	&see section \ref{controller-section}	&28--pin DIP
 	&Microchip Technology	&PIC16F883-I/SP		&1.90		&1.90	\\
 
@@ -1747,9 +1727,20 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 40	&1	&	&USART header			&				&2--pos, 0.1” pitch
 	&Molex, LLC	&0022032021			&0.23		&0.23	\\
 
-\hline
-Item	&Qty	&Labels	&Description	&Electrical Specs	&Mechanical Specs
-	&Manufacturer		&Part Number		&Unit Cost	&	\\
+\hline\hline
+\end{tabular}
+\end{adjustbox}
+\label{digikey-bill-of-materials}
+\end{center}
+
+
+\begin{center}
+\captionof{table}{McMaster--Carr Bill of Materials}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{c c c c c c c c c c}
+\hline\hline
+Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
+	&Manufacturer		&Part Number		&Unit Cost	&Total Cost	\\
 \hline
 
 41	&1	&P1	&1'x8”x8" Aluminum Tube		&	&6061 Al, 3/16” thick
@@ -1817,7 +1808,8 @@ Item	&Qty	&Labels	&Description	&Electrical Specs	&Mechanical Specs
 \hline\hline
 \end{tabular}
 \end{adjustbox}
-\label{bill-of-materials}
+\label{mcmaster-bill-of-materials}
 \end{center}
+
 
 \end{document}
