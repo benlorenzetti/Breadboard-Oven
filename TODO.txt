@@ -1,10 +1,23 @@
-(1)	Fuseholders are incomplete with out corresponding fuseholder cap: Littelfuse Part # 83700000005
-(2)	Thru-holes on front facing PCB for SW1-7 are all too tight.
-(3)	Green and Red pushbuttons are oriented with switch terminals above LED terminals if mounted on front side.
-(4)	Should switch the start and stop labels, i.e. the button positions
-(5)	Increase separation for the swithc terminals for start and stop buttons
-(6)	Decrease separation of thru-hole lines for Display driver package
-(7)	Decrease green and red LED resistance (too dim with 500 ohm)
-(8)	Fix pushbutton diagrams to reflect correct resistance locations
-(9)	Do ADC calculations to set and appropriate Vref+ for both sensors
-(10)	Add 10k resistor from Low voltage programming pin to ground
+Fuseholders are incomplete with out corresponding fuseholder cap: Littelfuse Part # 83700000005
+
+Thru-holes on front facing PCB for SW1-7 are all too tight.
+
+Eliminate Pushbuttons except for stop in favor of rotary encoder with color leds
+
+Decrease separation of thru-hole lines for Display driver package
+
+Resistor Calculations for temperature feedback amplifiers
+
+Section on electric circuit for nichrome wire temperature integrator
+
+Add connectors for thermocouple and screw terminal for heater and chassis ground
+
+Back/Motor Mechanical Drawing
+
+Front/Door/Contact Block Mechanical Drawing
+
+Door Mechanical Drawing
+
+Front Mechanical Drawing
+
+Back Mechanical Drawing 
