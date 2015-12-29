@@ -1,0 +1,12 @@
+*** Nichrome-Temperature-Integrator ***
+
+Vroomtemp atm gnd DC 20
+Iin gnd n1 PULSE(0 411 1s 1ns 1ns 100s 100s)
+; (init_value, pulse_value, delay_t, rise_t, fall_t, pulse_width, period)
+
+Cnichrome n1 gnd 5.03
+Rnichrome n1 gnd 2
+
+.control
+tran 0.1s 100s; tstep, tstop
+plot v(n1)
