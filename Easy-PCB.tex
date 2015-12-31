@@ -1100,7 +1100,7 @@ With a 12 V rail in mind, there are many more choices for motors to drive the fa
 A bipolar stepper motor was chosen because of its open speed control in low torque applications.
 
 \begin{center}
-	\includegraphics[width=0.25\textwidth]{Figures/bipolar-motor.pdf}
+	\includegraphics[width=0.2\textwidth]{Figures/bipolar-motor.pdf}
 	\captionof{figure}{Bipolar Stepper Motor}
 \end{center}
 
@@ -1139,6 +1139,21 @@ Rated Current per Phase	&$\nicefrac{12V}{70\Omega}=0.17A$	\\
 \end{tabular}
 \end{table}
 
+\begin{table}
+\centering
+\caption{Adafruit 324 Electrical Specifications}
+\begin{tabular}{c | c }
+\hline\hline
+&Bipolar	\\
+\hline\hline
+DC Operating Voltage	&$12V$	\\
+Resistance per Winding	&$35\,\Omega$	\\
+Inductance per Winding	-	\\
+Rated Current per Phase	&$\nicefrac{12V}{35\Omega}=350\,mA$	\\
+\hline\hline
+\end{tabular}
+\end{table}
+
 \subsection{Push-Pull Driver Design}
 
 The driving circuit for the bipolar motor must be capable if pulling 
@@ -1167,19 +1182,98 @@ off to conserve power.
 	\label{motor-driver-circuit}
 \end{figure*}
 
-To design the driver, the electric properties of the motor windings
-and symmetric NPN/PNP BJTs are needed.
-The resistor networks should were chosen such that switching $V_{in}$ from
-0 to 5 V causes $Q_{5}$ and $Q_{6}$ to alternate cutoff and saturation.
+Only one of the power transistors ($Q_{1-4}$) on each vertical control line
+will be on at any time, so the max base current for each vertical control line is
+\begin{equation*}
+I_{HB(max)}=\frac{I_{(sat)}}{h_{fe(min)}},
+\end{equation*}
+where $h_{fe(min)}$ for the MJE3x0 power transistors is 30 and $I_{(sat)}$ comes
+is the motor's rated current.
 
-From the winding resistance of the motor, the saturation current through
-$Q_{1-4}$ and the maximum current for which the flyback diodes must be rated is
+If possible, based on the maximum power dissipation of the differential transistors
+($Q_{5,6}$), the vertical control lines quiescent currents should be
 \begin{equation}
-I_{sat}=\frac{12\,V}{70\,\Omega}=171\,mA.
+\begin{array}{c}
+I_{CQ}=10*I_{HB(max)},\quad\textrm{or}\\
+I_{CQ}=\frac{P_{max(Q5,6)}}{V_{cc}-1.4\,V},
+\end{array}
+\label{vertical-control-line-quiescent-current}
 \end{equation}
+if $P_{max(Q5)}$ is the more limiting factor.
+
+To set up the current mirror for the desired $I_{CQ}$ with $10\,\Omega$ emitter resistances,
+the mirror ON voltages should be
 \begin{equation}
-P_{sat}=IV=171\,mA*12\,V=2\,W
+V_{\textrm{imirror}}=10\Omega*I_{CQ}+0.7V,
+\label{mirror-on-voltages}
 \end{equation}
+which is set by
+\begin{equation*}
+(V_{DD}-0.7V)-V_{\textrm{imirror}}=R_{ref}I_{CQ}
+\end{equation*}
+i.e.
+\begin{equation}
+R_{ref}=\frac{V_{DD}-1.4V}{I_{CQ}}-10
+\label{Rref-eq}
+\end{equation}
+
+When the differential transistors ($Q_{5,6}$) are balanced,
+they should both be biased fully on in saturation mode.
+This is ensured with the approximate $V_{BE(on)}$ of 0.7 V and
+a margin for error of 0.25 V.
+\begin{equation*}
+V_{B(\textrm{balanced})}=V_{\textrm{imirror}}+0.95\,V
+\end{equation*}
+
+The static bias network ($Q_{6}$) should be biased at the balance point
+and the input bias network ($Q_{5}$) should swing above and below the
+balance voltage with 0 and 5V inputs.
+\begin{equation*}
+V_{B(\textrm{balanced})}=\frac{R_{4}}{R_{3}+R_{4}}V_{DD}
+\end{equation*}
+\begin{equation*}
+V_{B(\textrm{balanced})}+0.25\,V=\frac{R_{2}}{R_{1}+R_{2}}V_{DD}
+\end{equation*}
+
+For stiff bias, it is desirable that the total series resistance of
+both bias networks is
+\begin{equation*}
+R_{\Sigma}\approx \frac{h_{fe(min)(Q5)}}{10}*\frac{V_{DD}}{I_{CQ}}
+\end{equation*}
+
+\begin{equation}
+\begin{array}{r c l}
+R_{1}	&=&	x\\
+R_{2}	&=&	x\\
+R_{3}	&=&	x\\
+R_{4}	&=&	x\\
+\end{array}
+\label{Rbias12-eq}
+\end{equation}
+
+Two H--bridge networks are needed, but $R_{3}$ and $R_{4}$ do not
+necessarily need to be repeated. If they are not, the $R_{\Sigma}$
+for this network should be halved to support two base currents.
+
+\begin{equation}
+\begin{array}{r c l}
+R_{3}	&=&	x\\
+R_{4}	&=&	x\\
+\end{array}
+\label{Rbias34-eq}
+\end{equation}
+
+The collector resistors should be selected to allow maximum voltage
+swing on the vertical control lines and be rated for the power
+that may be dropped.
+\begin{equation}
+\begin{array}{c}
+R_{Cx}=\frac{V_{CC}-V_{(\textrm{balanced})}}{I_{CQ}}	\\
+P_{Rcx}\geq (V_{CC}-V_{(\textrm{balanced})})I_{CQ}
+\end{array}
+\label{Rcs-eq}
+\end{equation}
+
 
 \subsection{Driver SPICE Simulation}
 
@@ -1586,8 +1680,33 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&Manufacturer		&Part Number		&Unit Cost	&Total Cost	\\
 \hline
 
-	&1	&RP1	&8 resistor array	&$320\Omega$			&DIP
+	&1	&RP1	&8 resistor array	&8 x $320\,\Omega$		&DIP
 	&Bourns Inc.		&4116R-1-331LF		&0.76		&0.76		\\
+
+	&1	&R24	&Relay voltage drop	&$330\,\Omega$, $\geq 0.5\,W$	&
+	&Yageo			&FMP100JR-52-330R	&0.15		&0.15		\\
+
+	&1	&R25	&$V_{DD}$ supply LP filter	&$10\,\Omega$, $\geq 2\,W$	&
+	&TE Connectivity	&1625890-6		&0.20		&0.20		\\
+	
+	&2	&R26,28	&Motor Driver	&$140\Omega$, see eq. \ref{Rbias12-eq}	&
+	&			&			&		&		\\
+
+	&2	&R27,29	&Motor Driver	&$115\Omega$, see eq. \ref{Rbias12-eq}	&
+	&			&			&		&		\\
+
+	&2	&R30,31	&Motor Driver	&$64\Omega$, see eq. \ref{Rbias34-eq}	&
+	&			&			&		&		\\
+
+	&4	&R32--35	&Motor Drier	&$165\Omega$, $P\geq 0.6W$, see eq. \ref{Rcs-eq}	&
+	&			&			&		&		\\
+
+	&1	&R36	&Motor Driver		&$51\Omega$, see eq. \ref{Rref-eq}	\\
+	&			&			&		&		\\
+
+	&3	&R37--39	&Motor Driver	&$10\Omega$		&
+	&			&			&		&		\\
+
 
 1	&4	&	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
 	&E-Switch		&RP3502BBLK		&2.04		&8.16	\\
@@ -1649,8 +1768,8 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 20	&1	&U3	&cold jnct temp. sensor	&Vout=500mV + 10mV/degC 	&-40 to 125$^{o}C$
 	&Microchip Technology	&MCP9700--E/TO		&0.31		&0.31	\\
 
-21	&1	&	&Bipolar Stepper Motor	&12 V, 35 mH, 70 Ohms		&$3\,mm\emptyset$ Shaft, $44\,mm\emptyset$ Body, 28 AWG leads
-	&Portescap		&44M100D2B		&26.62		&26.62	\\
+21	&1	&	&Bipolar Stepper Motor	&12 V, 350 mA		&5 mm $\emptyset$ Shaft, $42x42\,mm^{2}$ body, M3 mounts
+	&Adafruit		&324			&14.00		&14.00	\\
 
 22	&4	&	&crimp socket connectors	&			&for 24--30 AWG
 	&Molex, LLC		&0016020069		&0.12		&0.48	\\
