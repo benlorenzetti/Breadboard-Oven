@@ -1707,6 +1707,20 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&3	&R37--39	&Motor Driver	&$10\Omega$		&
 	&			&			&		&		\\
 
+	&2	&C1,4		&$V_{DD}$ Decoupling	&$0.1\,\mu F$	&0.5mm $\emptyset$ leads w/ 0.1'' spacing
+	&Vishay BC Components	&K104Z15Y5VF5TL2	&0.21		&0.42		\\
+
+	&1	&C2		&$V_{CC}$ Ripple Cap.	&$\geq16.6\,mF$	&35x50 mm DxL		
+	&Cornell Dubilier Electronics	&SLPX223M050H9P3	&5.74		&5.74	\\
+
+	&1	&C3		&$V_{DD}$ supply LP filter	&$0.33\,\mu F$	&S=5mm		
+	&Kemet			&C322C334M5U5TA7301	&0.53		&0.53		\\
+
+	&1	&D1		&$V_{DD}$ Bridge Rectifier	&$\geq 300\,mA$; $\geq 50\,V$	&4--DIP, 0.2'' pitch, 0.3'' row sp.
+	&Fairchild Semiconductor	&DF04M			&0.41		&0.41	\\
+
+	&9	&D2--10	&H--bridge \& relay flybacks	&$V_{R}\geq1\,kV$, $I_{0}\geq 1\,A$	&
+	&Diodes Incorporated	&1N4007--T		&0.13		&1.17	\\
 
 1	&4	&	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
 	&E-Switch		&RP3502BBLK		&2.04		&8.16	\\
@@ -1786,9 +1800,6 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 23	&4	&Q3,4,13,14	&PNP BJTs for H-bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2W$	&
 	&Fairchild Semiconductor	&MJE350STU	&0.42		&1.68	\\
 
-24	&8	&D1--8	&H--bridge flybacks	&$V_{R}\geq1\,kV$, $I_{0}\geq 1\,A$	&
-	&Diodes Incorporated	&1N4007--T		&0.13		&1.04	\\
-
 25	&8	&	&H--bridge control	&NPN, 2N3904			&
 	&Fairchild Semiconductor	&2N3904BU	&0.18		&1.44	\\
 
@@ -1815,9 +1826,6 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 
 33	&1	&	&Heat control relay		&DC 12 V, 33.3 mA; AC 250 V, 16 A	&$10^5$ cycles, thru-hole
 	&Omron Electronics Inc	&G5LE-1A-E DC12		&2.29		&2.29	\\
-
-34	&1	&	&Relay flyback			&$V_{R}\geq1\,kV$, $I_{0}\geq1\,A$	&
-	&Diodes Incorporated	&1N4007-T			&0.13	&0.13	\\
 
 35	&1	&	&Relay drive transistor		&NPN, $I_{C(max)}>67\,mA$		&
 	&Fairchild Semiconductor	&MJE340STU	&0.5		&0.5	\\
