@@ -1,0 +1,1712 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/ben/Documents/Breadboarding-Oven/KiCad/Easy-PCB.sch</source>
+    <date>Sat 02 Jan 2016 12:19:19 PM EST</date>
+    <tool>Eeschema 4.0.1-3.201512161002+6197~38~ubuntu15.04.1-stable</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Easy-PCB-v1</title>
+        <company>Ben Lorenzetti</company>
+        <rev/>
+        <date/>
+        <source>Easy-PCB.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="2" name="/Temperature Feedback/" tstamps="/564E6B87/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Temperature-Feedback.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="3" name="/Heat Relay/" tstamps="/567EDC0D/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Heat-Relay.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="4" name="/Power Circuit/" tstamps="/5682300F/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Power-Circuit.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="5" name="/Motor Driver/" tstamps="/5681BEC8/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Motor-Driver.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="6" name="/Analog Math/" tstamps="/56830748/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Analog-Math.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J3">
+      <value>HLW20R-2C7LF</value>
+      <footprint>Easy-PCB-footprints:HLW20R-2C7LF</footprint>
+      <libsource lib="conn" part="CONN_01X20"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>565A077E</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>PIC16F883</value>
+      <libsource lib="Easy-PCB" part="PIC16F883"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5680C7DE</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>0.1u</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D3_P2.5</footprint>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56814167</tstamp>
+    </comp>
+    <comp ref="P1">
+      <value>Molex 0022032021</value>
+      <libsource lib="conn" part="CONN_01X02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56815306</tstamp>
+    </comp>
+    <comp ref="R11">
+      <value>10k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5681DE70</tstamp>
+    </comp>
+    <comp ref="R12">
+      <value>10k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5681DF9D</tstamp>
+    </comp>
+    <comp ref="R13">
+      <value>10k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5681E010</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>10k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>568203C6</tstamp>
+    </comp>
+    <comp ref="P2">
+      <value>Molex 0901200126</value>
+      <libsource lib="conn" part="CONN_01X06"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56821F62</tstamp>
+    </comp>
+    <comp ref="SP1">
+      <value>SPEAKER</value>
+      <libsource lib="device" part="SPEAKER"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56815E3D</tstamp>
+    </comp>
+    <comp ref="R15">
+      <value>1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56816949</tstamp>
+    </comp>
+    <comp ref="R14">
+      <value>1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>568169CA</tstamp>
+    </comp>
+    <comp ref="P3">
+      <value>Molex 0022032041</value>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>568182F1</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>IEC Male Inlet: 703W-00/53</value>
+      <libsource lib="Easy-PCB" part="IEC_Male_Inlet"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56821A1C</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>SPST: DF62J12S2AHQA</value>
+      <libsource lib="device" part="SPST"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5682860D</tstamp>
+    </comp>
+    <comp ref="P5">
+      <value>Molex 0022032021</value>
+      <libsource lib="conn" part="CONN_01X02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>568338BB</tstamp>
+    </comp>
+    <comp ref="P4">
+      <value>Molex 387203208</value>
+      <libsource lib="conn" part="CONN_01X03"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5683419B</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5683D9B0</tstamp>
+    </comp>
+    <comp ref="RP1">
+      <value>320</value>
+      <footprint>Buttons_Switches_ThroughHole:SW_DIP_x8_Slide</footprint>
+      <libsource lib="device" part="R_PACK8"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5682FC9C</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56880FA0</tstamp>
+    </comp>
+    <comp ref="U4">
+      <value>MCP617</value>
+      <libsource lib="Easy-PCB-rescue" part="LMC6062-RESCUE-Easy-PCB"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>564E7160</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>MCP41050</value>
+      <libsource lib="Easy-PCB" part="MCP41050"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>567EB0B4</tstamp>
+    </comp>
+    <comp ref="R19">
+      <value>6.1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>567EB65C</tstamp>
+    </comp>
+    <comp ref="R20">
+      <value>1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>567EB832</tstamp>
+    </comp>
+    <comp ref="R18">
+      <value>1.7k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>567EBBB8</tstamp>
+    </comp>
+    <comp ref="R17">
+      <value>1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>567EBC11</tstamp>
+    </comp>
+    <comp ref="R16">
+      <value>100</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>567EBCDE</tstamp>
+    </comp>
+    <comp ref="U3">
+      <value>MCP9700A</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="MCP9700A"/>
+      <sheetpath names="/Temperature Feedback/" tstamps="/564E6B87/"/>
+      <tstamp>56880F29</tstamp>
+    </comp>
+    <comp ref="K1">
+      <value>G5LE-1A-E_DC12</value>
+      <libsource lib="Easy-PCB" part="G5LE-1A-E_DC12"/>
+      <sheetpath names="/Heat Relay/" tstamps="/567EDC0D/"/>
+      <tstamp>568008CE</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>MJE340</value>
+      <libsource lib="Easy-PCB" part="MJE340"/>
+      <sheetpath names="/Heat Relay/" tstamps="/567EDC0D/"/>
+      <tstamp>5680095F</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>V*A(max) &gt; 0.4 W</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Heat Relay/" tstamps="/567EDC0D/"/>
+      <tstamp>56800A86</tstamp>
+    </comp>
+    <comp ref="R23">
+      <value>333</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Heat Relay/" tstamps="/567EDC0D/"/>
+      <tstamp>56800FE2</tstamp>
+    </comp>
+    <comp ref="R22">
+      <value>1k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Heat Relay/" tstamps="/567EDC0D/"/>
+      <tstamp>5680103F</tstamp>
+    </comp>
+    <comp ref="R21">
+      <value>10k</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Heat Relay/" tstamps="/567EDC0D/"/>
+      <tstamp>5680107F</tstamp>
+    </comp>
+    <comp ref="F1">
+      <value>83100000005</value>
+      <libsource lib="device" part="FUSE"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682385A</tstamp>
+    </comp>
+    <comp ref="T1">
+      <value>VPP24-830</value>
+      <libsource lib="Easy-PCB" part="VPP24-830"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>568240FC</tstamp>
+    </comp>
+    <comp ref="P24">
+      <value>M20-9980346</value>
+      <footprint>Easy-PCB-footprints:Male_Header_2x03</footprint>
+      <libsource lib="conn" part="CONN_02X03"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>568246CA</tstamp>
+    </comp>
+    <comp ref="P12">
+      <value>M20-9980346</value>
+      <footprint>Easy-PCB-footprints:Male_Header_2x03</footprint>
+      <libsource lib="conn" part="CONN_02X03"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682471A</tstamp>
+    </comp>
+    <comp ref="R24">
+      <value>330</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>56825401</tstamp>
+    </comp>
+    <comp ref="F2">
+      <value>83100000005</value>
+      <libsource lib="device" part="FUSE"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>56825CC3</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>DF04M</value>
+      <footprint>Easy-PCB-footprints:DF04M</footprint>
+      <libsource lib="Easy-PCB" part="DF04M"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682669A</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>&gt;16.6 mF</value>
+      <footprint>Capacitors_ThroughHole:C_Radial_D35_L51_P10</footprint>
+      <libsource lib="device" part="CP1"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682AC61</tstamp>
+    </comp>
+    <comp ref="U5">
+      <value>LM78M05CT</value>
+      <libsource lib="regul" part="7805"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682B5F4</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>0.1 uF</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D3_P2.5</footprint>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682C2EA</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>0.33 uF</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D6_P5</footprint>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682CBEE</tstamp>
+    </comp>
+    <comp ref="R25">
+      <value>10 Ohm; &gt;= 2W</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM15mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Power Circuit/" tstamps="/5682300F/"/>
+      <tstamp>5682CEE6</tstamp>
+    </comp>
+    <comp ref="Q9">
+      <value>MJE340</value>
+      <libsource lib="Easy-PCB" part="MJE340"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C08E</tstamp>
+    </comp>
+    <comp ref="Q13">
+      <value>MJE340</value>
+      <libsource lib="Easy-PCB" part="MJE340"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C158</tstamp>
+    </comp>
+    <comp ref="Q16">
+      <value>MJE340</value>
+      <libsource lib="Easy-PCB" part="MJE340"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C173</tstamp>
+    </comp>
+    <comp ref="Q5">
+      <value>MJE340</value>
+      <libsource lib="Easy-PCB" part="MJE340"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C18E</tstamp>
+    </comp>
+    <comp ref="Q6">
+      <value>MJE350</value>
+      <libsource lib="Easy-PCB" part="MJE350"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C8DD</tstamp>
+    </comp>
+    <comp ref="Q10">
+      <value>MJE350</value>
+      <libsource lib="Easy-PCB" part="MJE350"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C95E</tstamp>
+    </comp>
+    <comp ref="Q14">
+      <value>MJE350</value>
+      <libsource lib="Easy-PCB" part="MJE350"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C997</tstamp>
+    </comp>
+    <comp ref="Q17">
+      <value>MJE350</value>
+      <libsource lib="Easy-PCB" part="MJE350"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681C9BC</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681CB9A</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D091</tstamp>
+    </comp>
+    <comp ref="D5">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D0BE</tstamp>
+    </comp>
+    <comp ref="D6">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D0F5</tstamp>
+    </comp>
+    <comp ref="D7">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D13E</tstamp>
+    </comp>
+    <comp ref="D8">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D171</tstamp>
+    </comp>
+    <comp ref="D9">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D1A8</tstamp>
+    </comp>
+    <comp ref="D10">
+      <value>D</value>
+      <footprint>Discret:D3</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681D1DF</tstamp>
+    </comp>
+    <comp ref="R32">
+      <value>165</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM15mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681F689</tstamp>
+    </comp>
+    <comp ref="R33">
+      <value>165</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM15mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681F6D4</tstamp>
+    </comp>
+    <comp ref="R34">
+      <value>165</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM15mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681F715</tstamp>
+    </comp>
+    <comp ref="R35">
+      <value>165</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM15mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681F758</tstamp>
+    </comp>
+    <comp ref="R30">
+      <value>64</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681FC40</tstamp>
+    </comp>
+    <comp ref="R31">
+      <value>64</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681FD0B</tstamp>
+    </comp>
+    <comp ref="R26">
+      <value>140</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681FEE1</tstamp>
+    </comp>
+    <comp ref="R28">
+      <value>140</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5681FF38</tstamp>
+    </comp>
+    <comp ref="R29">
+      <value>115</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56820103</tstamp>
+    </comp>
+    <comp ref="R27">
+      <value>115</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56820195</tstamp>
+    </comp>
+    <comp ref="R36">
+      <value>51</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>568252C6</tstamp>
+    </comp>
+    <comp ref="R39">
+      <value>10</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56825779</tstamp>
+    </comp>
+    <comp ref="R38">
+      <value>10</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>568257DC</tstamp>
+    </comp>
+    <comp ref="R37">
+      <value>10</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>568258D1</tstamp>
+    </comp>
+    <comp ref="Q3">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>568814C5</tstamp>
+    </comp>
+    <comp ref="Q11">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56881680</tstamp>
+    </comp>
+    <comp ref="Q12">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56881817</tstamp>
+    </comp>
+    <comp ref="Q18">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56881960</tstamp>
+    </comp>
+    <comp ref="Q15">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56881BB3</tstamp>
+    </comp>
+    <comp ref="Q8">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56881E2C</tstamp>
+    </comp>
+    <comp ref="Q7">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>56881FE9</tstamp>
+    </comp>
+    <comp ref="Q4">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Motor Driver/" tstamps="/5681BEC8/"/>
+      <tstamp>5688217E</tstamp>
+    </comp>
+    <comp ref="R40">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683EA71</tstamp>
+    </comp>
+    <comp ref="R41">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683EABC</tstamp>
+    </comp>
+    <comp ref="R42">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683ED88</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>CP1</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D6_P5</footprint>
+      <libsource lib="device" part="CP1"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683F065</tstamp>
+    </comp>
+    <comp ref="R43">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683F3CB</tstamp>
+    </comp>
+    <comp ref="R44">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683F658</tstamp>
+    </comp>
+    <comp ref="R46">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683F6FD</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>CP1</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D6_P5</footprint>
+      <libsource lib="device" part="CP1"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683F74C</tstamp>
+    </comp>
+    <comp ref="R47">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>5683FA2B</tstamp>
+    </comp>
+    <comp ref="R45">
+      <value>R</value>
+      <footprint>Resistors_ThroughHole:Resistor_Horizontal_RM10mm</footprint>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>56840AF4</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>CP1</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D6_P5</footprint>
+      <libsource lib="device" part="CP1"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>56840B21</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>CP1</value>
+      <footprint>Capacitors_ThroughHole:C_Disc_D6_P5</footprint>
+      <libsource lib="device" part="CP1"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>56840B56</tstamp>
+    </comp>
+    <comp ref="Q19">
+      <value>2N3904</value>
+      <footprint>Easy-PCB-footprints:TO-92</footprint>
+      <libsource lib="Easy-PCB" part="2N3904"/>
+      <sheetpath names="/Analog Math/" tstamps="/56830748/"/>
+      <tstamp>56882825</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Easy-PCB" part="2N3904">
+      <description>40V Vce, 0.2A Ic, NPN, Small Signal Transistor, SOT-23</description>
+      <docs>http://www.nxp.com/documents/data_sheet/MMBT3904.pdf</docs>
+      <footprints>
+        <fp>SOT-23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">2N3904</field>
+        <field name="Footprint">TO-92</field>
+      </fields>
+      <pins>
+        <pin num="1" name="E" type="passive"/>
+        <pin num="2" name="B" type="input"/>
+        <pin num="3" name="C" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="regul" part="7805">
+      <aliases>
+        <alias>LM7805</alias>
+        <alias>LM7812</alias>
+        <alias>78L05</alias>
+      </aliases>
+      <description>Linear Regulator +5V</description>
+      <docs>regulator\lm78xx.pdf</docs>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">7805</field>
+      </fields>
+      <pins>
+        <pin num="GND" name="GND" type="input"/>
+        <pin num="VI" name="VI" type="input"/>
+        <pin num="VO" name="VO" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="C">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C?</fp>
+        <fp>C_????_*</fp>
+        <fp>C_????</fp>
+        <fp>SMD*_c</fp>
+        <fp>Capacitor*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X02">
+      <description>Connector 01x02</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X02</fp>
+        <fp>Pin_Header_Angled_1X02</fp>
+        <fp>Socket_Strip_Straight_1X02</fp>
+        <fp>Socket_Strip_Angled_1X02</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X02</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X03">
+      <description>Connector 01x03</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X03</fp>
+        <fp>Pin_Header_Angled_1X03</fp>
+        <fp>Socket_Strip_Straight_1X03</fp>
+        <fp>Socket_Strip_Angled_1X03</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X03</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X04">
+      <description>Connector 01x04</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X04</fp>
+        <fp>Pin_Header_Angled_1X04</fp>
+        <fp>Socket_Strip_Straight_1X04</fp>
+        <fp>Socket_Strip_Angled_1X04</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X06">
+      <description>Connector 01x06</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X06</fp>
+        <fp>Pin_Header_Angled_1X06</fp>
+        <fp>Socket_Strip_Straight_1X06</fp>
+        <fp>Socket_Strip_Angled_1X06</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X06</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X20">
+      <description>Connector 01x20</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X20</fp>
+        <fp>Pin_Header_Angled_1X20</fp>
+        <fp>Socket_Strip_Straight_1X20</fp>
+        <fp>Socket_Strip_Angled_1X20</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X20</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+        <pin num="7" name="P7" type="passive"/>
+        <pin num="8" name="P8" type="passive"/>
+        <pin num="9" name="P9" type="passive"/>
+        <pin num="10" name="P10" type="passive"/>
+        <pin num="11" name="P11" type="passive"/>
+        <pin num="12" name="P12" type="passive"/>
+        <pin num="13" name="P13" type="passive"/>
+        <pin num="14" name="P14" type="passive"/>
+        <pin num="15" name="P15" type="passive"/>
+        <pin num="16" name="P16" type="passive"/>
+        <pin num="17" name="P17" type="passive"/>
+        <pin num="18" name="P18" type="passive"/>
+        <pin num="19" name="P19" type="passive"/>
+        <pin num="20" name="P20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_02X03">
+      <description>Connector 02x03</description>
+      <footprints>
+        <fp>Pin_Header_Straight_2X03</fp>
+        <fp>Pin_Header_Angled_2X03</fp>
+        <fp>Socket_Strip_Straight_2X03</fp>
+        <fp>Socket_Strip_Angled_2X03</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_02X03</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="CP1">
+      <description>Polarised capacitor</description>
+      <footprints>
+        <fp>SMD*_Pol</fp>
+        <fp>c_elec*</fp>
+        <fp>C*elec</fp>
+        <fp>TantalC*</fp>
+        <fp>Elko*</fp>
+        <fp>CP*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CP1</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="C_Small">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C?</fp>
+        <fp>C_????_*</fp>
+        <fp>C_????</fp>
+        <fp>SMD*_c</fp>
+        <fp>Capacitor*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="D">
+      <description>Diode</description>
+      <footprints>
+        <fp>Diode_*</fp>
+        <fp>D-Pak_TO252AA</fp>
+        <fp>*SingleDiode</fp>
+        <fp>*_Diode_*</fp>
+        <fp>*SingleDiode*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="DF04M">
+      <description>Diode bridge</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">DF04M</field>
+      </fields>
+      <pins>
+        <pin num="1" name="+" type="input"/>
+        <pin num="2" name="-" type="input"/>
+        <pin num="3" name="~" type="input"/>
+        <pin num="4" name="~" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="FUSE">
+      <fields>
+        <field name="Reference">F</field>
+        <field name="Value">FUSE</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="input"/>
+        <pin num="2" name="~" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="G5LE-1A-E_DC12">
+      <fields>
+        <field name="Reference">K</field>
+        <field name="Value">G5LE-1A-E_DC12</field>
+      </fields>
+      <pins>
+        <pin num="1" name="contact_1" type="unspc"/>
+        <pin num="2" name="coil_1" type="passive"/>
+        <pin num="3" name="contact_2" type="unspc"/>
+        <pin num="5" name="coil_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="IEC_Male_Inlet">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">IEC_Male_Inlet</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Live" type="power_out"/>
+        <pin num="2" name="Earth" type="power_out"/>
+        <pin num="3" name="Neutral" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB-rescue" part="LMC6062-RESCUE-Easy-PCB">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LMC6062-RESCUE-Easy-PCB</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="output"/>
+        <pin num="2" name="-" type="input"/>
+        <pin num="3" name="+" type="input"/>
+        <pin num="4" name="V-" type="power_in"/>
+        <pin num="5" name="+" type="input"/>
+        <pin num="6" name="-" type="input"/>
+        <pin num="7" name="~" type="output"/>
+        <pin num="8" name="V+" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="MCP41050">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MCP41050</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~CS" type="input"/>
+        <pin num="2" name="SCK" type="input"/>
+        <pin num="3" name="SI" type="input"/>
+        <pin num="4" name="Vss" type="power_in"/>
+        <pin num="5" name="PA0" type="passive"/>
+        <pin num="6" name="PW0" type="passive"/>
+        <pin num="7" name="PB0" type="passive"/>
+        <pin num="8" name="Vdd" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="MCP9700A">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MCP9700A</field>
+        <field name="Footprint">TO-92</field>
+      </fields>
+      <pins>
+        <pin num="1" name="V+" type="power_in"/>
+        <pin num="2" name="Vout" type="output"/>
+        <pin num="3" name="Gnd" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="MJE340">
+      <description>0.5A Ic, 300V Vce, Silicon Switching Power Transistor NPN, TO-126</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">MJE340</field>
+        <field name="Footprint">TO-126</field>
+      </fields>
+      <pins>
+        <pin num="1" name="E" type="passive"/>
+        <pin num="2" name="C" type="passive"/>
+        <pin num="3" name="B" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="MJE350">
+      <description>40V Vce, 0.2A Ic, PNP, Small Signal Transistor, SOT-23</description>
+      <docs>http://www.nxp.com/documents/data_sheet/MMBT3906.pdf</docs>
+      <footprints>
+        <fp>SOT-23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">MJE350</field>
+        <field name="Footprint">TO-126</field>
+      </fields>
+      <pins>
+        <pin num="1" name="E" type="passive"/>
+        <pin num="2" name="C" type="passive"/>
+        <pin num="3" name="B" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="PIC16F883">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">PIC16F883</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RE3/~MCLR~/Vpp" type="3state"/>
+        <pin num="2" name="RA0/AN0/ULPWU/C12IN0-" type="3state"/>
+        <pin num="3" name="RA1/AN1/C12IN1-" type="3state"/>
+        <pin num="4" name="RA2/AN2/Vref-/CVref/C2IN+" type="3state"/>
+        <pin num="5" name="RA3/AN3/Vref+/C1IN+" type="3state"/>
+        <pin num="6" name="RA4/T0CLI/C1OUT" type="3state"/>
+        <pin num="7" name="RA5/AN4/~SS~/C2OUT" type="3state"/>
+        <pin num="8" name="Vss" type="power_in"/>
+        <pin num="9" name="RA7/OSC1/CLKIN" type="3state"/>
+        <pin num="10" name="RA6/OSC2/CLKOUT" type="3state"/>
+        <pin num="11" name="RC0/T1OSO/T1CKI" type="3state"/>
+        <pin num="12" name="RC1/T1OSI/CCP2" type="3state"/>
+        <pin num="13" name="RC2/P1A/CCP1" type="3state"/>
+        <pin num="14" name="RC3/SCK/SCL" type="3state"/>
+        <pin num="15" name="RC4/SDI/SDA" type="3state"/>
+        <pin num="16" name="RC5/SDO" type="3state"/>
+        <pin num="17" name="RC6/TX/CK" type="3state"/>
+        <pin num="18" name="RC7/RX/DT" type="3state"/>
+        <pin num="19" name="Vss" type="power_in"/>
+        <pin num="20" name="Vdd" type="power_in"/>
+        <pin num="21" name="RB0/AN12/INT" type="3state"/>
+        <pin num="22" name="RB1/AN10/P1C/C12IN3-" type="3state"/>
+        <pin num="23" name="RB2/AN8/P1B" type="3state"/>
+        <pin num="24" name="RB3/AN9/PGM/C12IN2-" type="3state"/>
+        <pin num="25" name="RB4/AN11/P1D" type="3state"/>
+        <pin num="26" name="RB5/AN13/~T1G" type="3state"/>
+        <pin num="27" name="RB6/ICSPCLK" type="3state"/>
+        <pin num="28" name="RB7/ICSPDAT" type="3state"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+        <fp>Resistor_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R_PACK8">
+      <description>8 resistors Pack</description>
+      <fields>
+        <field name="Reference">RP</field>
+        <field name="Value">R_PACK8</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+        <pin num="7" name="P7" type="passive"/>
+        <pin num="8" name="P8" type="passive"/>
+        <pin num="9" name="R8" type="passive"/>
+        <pin num="10" name="R7" type="passive"/>
+        <pin num="11" name="R6" type="passive"/>
+        <pin num="12" name="R5" type="passive"/>
+        <pin num="13" name="R4" type="passive"/>
+        <pin num="14" name="R3" type="passive"/>
+        <pin num="15" name="R2" type="passive"/>
+        <pin num="16" name="R1" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="SPEAKER">
+      <fields>
+        <field name="Reference">SP</field>
+        <field name="Value">SPEAKER</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="input"/>
+        <pin num="2" name="2" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="SPST">
+      <description>Interrupteur simple</description>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SPST</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="input"/>
+        <pin num="2" name="2" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Easy-PCB" part="VPP24-830">
+      <fields>
+        <field name="Reference">T</field>
+        <field name="Value">VPP24-830</field>
+      </fields>
+      <pins>
+        <pin num="1" name="AD" type="passive"/>
+        <pin num="3" name="AC" type="passive"/>
+        <pin num="4" name="AB" type="passive"/>
+        <pin num="6" name="AA" type="passive"/>
+        <pin num="7" name="SA" type="passive"/>
+        <pin num="9" name="SB" type="passive"/>
+        <pin num="10" name="SC" type="passive"/>
+        <pin num="12" name="SD" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Easy-PCB-rescue">
+      <uri>/home/ben/Documents/Breadboarding-Oven/KiCad/Easy-PCB-rescue.lib</uri>
+    </library>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="Easy-PCB">
+      <uri>/home/ben/Documents/Breadboarding-Oven/KiCad/Easy-PCB.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>/usr/share/kicad/library/conn.lib</uri>
+    </library>
+    <library logical="regul">
+      <uri>/usr/share/kicad/library/regul.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="Net-(J1-Pad1)">
+      <node ref="J1" pin="1"/>
+      <node ref="SW1" pin="1"/>
+    </net>
+    <net code="2" name="/Motor Driver/wind1">
+      <node ref="R26" pin="2"/>
+      <node ref="U1" pin="13"/>
+    </net>
+    <net code="3" name="/Motor Driver/wind2b">
+      <node ref="Q16" pin="1"/>
+      <node ref="Q17" pin="1"/>
+      <node ref="D9" pin="2"/>
+      <node ref="D10" pin="1"/>
+      <node ref="P3" pin="4"/>
+    </net>
+    <net code="4" name="/Motor Driver/wind2a">
+      <node ref="P3" pin="3"/>
+      <node ref="D8" pin="1"/>
+      <node ref="D7" pin="2"/>
+      <node ref="Q13" pin="1"/>
+      <node ref="Q14" pin="1"/>
+    </net>
+    <net code="5" name="/Motor Driver/wind1b">
+      <node ref="Q10" pin="1"/>
+      <node ref="D6" pin="1"/>
+      <node ref="D5" pin="2"/>
+      <node ref="Q9" pin="1"/>
+      <node ref="P3" pin="2"/>
+    </net>
+    <net code="6" name="/Motor Driver/wind1a">
+      <node ref="Q5" pin="1"/>
+      <node ref="D3" pin="2"/>
+      <node ref="D4" pin="1"/>
+      <node ref="P3" pin="1"/>
+      <node ref="Q6" pin="1"/>
+    </net>
+    <net code="7" name="/Power Circuit/MainsLive">
+      <node ref="T1" pin="6"/>
+      <node ref="SW1" pin="2"/>
+      <node ref="F1" pin="1"/>
+      <node ref="T1" pin="3"/>
+    </net>
+    <net code="8" name="/Motor Driver/wind2">
+      <node ref="U1" pin="12"/>
+      <node ref="R28" pin="2"/>
+    </net>
+    <net code="9" name="/Motor Driver/Motor_On">
+      <node ref="Q4" pin="2"/>
+      <node ref="U1" pin="11"/>
+    </net>
+    <net code="10" name="Net-(Q1-Pad3)">
+      <node ref="Q1" pin="3"/>
+      <node ref="SP1" pin="2"/>
+      <node ref="R15" pin="2"/>
+    </net>
+    <net code="11" name="GND">
+      <node ref="U3" pin="3"/>
+      <node ref="U4" pin="4"/>
+      <node ref="U2" pin="4"/>
+      <node ref="P2" pin="3"/>
+      <node ref="J1" pin="3"/>
+      <node ref="R23" pin="2"/>
+      <node ref="Q2" pin="1"/>
+      <node ref="R20" pin="2"/>
+      <node ref="C3" pin="2"/>
+      <node ref="C4" pin="2"/>
+      <node ref="U5" pin="GND"/>
+      <node ref="T1" pin="4"/>
+      <node ref="T1" pin="1"/>
+      <node ref="D8" pin="2"/>
+      <node ref="D6" pin="2"/>
+      <node ref="D4" pin="2"/>
+      <node ref="D10" pin="2"/>
+      <node ref="C2" pin="2"/>
+      <node ref="R41" pin="2"/>
+      <node ref="R42" pin="2"/>
+      <node ref="D1" pin="2"/>
+      <node ref="R31" pin="2"/>
+      <node ref="R27" pin="2"/>
+      <node ref="R29" pin="1"/>
+      <node ref="Q6" pin="2"/>
+      <node ref="Q10" pin="2"/>
+      <node ref="Q14" pin="2"/>
+      <node ref="Q17" pin="2"/>
+      <node ref="R39" pin="2"/>
+      <node ref="R38" pin="2"/>
+      <node ref="R37" pin="2"/>
+      <node ref="P4" pin="2"/>
+      <node ref="U1" pin="8"/>
+      <node ref="J3" pin="7"/>
+      <node ref="U1" pin="19"/>
+      <node ref="J3" pin="6"/>
+      <node ref="Q1" pin="1"/>
+      <node ref="J3" pin="5"/>
+      <node ref="C1" pin="1"/>
+      <node ref="P5" pin="2"/>
+    </net>
+    <net code="12" name="Earth">
+      <node ref="P4" pin="3"/>
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="13" name="/Heat Relay/HeatLive">
+      <node ref="K1" pin="1"/>
+      <node ref="P4" pin="1"/>
+    </net>
+    <net code="14" name="Net-(R14-Pad2)">
+      <node ref="R14" pin="2"/>
+      <node ref="U1" pin="9"/>
+    </net>
+    <net code="15" name="/Analog Math/NichromeTemp">
+      <node ref="C5" pin="2"/>
+      <node ref="R44" pin="2"/>
+      <node ref="Q19" pin="3"/>
+      <node ref="R43" pin="2"/>
+      <node ref="U1" pin="5"/>
+    </net>
+    <net code="16" name="/Temperature Feedback/K+">
+      <node ref="U4" pin="5"/>
+      <node ref="P5" pin="1"/>
+    </net>
+    <net code="17" name="/Heat Relay/Heat">
+      <node ref="R22" pin="2"/>
+      <node ref="R21" pin="2"/>
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="18" name="/Heat Relay/DoorC2">
+      <node ref="Q2" pin="3"/>
+      <node ref="R40" pin="2"/>
+      <node ref="J3" pin="20"/>
+      <node ref="R23" pin="1"/>
+    </net>
+    <net code="19" name="SCK">
+      <node ref="R11" pin="2"/>
+      <node ref="U1" pin="14"/>
+      <node ref="U2" pin="2"/>
+      <node ref="J3" pin="2"/>
+    </net>
+    <net code="20" name="/Heat Relay/DoorC1">
+      <node ref="R22" pin="1"/>
+      <node ref="J3" pin="19"/>
+    </net>
+    <net code="21" name="Net-(RP1-Pad14)">
+      <node ref="RP1" pin="14"/>
+      <node ref="U1" pin="23"/>
+    </net>
+    <net code="22" name="Net-(RP1-Pad15)">
+      <node ref="U1" pin="22"/>
+      <node ref="RP1" pin="15"/>
+    </net>
+    <net code="23" name="Net-(J3-Pad18)">
+      <node ref="R9" pin="2"/>
+      <node ref="J3" pin="18"/>
+    </net>
+    <net code="24" name="Net-(RP1-Pad13)">
+      <node ref="U1" pin="24"/>
+      <node ref="RP1" pin="13"/>
+    </net>
+    <net code="25" name="Net-(RP1-Pad12)">
+      <node ref="RP1" pin="12"/>
+      <node ref="U1" pin="25"/>
+    </net>
+    <net code="26" name="Net-(RP1-Pad11)">
+      <node ref="RP1" pin="11"/>
+      <node ref="U1" pin="26"/>
+    </net>
+    <net code="27" name="Net-(J3-Pad17)">
+      <node ref="RP1" pin="8"/>
+      <node ref="J3" pin="17"/>
+    </net>
+    <net code="28" name="Net-(J3-Pad16)">
+      <node ref="RP1" pin="7"/>
+      <node ref="J3" pin="16"/>
+    </net>
+    <net code="29" name="Net-(J3-Pad15)">
+      <node ref="J3" pin="15"/>
+      <node ref="RP1" pin="6"/>
+    </net>
+    <net code="30" name="Net-(J3-Pad14)">
+      <node ref="RP1" pin="5"/>
+      <node ref="J3" pin="14"/>
+    </net>
+    <net code="31" name="Net-(J3-Pad13)">
+      <node ref="RP1" pin="4"/>
+      <node ref="J3" pin="13"/>
+    </net>
+    <net code="32" name="Net-(J3-Pad12)">
+      <node ref="RP1" pin="3"/>
+      <node ref="J3" pin="12"/>
+    </net>
+    <net code="33" name="Net-(J3-Pad11)">
+      <node ref="RP1" pin="2"/>
+      <node ref="J3" pin="11"/>
+    </net>
+    <net code="34" name="Net-(Q1-Pad2)">
+      <node ref="Q1" pin="2"/>
+      <node ref="R14" pin="1"/>
+    </net>
+    <net code="35" name="Net-(J3-Pad10)">
+      <node ref="RP1" pin="1"/>
+      <node ref="J3" pin="10"/>
+    </net>
+    <net code="36" name="Net-(P2-Pad1)">
+      <node ref="R9" pin="1"/>
+      <node ref="P2" pin="1"/>
+      <node ref="R10" pin="2"/>
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="37" name="RX">
+      <node ref="P1" pin="2"/>
+      <node ref="U1" pin="18"/>
+    </net>
+    <net code="38" name="Net-(P2-Pad5)">
+      <node ref="U1" pin="27"/>
+      <node ref="RP1" pin="10"/>
+      <node ref="P2" pin="5"/>
+    </net>
+    <net code="39" name="Net-(P2-Pad4)">
+      <node ref="U1" pin="28"/>
+      <node ref="P2" pin="4"/>
+      <node ref="RP1" pin="9"/>
+    </net>
+    <net code="40" name="Net-(RP1-Pad16)">
+      <node ref="U1" pin="21"/>
+      <node ref="RP1" pin="16"/>
+    </net>
+    <net code="41" name="TX">
+      <node ref="P1" pin="1"/>
+      <node ref="U1" pin="17"/>
+    </net>
+    <net code="42" name="VDD">
+      <node ref="R21" pin="1"/>
+      <node ref="R30" pin="1"/>
+      <node ref="U4" pin="8"/>
+      <node ref="J3" pin="8"/>
+      <node ref="U3" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="C6" pin="1"/>
+      <node ref="Q4" pin="3"/>
+      <node ref="U5" pin="VO"/>
+      <node ref="C1" pin="2"/>
+      <node ref="R19" pin="1"/>
+      <node ref="C4" pin="1"/>
+      <node ref="P2" pin="2"/>
+      <node ref="R10" pin="1"/>
+      <node ref="U2" pin="8"/>
+      <node ref="C5" pin="1"/>
+      <node ref="U1" pin="20"/>
+      <node ref="J3" pin="9"/>
+      <node ref="R12" pin="1"/>
+      <node ref="R11" pin="1"/>
+      <node ref="SP1" pin="1"/>
+      <node ref="R15" pin="1"/>
+      <node ref="R47" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="R13" pin="1"/>
+      <node ref="R43" pin="1"/>
+    </net>
+    <net code="43" name="MOSI">
+      <node ref="J3" pin="4"/>
+      <node ref="U2" pin="3"/>
+      <node ref="U1" pin="16"/>
+    </net>
+    <net code="44" name="MISO">
+      <node ref="U1" pin="15"/>
+      <node ref="J3" pin="3"/>
+    </net>
+    <net code="45" name="/Temperature Feedback/Vref-">
+      <node ref="U1" pin="4"/>
+      <node ref="R20" pin="1"/>
+      <node ref="R19" pin="2"/>
+      <node ref="R17" pin="1"/>
+      <node ref="R16" pin="1"/>
+    </net>
+    <net code="46" name="/Temperature Feedback/Tref">
+      <node ref="U1" pin="3"/>
+      <node ref="U4" pin="1"/>
+      <node ref="R18" pin="2"/>
+    </net>
+    <net code="47" name="/Temperature Feedback/Tk">
+      <node ref="U1" pin="2"/>
+      <node ref="U2" pin="7"/>
+      <node ref="U4" pin="7"/>
+    </net>
+    <net code="48" name="CS1">
+      <node ref="R12" pin="2"/>
+      <node ref="U1" pin="7"/>
+      <node ref="J3" pin="1"/>
+    </net>
+    <net code="49" name="CS2">
+      <node ref="U2" pin="1"/>
+      <node ref="U1" pin="10"/>
+      <node ref="R13" pin="2"/>
+    </net>
+    <net code="50" name="Net-(P2-Pad6)">
+      <node ref="P2" pin="6"/>
+    </net>
+    <net code="51" name="Net-(R16-Pad2)">
+      <node ref="U4" pin="6"/>
+      <node ref="U2" pin="6"/>
+      <node ref="R16" pin="2"/>
+    </net>
+    <net code="52" name="Net-(R17-Pad2)">
+      <node ref="R17" pin="2"/>
+      <node ref="R18" pin="1"/>
+      <node ref="U4" pin="2"/>
+    </net>
+    <net code="53" name="Net-(U3-Pad2)">
+      <node ref="U4" pin="3"/>
+      <node ref="U3" pin="2"/>
+    </net>
+    <net code="54" name="Net-(U2-Pad5)">
+      <node ref="U2" pin="5"/>
+    </net>
+    <net code="55" name="+12V">
+      <node ref="P12" pin="6"/>
+      <node ref="R24" pin="2"/>
+      <node ref="D2" pin="1"/>
+      <node ref="K1" pin="2"/>
+    </net>
+    <net code="56" name="Net-(D2-Pad2)">
+      <node ref="D2" pin="2"/>
+      <node ref="K1" pin="5"/>
+      <node ref="Q2" pin="2"/>
+    </net>
+    <net code="57" name="VAA">
+      <node ref="F1" pin="2"/>
+      <node ref="K1" pin="3"/>
+    </net>
+    <net code="58" name="Net-(Q10-Pad3)">
+      <node ref="Q9" pin="3"/>
+      <node ref="Q11" pin="3"/>
+      <node ref="R33" pin="2"/>
+      <node ref="Q10" pin="3"/>
+    </net>
+    <net code="59" name="Net-(Q3-Pad3)">
+      <node ref="Q6" pin="3"/>
+      <node ref="Q5" pin="3"/>
+      <node ref="R32" pin="2"/>
+      <node ref="Q3" pin="3"/>
+    </net>
+    <net code="60" name="Net-(Q16-Pad3)">
+      <node ref="Q17" pin="3"/>
+      <node ref="Q18" pin="3"/>
+      <node ref="Q16" pin="3"/>
+      <node ref="R35" pin="2"/>
+    </net>
+    <net code="61" name="Net-(Q12-Pad2)">
+      <node ref="Q12" pin="2"/>
+      <node ref="R29" pin="2"/>
+      <node ref="R28" pin="1"/>
+    </net>
+    <net code="62" name="Net-(Q12-Pad3)">
+      <node ref="Q14" pin="3"/>
+      <node ref="Q13" pin="3"/>
+      <node ref="R34" pin="2"/>
+      <node ref="Q12" pin="3"/>
+    </net>
+    <net code="63" name="Net-(Q4-Pad1)">
+      <node ref="Q4" pin="1"/>
+      <node ref="R36" pin="2"/>
+    </net>
+    <net code="64" name="Net-(Q15-Pad1)">
+      <node ref="Q15" pin="1"/>
+      <node ref="R39" pin="1"/>
+    </net>
+    <net code="65" name="Net-(Q11-Pad1)">
+      <node ref="Q11" pin="1"/>
+      <node ref="Q8" pin="3"/>
+      <node ref="Q3" pin="1"/>
+    </net>
+    <net code="66" name="Net-(Q8-Pad1)">
+      <node ref="R38" pin="1"/>
+      <node ref="Q8" pin="1"/>
+    </net>
+    <net code="67" name="Net-(Q7-Pad1)">
+      <node ref="R37" pin="1"/>
+      <node ref="Q7" pin="1"/>
+    </net>
+    <net code="68" name="Net-(Q15-Pad2)">
+      <node ref="Q7" pin="3"/>
+      <node ref="Q7" pin="2"/>
+      <node ref="Q8" pin="2"/>
+      <node ref="Q15" pin="2"/>
+      <node ref="R36" pin="1"/>
+    </net>
+    <net code="69" name="Net-(Q12-Pad1)">
+      <node ref="Q12" pin="1"/>
+      <node ref="Q18" pin="1"/>
+      <node ref="Q15" pin="3"/>
+    </net>
+    <net code="70" name="Net-(Q3-Pad2)">
+      <node ref="R26" pin="1"/>
+      <node ref="Q3" pin="2"/>
+      <node ref="R27" pin="1"/>
+    </net>
+    <net code="71" name="Net-(Q11-Pad2)">
+      <node ref="Q18" pin="2"/>
+      <node ref="Q11" pin="2"/>
+      <node ref="R30" pin="2"/>
+      <node ref="R31" pin="1"/>
+    </net>
+    <net code="72" name="VCC">
+      <node ref="D1" pin="1"/>
+      <node ref="R35" pin="1"/>
+      <node ref="C2" pin="1"/>
+      <node ref="Q9" pin="2"/>
+      <node ref="Q13" pin="2"/>
+      <node ref="P12" pin="5"/>
+      <node ref="R24" pin="1"/>
+      <node ref="D9" pin="1"/>
+      <node ref="D5" pin="1"/>
+      <node ref="Q16" pin="2"/>
+      <node ref="Q5" pin="2"/>
+      <node ref="D7" pin="1"/>
+      <node ref="R25" pin="2"/>
+      <node ref="D3" pin="1"/>
+      <node ref="R32" pin="1"/>
+      <node ref="R33" pin="1"/>
+      <node ref="R34" pin="1"/>
+    </net>
+    <net code="73" name="Net-(P12-Pad3)">
+      <node ref="P12" pin="3"/>
+      <node ref="P24" pin="5"/>
+      <node ref="P24" pin="3"/>
+      <node ref="P24" pin="1"/>
+      <node ref="T1" pin="10"/>
+    </net>
+    <net code="74" name="Net-(P12-Pad2)">
+      <node ref="P12" pin="2"/>
+      <node ref="P24" pin="6"/>
+      <node ref="P24" pin="4"/>
+      <node ref="P24" pin="2"/>
+      <node ref="T1" pin="9"/>
+    </net>
+    <net code="75" name="Net-(F2-Pad1)">
+      <node ref="T1" pin="12"/>
+      <node ref="P12" pin="1"/>
+      <node ref="F2" pin="1"/>
+    </net>
+    <net code="76" name="Net-(D1-Pad4)">
+      <node ref="D1" pin="4"/>
+      <node ref="T1" pin="7"/>
+      <node ref="P12" pin="4"/>
+    </net>
+    <net code="77" name="Net-(C3-Pad1)">
+      <node ref="U5" pin="VI"/>
+      <node ref="C3" pin="1"/>
+      <node ref="R25" pin="1"/>
+    </net>
+    <net code="78" name="Net-(D1-Pad3)">
+      <node ref="D1" pin="3"/>
+      <node ref="F2" pin="2"/>
+    </net>
+    <net code="79" name="Net-(C8-Pad2)">
+      <node ref="R46" pin="1"/>
+      <node ref="C8" pin="2"/>
+      <node ref="R47" pin="2"/>
+    </net>
+    <net code="80" name="Net-(C7-Pad2)">
+      <node ref="C7" pin="2"/>
+      <node ref="R46" pin="2"/>
+      <node ref="R45" pin="1"/>
+    </net>
+    <net code="81" name="Net-(C6-Pad2)">
+      <node ref="R45" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="R44" pin="1"/>
+    </net>
+    <net code="82" name="Net-(Q19-Pad2)">
+      <node ref="Q19" pin="2"/>
+      <node ref="R41" pin="1"/>
+      <node ref="R40" pin="1"/>
+    </net>
+    <net code="83" name="Net-(Q19-Pad1)">
+      <node ref="R42" pin="1"/>
+      <node ref="Q19" pin="1"/>
+    </net>
+  </nets>
+</export>
