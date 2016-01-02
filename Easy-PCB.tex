@@ -1068,21 +1068,49 @@ op amps cannot swing their output the full range of the supply rails.
 The \textrm{PIC16F883}'s ADC has the ability to operate between $V_{SS}$ and $V_{DD}$ (0 and 5 V),
 but external reference voltages can also be used. Therefore, we should pass the
 negative voltage reference for the op amp into the negative voltage reference pin of the PIC,
-and then design the amplifier gain such that the maximum temperature range of $0\leftrightarrow255\,^{o}C$
-is mapped linearly to $V_{ref-}\leftrightarrow5\,V$
+and then design the amplifier gain such that the maximum temperature range of $\{20\leftrightarrow275\,^{o}C\}$
+is mapped linearly to $\{V_{ref-}\leftrightarrow5\,V\}$
 
-\begin{equation*}
-	\frac{R_{f2}}{R_{f1}}=
-	\frac{V_{\textrm{ADC(max)}}}{V_{\textrm{K(max)}}}=
-	\frac{3.3\,V}{10.2\,mV}
-\end{equation*}
 \begin{equation}
-\textrm{type--K:}\quad R_{f2}=323.5*R_{f1}
+	\frac{R_{f2(\textrm{t--couple})}}{R_{f1(\textrm{t--couple})}}=
+	\frac{V_{DD}-V_{ref-}}{V_{\textrm{t--couple}}(255^{o}C)}
+	\label{feedback-resistors-eq}
 \end{equation}
 
-Similarly, if a type--J thermocouples is used, the resistor ratio should be
+Meanwhile, the MCP9700 thermistor outputs 500 mV at $0\,^{o}C$,
+with temperature coefficient $+10\,mV/^{o}C$ thereafter.
+We want $20^{o}C$ to be our reference temperature, so it makes sense to
+set $V_{ref-}$ to
+\begin{equation*}
+V_{ref-}=500mV+\frac{10mV}{^{o}C}*20^{o}C=700\,mV.
+\end{equation*}
+
+This can be done with
 \begin{equation}
-\textrm{type--J:}\quad R_{f2}=233.2*R_{f1}
+R_{3}=6.14*R_{4}.
+\label{vref-resistors-eq}
+\end{equation}
+
+And then the feedback ratios for type--K and J thermocouples are
+\begin{equation}
+\begin{array}{r c c l}
+\textrm{type--K:}	&R_{f2}	&=&	421*R_{f1}	\\
+\textrm{type--J:}	&R_{f2}	&=&	304*R_{f1}.	\\
+\end{array}
+\label{thermocouple-feedback-ratios-eq}
+\end{equation}
+
+The MCP627 has two identical op--amp modules, so a second op--amp is available
+for reducing the math that must be done by the 8--bit PIC $\mu$Controller to
+get the cold junction temperature from the MCP9700 thermistor.
+\begin{equation*}
+\frac{R_{f2(\textrm{thermistor})}}{R_{f1(\textrm{thermistor})}}=
+\frac{V_{DD}-V_{ref-}}{255^{o}C*T_{\textrm{coefficient}}}
+\end{equation*}
+
+\begin{equation}
+\textrm{thermistor:}\quad R_{f2}=1.7*R_{f1}
+\label{thermistor-feedback-ratio-eq}
 \end{equation}
 
 \subsection{Thermistor Amplifier Design}
@@ -1682,6 +1710,15 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 
 	&1	&RP1	&8 resistor array	&8 x $320\,\Omega$		&DIP
 	&Bourns Inc.		&4116R-1-331LF		&0.76		&0.76		\\
+
+	&1	&R16	&thermocouple $R_{f1}$	&100 $\Omega$, see eq. \ref{thermocouple-feedback-ratios-eq}	&
+	&			&			&		&		\\
+
+	&1	&R18	&thermistor $R_{f2}$	&1.7 $k\Omega$, see eq. \ref{thermistor-feedback-ratio-eq}	&
+	&			&			&		&		\\
+
+	&1	&R19	&$V_{ref-}$ voltage divider $R_{3}$	&6.1 $k\Omega$, see eq. \ref{vref-resistors-eq}	&
+	&			&			&		&		\\
 
 	&1	&R24	&Relay voltage drop	&$330\,\Omega$, $\geq 0.5\,W$	&
 	&Yageo			&FMP100JR-52-330R	&0.15		&0.15		\\
