@@ -2321,7 +2321,7 @@
   )
 
   (module Resistors_ThroughHole:Resistor_Horizontal_RM10mm (layer F.Cu) (tedit 53F56209) (tstamp 568A0BCF)
-    (at 156.21 86.36)
+    (at 157.48 86.36)
     (descr "Resistor, Axial,  RM 10mm, 1/3W,")
     (tags "Resistor, Axial, RM 10mm, 1/3W,")
     (path /5682300F/56825401)
