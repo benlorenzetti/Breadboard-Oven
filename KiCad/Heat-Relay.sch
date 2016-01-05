@@ -80,17 +80,17 @@ F 3 "" H 6400 3250 50  0000 C CNN
 	1    6400 3250
 	0    1    1    0   
 $EndComp
-Text HLabel 8800 3950 2    60   BiDi ~ 0
+Text HLabel 8725 2625 2    60   BiDi ~ 0
 HeatLive
 $Comp
 L VAA #PWR024
 U 1 1 56800D0A
-P 7650 2200
-F 0 "#PWR024" H 7650 2050 50  0001 C CNN
-F 1 "VAA" H 7650 2350 50  0000 C CNN
-F 2 "" H 7650 2200 50  0000 C CNN
-F 3 "" H 7650 2200 50  0000 C CNN
-	1    7650 2200
+P 8400 3850
+F 0 "#PWR024" H 8400 3700 50  0001 C CNN
+F 1 "VAA" H 8400 4000 50  0000 C CNN
+F 2 "" H 8400 3850 50  0000 C CNN
+F 3 "" H 8400 3850 50  0000 C CNN
+	1    8400 3850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -104,26 +104,6 @@ F 3 "" H 6400 2200 50  0000 C CNN
 	1    6400 2200
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7650 2200 7650 2800
-Wire Wire Line
-	8800 3950 7650 3950
-Wire Wire Line
-	7650 3950 7650 3700
-Wire Wire Line
-	6400 2200 6400 3100
-Wire Wire Line
-	6400 2650 7100 2650
-Wire Wire Line
-	7100 2650 7100 2800
-Connection ~ 6400 2650
-Wire Wire Line
-	6400 3400 6400 4200
-Wire Wire Line
-	7100 3700 7100 3850
-Wire Wire Line
-	7100 3850 6400 3850
-Connection ~ 6400 3850
 Text HLabel 4400 4300 1    60   BiDi ~ 0
 DoorC1
 Text HLabel 4800 4300 1    60   BiDi ~ 0
@@ -172,24 +152,6 @@ F 3 "" H 3000 3300 50  0000 C CNN
 	1    3000 3300
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3000 3300 3000 3800
-Wire Wire Line
-	2400 4400 3400 4400
-Wire Wire Line
-	3000 4100 3000 4400
-Connection ~ 3000 4400
-Wire Wire Line
-	3700 4400 4400 4400
-Wire Wire Line
-	4400 4400 4400 4300
-Wire Wire Line
-	4800 4300 4800 4400
-Wire Wire Line
-	4800 4400 6100 4400
-Wire Wire Line
-	5500 4800 5500 4400
-Connection ~ 5500 4400
 $Comp
 L GND #PWR027
 U 1 1 56801366
@@ -213,7 +175,47 @@ F 3 "" H 6400 5400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
+	6400 2200 6400 3100
+Wire Wire Line
+	6400 2650 7100 2650
+Wire Wire Line
+	7100 2650 7100 2800
+Connection ~ 6400 2650
+Wire Wire Line
+	6400 3400 6400 4200
+Wire Wire Line
+	7100 3700 7100 3850
+Wire Wire Line
+	7100 3850 6400 3850
+Connection ~ 6400 3850
+Wire Wire Line
+	3000 3300 3000 3800
+Wire Wire Line
+	2400 4400 3400 4400
+Wire Wire Line
+	3000 4100 3000 4400
+Connection ~ 3000 4400
+Wire Wire Line
+	3700 4400 4400 4400
+Wire Wire Line
+	4400 4400 4400 4300
+Wire Wire Line
+	4800 4300 4800 4400
+Wire Wire Line
+	4800 4400 6100 4400
+Wire Wire Line
+	5500 4800 5500 4400
+Connection ~ 5500 4400
+Wire Wire Line
 	5500 5100 5500 5400
 Wire Wire Line
 	6400 4600 6400 5400
+Wire Wire Line
+	8725 2625 7650 2625
+Wire Wire Line
+	7650 2625 7650 2800
+Wire Wire Line
+	7650 3700 7650 3850
+Wire Wire Line
+	7650 3850 8400 3850
 $EndSCHEMATC
