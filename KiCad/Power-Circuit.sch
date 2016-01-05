@@ -107,12 +107,12 @@ $Comp
 L CONN_02X03 P12
 U 1 1 5682471A
 P 5350 4400
-F 0 "P12" V 5300 4050 50  0000 L CNN
-F 1 "M20-9980346" V 5400 3650 50  0000 L CNN
+F 0 "P12" V 5300 4650 50  0000 L CNN
+F 1 "M20-9980346" V 5400 4600 50  0000 L CNN
 F 2 "Easy-PCB-footprints:Male_Header_2x03" H 5350 3200 50  0001 C CNN
 F 3 "" H 5350 3200 50  0000 C CNN
 	1    5350 4400
-	0    1    -1   0   
+	0    -1   1    0   
 $EndComp
 Wire Wire Line
 	3300 4300 3400 4300
@@ -395,4 +395,16 @@ Wire Wire Line
 Wire Wire Line
 	6650 3825 6600 3825
 Connection ~ 6650 3900
+Text GLabel 4800 3900 1    60   Input ~ 0
+12or24VAC1
+Text GLabel 4800 4900 3    60   Input ~ 0
+12or24VAC2
+Text GLabel 4950 4100 1    60   Input ~ 0
+12or24VAC3
+Text GLabel 4950 4700 3    60   Input ~ 0
+12or24VAC4
+Text GLabel 7000 3900 1    60   Input ~ 0
+12or24VAC5
+Text GLabel 8850 4400 1    60   Input ~ 0
+VDDunreg
 $EndSCHEMATC
