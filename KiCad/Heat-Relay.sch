@@ -220,4 +220,6 @@ Text GLabel 6400 2650 0    60   Input ~ 0
 12Vrelay1
 Text GLabel 6400 3850 0    60   Input ~ 0
 12Vrelay2
+Text GLabel 5500 4400 1    60   Input ~ 0
+DoorC2
 $EndSCHEMATC
