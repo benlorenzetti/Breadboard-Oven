@@ -1540,13 +1540,6 @@ The mapping of the pins on the \textrm{PIC16F883} is shown in
 An overall flowchart is shown in figure
 \ref{high-level-program-flowchart}.
 
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.75\textwidth]{high-level-program-flowchart.pdf}
-	\caption{High Level Program Flowchart}
-	\label{high-level-program-flowchart}
-\end{figure*}
-
 The program is separated into two logical halves:
 the user interface loop and the control loop.
 Pressing start from the user interface loop causes the
@@ -1578,34 +1571,6 @@ Initialization and several subfunctions are depicted in figures
 	\caption{Runtime Control Program Flowchart}
 	\label{control-flowchart}
 \end{figure*}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{user-interface-flowchart-1.pdf}
-	\caption{Program Initialization Flowchart}
-	\label{user-interface-flowchart-1}
-\end{figure}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.75\textwidth]{user-interface-flowchart-2.pdf}
-	\caption{Down Button Subroutine}
-	\label{user-interface-flowchart-2}
-\end{figure*}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.75\textwidth]{user-interface-flowchart-3.pdf}
-	\caption{Up Button Subroutine}
-	\label{user-interface-flowchart-3}
-\end{figure*}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\columnwidth]{user-interface-flowchart-4.pdf}
-	\caption{EEPROM Write Subroutine}
-	\label{user-interface-flowchart-4}
-\end{figure}
 
 The program itself is listed in
 \hyperref[easy-pcb-listing]{appendix \ref{easy-pcb-listing}}.
@@ -1726,16 +1691,22 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&1	&U4	&Cold jnct. temp. sensor	&$V_{out}=500mV+10mV/^{o}C$ 	&-40 to 125$^{o}C$
 	&Microchip Technology	&MCP9700--E/TO		&0.31		&0.31	\\
 
-	&	&U5	&5V regulator			&-				&-
+	&1	&U5	&5V regulator			&-				&-
 	&Fairchild Semiconductor	&LM78M05CT	&0.57		&0.57	\\
 
-	&1	&U6	&7--seg, 8--dig disp. driver	&common--cathode, SPI	&"0.1” pitch, DIP
-	&Maxim Integrated	&MAX7219CNG		&9.13		&9.13	\\
+	&0	&-	&7--seg, 8--dig disp. driver	&Common--cathode, SPI	&"0.1” pitch, DIP
+	&Maxim Integrated	&MAX7219CNG		&9.13		&0.00	\\
 
-	&1	&-	&24--pin, DIP Socket		&-				&.1” pitch, 0.3” row spacing
-	&3M		&4824-3000-CP			&0.74		&0.74	\\
+	&0	&-	&24--pin, DIP Socket		&-				&.1” pitch, 0.3” row spacing
+	&3M		&4824-3000-CP			&0.74		&0.00	\\
 
-	&1	&U7	&7-seg, LED clock display	&common--cathode		&0.1” pitch DIP
+	&1	&U6	&7--Seg, 5--Dig Disp. Driver	&Common--cathode, SPI	&20 pin, 0.1'' pitch, DIP
+	&Freescale Semiconductor	&MC14489BPE	&5.49		&5.49	\\
+
+	&1	&-	&20--pin, DIP Socket		&-				&.1” pitch, 0.3” row spacing
+	&		&			&		&	\\
+
+	&1	&U7	&7-seg, LED clock display	&Common--cathode		&0.1” pitch DIP
 	&Lite--On Inc.		&LTC-4727JR		&3.56		&3.56	\\
 
 \hline
@@ -1745,16 +1716,22 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&1	&RP1	&8 resistor array	&8 x $320\,\Omega$		&DIP
 	&Bourns Inc.		&4116R-1-331LF		&0.76		&0.76		\\
 
-	&2	&R14,15	&piezo resistors	&1kOhm				&
+	&6	&R9,14,15,17,20,22	&current limit resistors	&$1\,k\Omega$		&
 	&			&			&		&	\\
 
-	&1	&R16	&thermocouple $R_{f1}$	&100 $\Omega$, see eq. \ref{thermocouple-feedback-ratios-eq}	&
+	&5	&R10--13,21	&pullup resistors	&$10\,k\Omega$		&
 	&			&			&		&		\\
 
-	&1	&R18	&thermistor $R_{f2}$	&1.7 $k\Omega$, see eq. \ref{thermistor-feedback-ratio-eq}	&
+	&1	&R16	&thermocouple $R_{f1}$	&see eq. \ref{thermocouple-feedback-ratios-eq} ($100\,\Omega$)	&
 	&			&			&		&		\\
 
-	&1	&R19	&$V_{ref-}$ voltage divider $R_{3}$	&6.1 $k\Omega$, see eq. \ref{vref-resistors-eq}	&
+	&1	&R18	&thermistor $R_{f2}$	&see eq. \ref{thermistor-feedback-ratio-eq} ($1.7\,k\Omega$)	&
+	&			&			&		&		\\
+
+	&1	&R19	&$V_{ref-}$ voltage divider $R_{3}$	&see eq. \ref{vref-resistors-eq} ($6.1\,k\Omega$)	&
+	&			&			&		&		\\
+
+	&1	&R23	&relay bias network		&see eq. \ref{heat-relay-bias-network-eq} ($333\,\Omega$)	&
 	&			&			&		&		\\
 
 	&1	&R24	&Relay voltage drop	&$330\,\Omega$, $\geq 0.5\,W$	&
@@ -1763,28 +1740,28 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&1	&R25	&$V_{DD}$ supply LP filter	&$10\,\Omega$, $\geq 2\,W$	&
 	&TE Connectivity	&1625890-6		&0.20		&0.20		\\
 	
-	&2	&R26,28	&Motor Driver	&$140\Omega$, see eq. \ref{Rbias12-eq}	&
+	&2	&R26,28	&Motor Driver	&see eq. \ref{Rbias12-eq} ($140\,\Omega$)	&
 	&			&			&		&		\\
 
-	&2	&R27,29	&Motor Driver	&$115\Omega$, see eq. \ref{Rbias12-eq}	&
+	&2	&R27,29	&Motor Driver	&see eq. \ref{Rbias12-eq} ($115\,\Omega$)	&
 	&			&			&		&		\\
 
-	&2	&R30,31	&Motor Driver	&$64\Omega$, see eq. \ref{Rbias34-eq}	&
+	&2	&R30,31	&Motor Driver	&see eq. \ref{Rbias34-eq} ($64\,\Omega$)	&
 	&			&			&		&		\\
 
-	&4	&R32--35	&Motor Driver	&$165\Omega$, $P\geq 0.6W$, see eq. \ref{Rcs-eq}	&
+	&4	&R32--35	&Motor Driver	&see eq. \ref{Rcs-eq} ($165\,\Omega$, $P\geq 0.6W$)	&
 	&Yageo			&RSF100JB-73-160R	&0.25		&1.00		\\
 
-	&1	&R36	&Motor Driver		&$51\Omega$, see eq. \ref{Rref-eq}
+	&1	&R36	&Motor Driver		&see eq. \ref{Rref-eq} ($51\,\Omega$)
 	&			&			&		&		\\
 
 	&3	&R37--39	&Motor Driver	&$10\Omega$		&
 	&			&			&		&		\\
 
-	&1	&	&Rset for LED display driver	&10 $k\Omega$		&
-	&			&			&		&	\\
+	&8	&R40--47	&analog modeling	&TBD			&
+	&			&			&		&		\\
 
-	&2	&	&SPI pull ups			&			&
+	&1	&	&Rset for LED display driver	&10 $k\Omega$		&
 	&			&			&		&	\\
 
 	&2	&C1,4		&$V_{DD}$ Decoupling	&$0.1\,\mu F$	&0.5mm $\emptyset$ leads w/ 0.1'' spacing
@@ -1820,17 +1797,26 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&1	&SW1	&power switch			&SPST, 120 VAC, $\geq10\,A$	&right angle mount
 	&E-Switch		&R1966ABLKBLKFR		&1.37		&1.37	\\
 
-1	&4	&	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
-	&E-Switch		&RP3502BBLK		&2.04		&8.16	\\
+	&1	&SW2	&Rotary Encoder w/ SW \&LEDs	&	&6mm, T(eeth)=18, knurled shaft
+	&Bourns Inc.		&PEL12D-4225S-S2024	&3.89		&3.89	\\
 
-2	&1	&	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
-	&E-Switch		&RP3508BBLKGRNGRNNS	&5.43		&5.43	\\
-
-3	&1	&	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
-	&E-Switch		&RP3508BBLKREDREDNS	&5.43		&5.43	\\
-
-4	&1	&	&door contact block	&SPDT, momentary		&
+	&1	&-	&Clear Knob			&		&for 6mm, T=18 knurled shaft
+	&Eagle Plastic Devices	&450-AA152C		&0.52		&0.52	\\
+	
+	&1	&SW3	&door contact block	&SPDT, momentary		&14.5 mm closed height
 	&Apem Inc.		&A0151B			&6.76		&6.76	\\
+
+	&1	&SW4	&Red ``Stop'' button	&SPST--NO			&17 mm open height
+	&E-Swtich		&TL1105LF250Q		&0.31		&0.31	\\
+
+	&0	&	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
+	&E-Switch		&RP3502BBLK		&2.04		&0.00	\\
+
+	&0	&	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+	&E-Switch		&RP3508BBLKGRNGRNNS	&5.43		&0.00	\\
+
+	&0	&	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+	&E-Switch		&RP3508BBLKREDREDNS	&5.43		&0.00	\\
 
 	&1	&J1	&IEC male inlet (power)	&120 VAC, $\geq 10A$		&right angle mount
 	&Qualtek		&703W-00/53		&0.99		&0.99	\\
