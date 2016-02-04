@@ -1694,74 +1694,64 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&1	&U5	&5V regulator			&-				&-
 	&Fairchild Semiconductor	&LM78M05CT	&0.57		&0.57	\\
 
-	&0	&-	&7--seg, 8--dig disp. driver	&Common--cathode, SPI	&"0.1” pitch, DIP
-	&Maxim Integrated	&MAX7219CNG		&9.13		&0.00	\\
-
-	&0	&-	&24--pin, DIP Socket		&-				&.1” pitch, 0.3” row spacing
-	&3M		&4824-3000-CP			&0.74		&0.00	\\
-
 	&1	&U6	&7--Seg, 5--Dig Disp. Driver	&Common--cathode, SPI	&20 pin, 0.1'' pitch, DIP
 	&Freescale Semiconductor	&MC14489BPE	&5.49		&5.49	\\
 
 	&1	&-	&20--pin, DIP Socket		&-				&.1” pitch, 0.3” row spacing
-	&		&			&		&	\\
+	&On Shore Technology Inc.	&ED20DT 	&0.26		&0.26	\\
 
 	&1	&U7	&7-seg, LED clock display	&Common--cathode		&0.1” pitch DIP
 	&Lite--On Inc.		&LTC-4727JR		&3.56		&3.56	\\
 
-\hline
-&&&&&&&&&	19.26	\\
-\hline
-
-	&1	&RP1	&8 resistor array	&8 x $320\,\Omega$		&DIP
+	&1	&RP1	&8 Resistor Array	&8 x $320\,\Omega$		&DIP
 	&Bourns Inc.		&4116R-1-331LF		&0.76		&0.76		\\
 
-	&6	&R9,14,15,17,20,22	&current limit resistors	&$1\,k\Omega$		&
+	&6	&R9,14,15,17,20,22	&Current Limit Resistors	&$1\,k\Omega$		&
 	&			&			&		&	\\
 
-	&5	&R10--13,21	&pullup resistors	&$10\,k\Omega$		&
+	&8	&R10--13,21,48--50	&Pullup Resistors	&$10\,k\Omega$		&
 	&			&			&		&		\\
 
-	&1	&R16	&thermocouple $R_{f1}$	&see eq. \ref{thermocouple-feedback-ratios-eq} ($100\,\Omega$)	&
+	&1	&R16	&Thermocouple $R_{f1}$	&equation \ref{thermocouple-feedback-ratios-eq} ($100\,\Omega$)	&
 	&			&			&		&		\\
 
-	&1	&R18	&thermistor $R_{f2}$	&see eq. \ref{thermistor-feedback-ratio-eq} ($1.7\,k\Omega$)	&
+	&1	&R18	&Thermistor $R_{f2}$	&equation \ref{thermistor-feedback-ratio-eq} ($1.7\,k\Omega$)	&
 	&			&			&		&		\\
 
-	&1	&R19	&$V_{ref-}$ voltage divider $R_{3}$	&see eq. \ref{vref-resistors-eq} ($6.1\,k\Omega$)	&
+	&1	&R19	&$V_{ref-}$ Voltage Divider $R_{3}$	&equation \ref{vref-resistors-eq} ($6.1\,k\Omega$)	&
 	&			&			&		&		\\
 
-	&1	&R23	&relay bias network		&see eq. \ref{heat-relay-bias-network-eq} ($333\,\Omega$)	&
+	&1	&R23	&Relay Bias Network		&equation \ref{heat-relay-bias-network-eq} ($333\,\Omega$)	&
 	&			&			&		&		\\
 
-	&1	&R24	&Relay voltage drop	&$330\,\Omega$, $\geq 0.5\,W$	&
+	&1	&R24	&Relay Voltage Drop	&$330\,\Omega$, $\geq 0.5\,W$	&
 	&Yageo			&FMP100JR-52-330R	&0.15		&0.15		\\
 
-	&1	&R25	&$V_{DD}$ supply LP filter	&$10\,\Omega$, $\geq 2\,W$	&
+	&1	&R25	&$V_{DD}$ Supply Filter	&$10\,\Omega$, $\geq 2\,W$	&
 	&TE Connectivity	&1625890-6		&0.20		&0.20		\\
 	
-	&2	&R26,28	&Motor Driver	&see eq. \ref{Rbias12-eq} ($140\,\Omega$)	&
+	&2	&R26,28	&Motor Driver	&equation \ref{Rbias12-eq} ($140\,\Omega$)	&
 	&			&			&		&		\\
 
-	&2	&R27,29	&Motor Driver	&see eq. \ref{Rbias12-eq} ($115\,\Omega$)	&
+	&2	&R27,29	&Motor Driver	&equation \ref{Rbias12-eq} ($115\,\Omega$)	&
 	&			&			&		&		\\
 
-	&2	&R30,31	&Motor Driver	&see eq. \ref{Rbias34-eq} ($64\,\Omega$)	&
+	&2	&R30,31	&Motor Driver	&equation \ref{Rbias34-eq} ($64\,\Omega$)	&
 	&			&			&		&		\\
 
-	&4	&R32--35	&Motor Driver	&see eq. \ref{Rcs-eq} ($165\,\Omega$, $P\geq 0.6W$)	&
+	&4	&R32--35	&Motor Driver	&equation \ref{Rcs-eq} ($165\,\Omega$, $P\geq 0.6W$)	&
 	&Yageo			&RSF100JB-73-160R	&0.25		&1.00		\\
 
-	&1	&R36	&Motor Driver		&see eq. \ref{Rref-eq} ($51\,\Omega$)
+	&1	&R36	&Motor Driver		&equation \ref{Rref-eq} ($51\,\Omega$)
 	&			&			&		&		\\
 
 	&3	&R37--39	&Motor Driver	&$10\Omega$		&
 	&			&			&		&		\\
 
-	&8	&R40--47	&analog modeling	&TBD			&
+	&8	&R40--47	&Analog Math	&TBD			&
 	&			&			&		&		\\
 
-	&1	&	&Rset for LED display driver	&10 $k\Omega$		&
+	&1	&R51	&Rx for LED display driver	&?		&
 	&			&			&		&	\\
 
 	&2	&C1,4		&$V_{DD}$ Decoupling	&$0.1\,\mu F$	&0.5mm $\emptyset$ leads w/ 0.1'' spacing
@@ -1780,98 +1770,106 @@ Item	&Qty	&Labels	&Description		&Electrical Specs		&Mechanical Specs
 	&Diodes Incorporated	&1N4007--T		&0.13		&1.17	\\
 
 	&1	&F1	&Cartridge fuse		&5A			&5 x 20 mm cartridge
-	&-			&			&		&	\\
+	&Bel Fuse Inc.		&5MF 5-R		&0.21		&0.21	\\
 
 	&1	&F2	&Cartridge fuse		&2.0 A, slow blow	&5 x 20 mm cartridge
-	&-			&			&		&	\\
+	&Bel Fuse Inc.		&5MF 2-R		&0.21		&0.21	\\
 
-	&2	&	&Cartridge fuse holder	&250 VAC, 6.3A			&for 5 x 20 mm cart.
+	&2	&-	&Cartridge fuse holder	&250 VAC, 6.3A			&for 5 x 20 mm cart.
 	&Littelfuse Inc.	&83100000005		&1.21		&2.42	\\
 
-	&2	&	&Fuse holder caps	&				&corresponding to 83100000005
+	&2	&-	&Fuse holder caps	&-				&corresponding to 83100000005
 	&Littelfuse Inc.	&83700000005		&1.71		&3.42	\\
 
 	&1	&T1	&Transformer		&20 VA, 24 $V_{\textrm{series}}$, 12 $V_{||}$	&-
 	&Triad Magnetics	&VPP24-830		&11.37		&11.37	\\
 
-	&1	&SW1	&power switch			&SPST, 120 VAC, $\geq10\,A$	&right angle mount
+	&1	&SW1	&Power switch			&SPST, 120 VAC, $\geq10\,A$	&right angle mount
 	&E-Switch		&R1966ABLKBLKFR		&1.37		&1.37	\\
 
-	&1	&SW2	&Rotary Encoder w/ SW \&LEDs	&	&6mm, T(eeth)=18, knurled shaft
+	&1	&SW2	&Rotary encoder w/ SW \&LEDs	&-	&6mm, T(eeth)=18, knurled shaft
 	&Bourns Inc.		&PEL12D-4225S-S2024	&3.89		&3.89	\\
 
-	&1	&-	&Clear Knob			&		&for 6mm, T=18 knurled shaft
+	&1	&-	&Clear knob			&-		&for 6mm, T=18 knurled shaft
 	&Eagle Plastic Devices	&450-AA152C		&0.52		&0.52	\\
 	
-	&1	&SW3	&door contact block	&SPDT, momentary		&14.5 mm closed height
+	&1	&SW3	&Door contact block	&SPDT, momentary		&14.5 mm closed height
 	&Apem Inc.		&A0151B			&6.76		&6.76	\\
 
 	&1	&SW4	&Red ``Stop'' button	&SPST--NO			&17 mm open height
 	&E-Swtich		&TL1105LF250Q		&0.31		&0.31	\\
 
-	&0	&	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
-	&E-Switch		&RP3502BBLK		&2.04		&0.00	\\
+	&5	&Q2,5,9,13,16	&NPN BJTs for H--bridge \&Relay	&$I_{c(max)}>171\,mA$, $P_{max}>2\,W$	&-
+	&Fairchild Semiconductor	&MJE340STU	&0.50		&2.00	\\
 
-	&0	&	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
-	&E-Switch		&RP3508BBLKGRNGRNNS	&5.43		&0.00	\\
+	&4	&Q6,10,14,17	&PNP BJTs for H-bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2W$	&-
+	&Fairchild Semiconductor	&MJE350STU	&0.42		&1.68	\\
 
-	&0	&	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
-	&E-Switch		&RP3508BBLKREDREDNS	&5.43		&0.00	\\
+	&10	&$Q_{1,3,4,7,8,11,12,15,18,19}$	&H--bridge, SP1 driver, \& analog comp.	&NPN, 2N3904	&-
+	&Fairchild Semiconductor	&2N3904BU	&0.18		&1.80	\\
+
+	&1	&K1	&Heat control relay		&DC 12 V, 33.3 mA; AC 250 V, 16 A	&$10^5$ cycles, thru-hole
+	&Omron Electronics Inc	&G5LE-1A-E DC12		&2.29		&2.29	\\
+
+	&1	&SP1	&2 kHz piezo buzzer	&5V(0-peak)			&-
+	&TDK Corporation	&PS1420P02CT		&0.85		&0.85	\\
+
+	&1	&-	&Bipolar Stepper Motor	&12 V, 350 mA		&5 mm $\emptyset$ Shaft, $42x42\,mm^{2}$ body, M3 mounts
+	&Adafruit		&324			&14.00		&14.00	\\
 
 	&1	&J1	&IEC male inlet (power)	&120 VAC, $\geq 10A$		&right angle mount
 	&Qualtek		&703W-00/53		&0.99		&0.99	\\
 
-13	&2	&J3,	&front PCB to controller PCB	&20 pos			&1mm pitch, 1 row flat flex
+	&2	&J3,	&Front PCB to controller PCB	&20 pos			&1mm pitch, 1 row flat flex
 	&FCI			&HLW20R-2C7LF		&0.21		&0.42	\\
 
-	&1	&P4	&Screw Terminal Block		&3 pos., > 120 VAC \& 5A	&12--22 AWG, w/ 6--32 screws
-	&TE Connectivity	&5-1437652-4		&1.42		&1.42	\\
-
-14	&1	&	&12” flat flex ribbon		&20 pos		&1mm pitch, 1 row
+	&1	&-	&12” flat flex ribbon		&20 pos		&1mm pitch, 1 row
 	&Parlex USA LLC		&100R20-305B		&6.08		&6.08	\\
 
-15	&1	&SP1	&2 kHz piezo buzzer	&5V(0-peak)			&
-	&TDK Corporation	&PS1420P02CT		&0.85		&0.85	\\
-
-17	&1	&Q1	&piezo drive BJT		&NPN				&
-	&Fairchild Semiconductor	&2N3904BU	&0.18		&0.18	\\
-
-18	&1	&	&type--K thermocouple	&				&
-	&			&			&		&	\\
-
-21	&1	&	&Bipolar Stepper Motor	&12 V, 350 mA		&5 mm $\emptyset$ Shaft, $42x42\,mm^{2}$ body, M3 mounts
-	&Adafruit		&324			&14.00		&14.00	\\
-
-22	&4	&	&crimp socket connectors	&			&for 24--30 AWG
-	&Molex, LLC		&0016020069		&0.12		&0.48	\\
-
-23	&1	&	&4--pos. connector housing	&			&0.1'' pitch
-	&Molex, LLC		&0050579004		&0.46		&0.46	\\
-
-24	&1	&	&4--pos. male header	&				&0.1'' pitch, tin
-	&Molex, LLC		&0022032041		&0.32		&0.32	\\
-
-22	&4	&Q1,2,11,12	&NPN BJTs for H--bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2\,W$	&
-	&Fairchild Semiconductor	&MJE340STU	&0.50		&2.00	\\
-
-23	&4	&Q3,4,13,14	&PNP BJTs for H-bridge	&$I_{c(max)}>171\,mA$, $P_{max}>2W$	&
-	&Fairchild Semiconductor	&MJE350STU	&0.42		&1.68	\\
-
-25	&8	&	&H--bridge control	&NPN, 2N3904			&
-	&Fairchild Semiconductor	&2N3904BU	&0.18		&1.44	\\
-
-33	&1	&	&Heat control relay		&DC 12 V, 33.3 mA; AC 250 V, 16 A	&$10^5$ cycles, thru-hole
-	&Omron Electronics Inc	&G5LE-1A-E DC12		&2.29		&2.29	\\
-
-35	&1	&	&Relay drive transistor		&NPN, $I_{C(max)}>67\,mA$		&
-	&Fairchild Semiconductor	&MJE340STU	&0.5		&0.5	\\
-
-39	&1	&	&PIC ICSP header		&				&6--pos, 0.1” pitch
-	&Molex, LLC	&0901200126			&0.77		&0.77	\\
-
-40	&1	&	&USART header			&				&2--pos, 0.1” pitch
+	&1	&P1	&USART header			&-				&2--pos, 0.1” pitch
 	&Molex, LLC	&0022032021			&0.23		&0.23	\\
 
+	&1	&P2	&PIC ICSP header		&-				&6--pos, 0.1” pitch
+	&Molex, LLC	&0901200126			&0.77		&0.77	\\
+
+	&1	&P3	&4--pos. male header		&-				&0.1'' pitch, tin
+	&Molex, LLC		&0022032041		&0.32		&0.32	\\
+
+	&1	&-	&4--pos. connector housing	&-			&0.1'' pitch
+	&Molex, LLC		&0050579004		&0.46		&0.46	\\
+
+	&4	&-	&crimp socket connectors	&-			&for 24--30 AWG
+	&Molex, LLC		&0016020069		&0.12		&0.48	\\
+
+	&1	&P4	&Screw Terminal Block		&3 pos., $\geq120\,VAC$ \& 5A	&12--22 AWG, w/ 6--32 screws
+	&TE Connectivity	&5-1437652-4		&1.42		&1.42	\\
+
+	&1	&P5	&Thermocouple Term. Block	&2 pos.				&0.1'' pitch
+	&On Shore Technology	&OSTVN02A150		&0.58		&0.58	\\
+
+	&2	&P12,24	&12V and 24V Option headers	&3 x 2 pos.			&0.1'' pitch
+	&Amphenol FCI		&68602-406HLF		&0.22		&0.44	\\
+
+	&3	&-	&12V \& 24V Option Jumpers	&-				&0.1'' pitch
+	&3M			&969102-0000-DA		&0.10		&0.30	\\
+
+	&0	&-	&7--seg, 8--dig disp. driver	&Common--cathode, SPI	&"0.1” pitch, DIP
+	&Maxim Integrated	&MAX7219CNG		&9.13		&0.00	\\
+
+	&0	&-	&24--pin, DIP Socket		&-				&.1” pitch, 0.3” row spacing
+	&3M		&4824-3000-CP			&0.74		&0.00	\\
+
+	&0	&-	&navigation pushbuttons	&SPST				&17.3 dist. PCB to enclosure
+	&E-Switch		&RP3502BBLK		&2.04		&0.00	\\
+
+	&0	&-	&green “start” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+	&E-Switch		&RP3508BBLKGRNGRNNS	&5.43		&0.00	\\
+
+	&0	&-	&red “stop” button	&SPST switch/1.8V, 20mA LED	&18 mm dist. PCB to enclosure
+	&E-Switch		&RP3508BBLKREDREDNS	&5.43		&0.00	\\
+
+	&	&	&			&				&
+	&			&			&\textbf{Total:}	&\textbf{91.11}	\\
 \hline\hline
 \end{tabular}
 \end{adjustbox}
@@ -1946,6 +1944,9 @@ Item	&Qty	&Labels	&Description	&Electrical Specs	&Mechanical Specs
 
 58	&1	&	&12 AWG, No. 6 ring terminals (100)	&	&$T_{max}=450^{o}C$
 	&McMaster--Carr	&69405K56		&12.36	&12.36	\\
+
+	&1	&-	&type--K thermocouple	&				&
+	&			&			&		&	\\
 
 \hline\hline
 \end{tabular}
